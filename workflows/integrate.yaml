@@ -1,0 +1,34 @@
+name: integration tests
+on:
+  workflow_call:
+jobs:
+  integration-test-lxd:
+    name: Integration tests for (lxd)
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Setup operator environment
+        uses: charmed-kubernetes/actions-operator@main
+        with:
+          provider: lxd
+      - name: Run machine integration tests
+        run: |
+          tree -fi releases/ | grep .yaml | grep -v k8s |  while read BUNDLE
+          do
+            tox -e integration -- --bundle $BUNDLE
+          done
+  integration-test-k8s:
+    runs-on: ubuntu-latest
+    name: Integration tests for (lxd)
+    steps:
+      - name: Setup operator environment
+        uses: charmed-kubernetes/actions-operator@main
+        with:
+          provider: microk8s
+      - name: Run k8s integration tests
+        run: |
+          tree -fi releases/ | grep .yaml | grep -v machine | while read BUNDLE
+          do
+            tox -e integration -- --bundle $BUNDLE
+          done

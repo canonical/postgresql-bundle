@@ -1,0 +1,10 @@
+name: scheduled integration tests
+on:
+  schedule:
+    - cron:  '0 12 * * 3'
+
+jobs:
+  integration-tests:
+    name: integration tests
+    runs-on: ubuntu-latest
+    uses: ./.github/workflows/integrate.yaml
