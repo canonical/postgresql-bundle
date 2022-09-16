@@ -11,6 +11,14 @@ show_missing = true
 [tool.pytest.ini_options]
 minversion = "6.0"
 log_cli_level = "INFO"
+asyncio_mode = "auto"
+markers = [
+    "smoke: quick integration tests that can be run to quickly verify that the charm builds and deploys ok.",
+    "dev: a quick development marker to run one test",
+    "standalone: integration tests that relate to standalone charm function",
+    "backend: integration tests that test backend relation to postgresql",
+    "legacy_relation: integration tests that test legacy client relations",
+]
 
 # Formatting tools configuration
 [tool.black]
@@ -20,20 +28,7 @@ target-version = ["py38"]
 [tool.isort]
 profile = "black"
 
-[tool.poetry]
-name = "zookeeper-operator"
-version = "1.0"
-description = "zookeeper-operator"
-authors = [""]
-
-[tool.poetry.dependencies]
-python = ">=3.8"
-black = "^22.3.0"
-kazoo = "^2.8.0"
-ops = "1.5.0"
-pure-sasl = "^0.6.2"
-tenacity = "^8.0.1"
-
+# Linting tools configuration
 [tool.flake8]
 max-line-length = 99
 max-doc-length = 99
