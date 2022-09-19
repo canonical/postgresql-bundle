@@ -243,10 +243,7 @@ async def deploy_postgres_bundle(
     """
     async with ops_test.fast_forward():
         await asyncio.gather(
-            ops_test.model.deploy(
-                PGB,
-                config=pgb_config, channel="edge"
-            ),
+            ops_test.model.deploy(PGB, config=pgb_config, channel="edge"),
             ops_test.model.deploy(
                 PG,
                 channel="edge",

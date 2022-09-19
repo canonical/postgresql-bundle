@@ -36,11 +36,7 @@ async def test_relate_pgbouncer_to_postgres(ops_test: OpsTest):
     # Build, deploy, and relate charms.
     async with ops_test.fast_forward():
         await asyncio.gather(
-            ops_test.model.deploy(
-                PGB,
-                channel="edge",
-                application_name=PGB
-            ),
+            ops_test.model.deploy(PGB, channel="edge", application_name=PGB),
             # Edge 5 is the new postgres charm
             ops_test.model.deploy(PG, channel="edge", trust=True, num_units=3),
         )
