@@ -9,7 +9,6 @@ import pytest
 import yaml
 from pytest_operator.plugin import OpsTest
 from tenacity import RetryError, Retrying, stop_after_delay, wait_fixed
-
 from tests.integration.helpers.helpers import (
     deploy_postgres_bundle,
     get_app_relation_databag,
@@ -22,7 +21,7 @@ from tests.integration.helpers.postgresql_helpers import check_database_users_ex
 logger = logging.getLogger(__name__)
 
 METADATA = yaml.safe_load(Path("./metadata.yaml").read_text())
-PGB = METADATA["name"]
+PGB = "pgbouncer"
 PG = "postgresql"
 RELATION = "backend-database"
 

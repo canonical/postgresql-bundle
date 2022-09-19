@@ -8,7 +8,6 @@ from pathlib import Path
 import pytest
 import yaml
 from pytest_operator.plugin import OpsTest
-
 from tests.integration.helpers.helpers import (
     get_app_relation_databag,
     get_backend_user_pass,
@@ -24,7 +23,7 @@ from tests.integration.helpers.postgresql_helpers import (
 )
 
 METADATA = yaml.safe_load(Path("./metadata.yaml").read_text())
-PGB = METADATA["name"]
+PGB = "pgbouncer-k8s"
 PG = "postgresql-k8s"
 FINOS_WALTZ = "finos-waltz"
 ANOTHER_FINOS_WALTZ = "another-finos-waltz"
@@ -36,19 +35,9 @@ logger = logging.getLogger(__name__)
 async def test_create_db_legacy_relation(ops_test: OpsTest):
     """Test that the pgbouncer and postgres charms can relate to one another."""
     # Build, deploy, and relate charms.
-    charm = await ops_test.build_charm(".")
-    resources = {
-        "pgbouncer-image": METADATA["resources"]["pgbouncer-image"]["upstream-source"],
-    }
-
     async with ops_test.fast_forward():
         await asyncio.gather(
-            ops_test.model.deploy(
-                charm,
-                resources=resources,
-                application_name=PGB,
-                num_units=3,
-            ),
+            ops_test.model.deploy(PGB, channel="edge", num_units=3),
             ops_test.model.deploy(PG, num_units=3, trust=True, channel="edge"),
             ops_test.model.deploy("finos-waltz-k8s", application_name=FINOS_WALTZ, channel="edge"),
         )

@@ -10,10 +10,9 @@ from typing import Dict
 
 import yaml
 from charms.pgbouncer_k8s.v0 import pgb
+from constants import AUTH_FILE_PATH, INI_PATH, LOG_PATH
 from pytest_operator.plugin import OpsTest
 from tenacity import RetryError, Retrying, stop_after_delay, wait_fixed
-
-from constants import AUTH_FILE_PATH, INI_PATH, LOG_PATH
 
 METADATA = yaml.safe_load(Path("./metadata.yaml").read_text())
 PGB = METADATA["name"]
@@ -242,13 +241,11 @@ async def deploy_postgres_bundle(
     Returns:
         libjuju Relation object describing the relation between pgbouncer and postgres.
     """
-    charm = await ops_test.build_charm(".")
     async with ops_test.fast_forward():
         await asyncio.gather(
             ops_test.model.deploy(
-                charm,
-                application_name=PGB,
-                config=pgb_config,
+                PGB,
+                config=pgb_config, channel="edge"
             ),
             ops_test.model.deploy(
                 PG,

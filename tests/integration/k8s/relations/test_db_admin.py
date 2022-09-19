@@ -8,7 +8,6 @@ from pathlib import Path
 import pytest
 import yaml
 from pytest_operator.plugin import OpsTest
-
 from tests.integration.helpers.helpers import (
     get_backend_user_pass,
     get_legacy_relation_username,
@@ -35,18 +34,9 @@ PG = "postgresql-k8s"
 @pytest.mark.legacy_relation
 async def test_create_db_admin_legacy_relation(ops_test: OpsTest):
     # Build, deploy, and relate charms.
-    charm = await ops_test.build_charm(".")
-    resources = {
-        "pgbouncer-image": METADATA["resources"]["pgbouncer-image"]["upstream-source"],
-    }
-
     async with ops_test.fast_forward():
         await asyncio.gather(
-            ops_test.model.deploy(
-                charm,
-                resources=resources,
-                application_name=PGB,
-            ),
+            ops_test.model.deploy(PGB, channel="edge"),
             ops_test.model.deploy(PG, trust=True, num_units=3, channel="edge"),
             ops_test.model.deploy(
                 FIRST_DISCOURSE_APP_NAME, application_name=FIRST_DISCOURSE_APP_NAME

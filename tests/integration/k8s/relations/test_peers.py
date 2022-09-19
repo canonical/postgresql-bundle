@@ -8,7 +8,6 @@ from pathlib import Path
 import pytest
 import yaml
 from pytest_operator.plugin import OpsTest
-
 from tests.integration.helpers.helpers import (
     scale_application,
     wait_for_relation_joined_between,
@@ -18,27 +17,10 @@ from tests.integration.helpers.helpers import (
 logger = logging.getLogger(__name__)
 
 METADATA = yaml.safe_load(Path("./metadata.yaml").read_text())
-PGB = METADATA["name"]
+PGB = "pgbouncer-k8s"
 PG = "postgresql-k8s"
 RELATION = "backend-database"
 FINOS_WALTZ = "finos-waltz"
-
-
-@pytest.mark.scaling
-@pytest.mark.abort_on_fail
-@pytest.mark.run(order=1)
-# TODO order marks aren't behaving
-async def test_deploy_at_scale(ops_test):
-    # Build, deploy, and relate charms.
-    charm = await ops_test.build_charm(".")
-    resources = {
-        "pgbouncer-image": METADATA["resources"]["pgbouncer-image"]["upstream-source"],
-    }
-    async with ops_test.fast_forward():
-        await ops_test.model.deploy(charm, resources=resources, application_name=PGB, num_units=3)
-        await ops_test.model.wait_for_idle(
-            apps=[PGB], status="active", timeout=1000, wait_for_exact_units=3
-        ),
 
 
 @pytest.mark.scaling
@@ -49,7 +31,7 @@ async def test_scaled_relations(ops_test: OpsTest):
     # Build, deploy, and relate charms.
     async with ops_test.fast_forward():
         await asyncio.gather(
-            # Edge 5 is the new postgres charm
+            ops_test.model.deploy(PGB, channel="edge"),
             ops_test.model.deploy(PG, channel="edge", trust=True, num_units=3),
             ops_test.model.deploy("finos-waltz-k8s", application_name=FINOS_WALTZ, channel="edge"),
         )

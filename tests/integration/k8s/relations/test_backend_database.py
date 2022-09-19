@@ -9,7 +9,6 @@ import pytest
 import yaml
 from pytest_operator.plugin import OpsTest
 from tenacity import RetryError, Retrying, stop_after_delay, wait_fixed
-
 from tests.integration.helpers.helpers import (
     get_app_relation_databag,
     get_backend_user_pass,
@@ -25,7 +24,7 @@ from tests.integration.helpers.postgresql_helpers import check_database_users_ex
 logger = logging.getLogger(__name__)
 
 METADATA = yaml.safe_load(Path("./metadata.yaml").read_text())
-PGB = METADATA["name"]
+PGB = "pgbouncer-k8s"
 PG = "postgresql-k8s"
 RELATION = "backend-database"
 
@@ -35,16 +34,12 @@ RELATION = "backend-database"
 async def test_relate_pgbouncer_to_postgres(ops_test: OpsTest):
     """Test that the pgbouncer and postgres charms can relate to one another."""
     # Build, deploy, and relate charms.
-    charm = await ops_test.build_charm(".")
-    resources = {
-        "pgbouncer-image": METADATA["resources"]["pgbouncer-image"]["upstream-source"],
-    }
     async with ops_test.fast_forward():
         await asyncio.gather(
             ops_test.model.deploy(
-                charm,
-                resources=resources,
-                application_name=PGB,
+                PGB,
+                channel="edge",
+                application_name=PGB
             ),
             # Edge 5 is the new postgres charm
             ops_test.model.deploy(PG, channel="edge", trust=True, num_units=3),

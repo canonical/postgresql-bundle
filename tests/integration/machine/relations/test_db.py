@@ -7,10 +7,9 @@ from pathlib import Path
 import psycopg2 as psycopg2
 import pytest
 import yaml
+from constants import PG
 from mailmanclient import Client
 from pytest_operator.plugin import OpsTest
-
-from constants import PG
 from tests.integration.helpers.helpers import (
     deploy_and_relate_application_with_pgbouncer_bundle,
     deploy_postgres_bundle,
@@ -24,7 +23,7 @@ from tests.integration.helpers.postgresql_helpers import (
 )
 
 METADATA = yaml.safe_load(Path("./metadata.yaml").read_text())
-PGB = METADATA["name"]
+PGB = "pgbouncer"
 
 logger = logging.getLogger(__name__)
 
