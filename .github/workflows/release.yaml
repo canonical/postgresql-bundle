@@ -6,10 +6,10 @@ on:
       - main
 
 jobs:
-  vm-integration:
+  integration:
     name: Integration tests
     runs-on: ubuntu-latest
-    uses: ./.github/workflows/vm_integrate.yaml
+    uses: ./.github/workflows/ci.yaml
 
   release-to-charmhub:
     name: Release to CharmHub

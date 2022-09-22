@@ -7,19 +7,19 @@ import psycopg2 as psycopg2
 import pytest
 from mailmanclient import Client
 from pytest_operator.plugin import OpsTest
-from tests.integration.vm.helpers.helpers import (
+from tests.integration.helpers.helpers import (
     deploy_and_relate_application_with_pgbouncer_bundle,
     deploy_postgres_bundle,
     get_backend_user_pass,
     get_legacy_relation_username,
 )
 
-from tests.integration.vm.helpers.postgresql_helpers import (
+from tests.integration.helpers.postgresql_helpers import (
     build_connection_string,
     check_database_users_existence,
     check_databases_creation,
 )
-from vm_constants import PG
+from constants import PG
 
 PGB = "pgbouncer"
 
