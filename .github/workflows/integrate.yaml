@@ -7,7 +7,7 @@ on:
 
 jobs:
   integration-test-lxd:
-    name: Integration tests for (lxd)
+    name: Integration tests for vm charm
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -22,7 +22,7 @@ jobs:
 
   integration-test-k8s:
     runs-on: ubuntu-latest
-    name: Integration tests for (lxd)
+    name: Integration tests for k8s charm
     steps:
       - name: Checkout
         uses: actions/checkout@v2
