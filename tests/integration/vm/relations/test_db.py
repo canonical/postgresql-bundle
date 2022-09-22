@@ -9,7 +9,7 @@ import pytest
 import yaml
 from mailmanclient import Client
 from pytest_operator.plugin import OpsTest
-from tests.integration.helpers.helpers import (
+from tests.integration.vm.helpers.helpers import (
     deploy_and_relate_application_with_pgbouncer_bundle,
     deploy_postgres_bundle,
     get_backend_user_pass,
