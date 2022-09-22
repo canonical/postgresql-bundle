@@ -1,25 +1,12 @@
 name: integration tests
 
 on:
+  workflow_call:
   pull_request:
   schedule:
     - cron:  '0 12 * * 3'
 
 jobs:
-  integration-test-lxd:
-    name: Integration tests for vm charm
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v2
-      - name: Setup operator environment
-        uses: charmed-kubernetes/actions-operator@main
-        with:
-          provider: lxd
-          lxd-channel: 5.4/stable
-      - name: Run machine integration tests
-        run: tox -e vm-integration
-
   integration-test-k8s:
     runs-on: ubuntu-latest
     name: Integration tests for k8s charm
