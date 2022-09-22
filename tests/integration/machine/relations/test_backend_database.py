@@ -9,7 +9,7 @@ import pytest
 import yaml
 from pytest_operator.plugin import OpsTest
 from tenacity import RetryError, Retrying, stop_after_delay, wait_fixed
-from tests.integration.helpers.helpers import (
+from tests.integration.machine.helpers.helpers import (
     deploy_postgres_bundle,
     get_app_relation_databag,
     get_backend_user_pass,

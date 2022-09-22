@@ -1,4 +1,4 @@
-name: bundle update avaiable
+name: bundle update available
 on:
   schedule:
     - cron:  '0 12 * * 1'
