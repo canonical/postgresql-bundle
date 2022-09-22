@@ -8,6 +8,7 @@ from pathlib import Path
 import pytest
 import yaml
 from pytest_operator.plugin import OpsTest
+
 from tests.integration.k8s.helpers.helpers import (
     scale_application,
     wait_for_relation_joined_between,

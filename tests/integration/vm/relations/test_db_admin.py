@@ -7,6 +7,7 @@ from pathlib import Path
 import pytest
 import yaml
 from pytest_operator.plugin import OpsTest
+
 from tests.integration.vm.helpers.helpers import (
     deploy_postgres_bundle,
     get_app_relation_databag,
