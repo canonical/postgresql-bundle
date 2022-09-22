@@ -6,16 +6,16 @@ on:
       - main
 
 jobs:
-
-  k8s-integration:
+  vm-integration:
     name: Integration tests
     runs-on: ubuntu-latest
-    uses: ./.github/workflows/k8s_integrate.yaml
+    uses: ./.github/workflows/vm_integrate.yaml
 
   release-to-charmhub:
     name: Release to CharmHub
     needs:
-      - k8s-integration
+      - vm_integration
+
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -28,8 +28,7 @@ jobs:
       - name: Upload bundle to edge
         uses: canonical/charming-actions/upload-bundle@1.0.0
         with:
+          bundle-path: releases/latest/vm/postgresql-bundle.yaml
           credentials: "${{ secrets.CHARMHUB_TOKEN }}"
           github-token: "${{ secrets.GITHUB_TOKEN }}"
-          resource-overrides: "pgbouncer-image:2"
           channel: "${{ steps.channel.outputs.name }}"
-
