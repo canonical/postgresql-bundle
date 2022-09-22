@@ -2,11 +2,9 @@
 # Copyright 2022 Canonical Ltd.
 # See LICENSE file for licensing details.
 import logging
-from pathlib import Path
 
 import psycopg2 as psycopg2
 import pytest
-import yaml
 from mailmanclient import Client
 from pytest_operator.plugin import OpsTest
 from tests.integration.vm.helpers.helpers import (
@@ -23,7 +21,6 @@ from tests.integration.vm.helpers.postgresql_helpers import (
 )
 from vm_constants import PG
 
-METADATA = yaml.safe_load(Path("./metadata.yaml").read_text())
 PGB = "pgbouncer"
 
 logger = logging.getLogger(__name__)

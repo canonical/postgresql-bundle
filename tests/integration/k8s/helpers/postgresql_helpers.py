@@ -2,14 +2,12 @@
 # Copyright 2022 Canonical Ltd.
 # See LICENSE file for licensing details.
 import itertools
-from pathlib import Path
 from typing import List
 
 import psycopg2
 import yaml
 from pytest_operator.plugin import OpsTest
 
-METADATA = yaml.safe_load(Path("./metadata.yaml").read_text())
 PG = "postgresql-k8s"
 
 

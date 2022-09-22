@@ -3,10 +3,8 @@
 
 import asyncio
 import logging
-from pathlib import Path
 
 import pytest
-import yaml
 from pytest_operator.plugin import OpsTest
 from tenacity import RetryError, Retrying, stop_after_delay, wait_fixed
 
@@ -23,7 +21,6 @@ from tests.integration.vm.helpers.postgresql_helpers import (
 
 logger = logging.getLogger(__name__)
 
-METADATA = yaml.safe_load(Path("./metadata.yaml").read_text())
 PGB = "pgbouncer"
 PG = "postgresql"
 RELATION = "backend-database"

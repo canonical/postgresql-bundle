@@ -4,18 +4,15 @@
 
 import json
 from multiprocessing import ProcessError
-from pathlib import Path
 from typing import Dict
 
-import yaml
 from charms.pgbouncer_k8s.v0 import pgb
 from pytest_operator.plugin import OpsTest
 from tenacity import RetryError, Retrying, stop_after_delay, wait_fixed
 
 from k8s_constants import AUTH_FILE_PATH, INI_PATH, LOG_PATH
 
-METADATA = yaml.safe_load(Path("./metadata.yaml").read_text())
-PGB = METADATA["name"]
+PGB = "pgbouncer-k8s"
 
 
 def get_backend_relation(ops_test: OpsTest):

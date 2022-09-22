@@ -2,10 +2,8 @@
 # Copyright 2022 Canonical Ltd.
 # See LICENSE file for licensing details.
 import logging
-from pathlib import Path
 
 import pytest
-import yaml
 from pytest_operator.plugin import OpsTest
 
 from tests.integration.vm.helpers.helpers import (
@@ -17,7 +15,6 @@ from tests.integration.vm.helpers.helpers import (
 
 logger = logging.getLogger(__name__)
 
-METADATA = yaml.safe_load(Path("./metadata.yaml").read_text())
 PGB = "pgbouncer"
 PG = "postgresql"
 PSQL = "psql"

@@ -27,7 +27,7 @@ FIRST_DISCOURSE_APP_NAME = "discourse-k8s"
 SECOND_DISCOURSE_APP_NAME = "discourse-charmers-discourse-k8s"
 REDIS_APP_NAME = "redis-k8s"
 METADATA = yaml.safe_load(Path("./metadata.yaml").read_text())
-PGB = METADATA["name"]
+PGB = "pgbouncer-k8s"
 PG = "postgresql-k8s"
 
 
