@@ -3,13 +3,13 @@ applications:
   pgbouncer:
     charm: pgbouncer
     channel: edge
-    revision: 7 # TODO latest version is 7 - add scaling tests!
+    revision: 7
     num_units: 1
     to:
     - "1"
     constraints: arch=amd64
   postgresql:
-    charm: cs:postgresql
+    charm: postgresql
     channel: edge
     revision: 254
     resources:
