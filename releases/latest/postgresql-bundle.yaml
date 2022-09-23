@@ -1,17 +1,17 @@
 series: focal
 applications:
   pgbouncer:
-    charm: pgbouncer
+    charm: cs:pgbouncer
     channel: edge
-    revision: 6
+    revision: 7
     num_units: 1
     to:
     - "1"
     constraints: arch=amd64
   postgresql:
-    charm: postgresql
+    charm: cs:postgresql
     channel: edge
-    revision: 251
+    revision: 254
     resources:
       patroni: 1
     num_units: 1
