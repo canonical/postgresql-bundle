@@ -234,13 +234,9 @@ def relation_exited(ops_test: OpsTest, endpoint_one: str, endpoint_two: str) -> 
 async def deploy_postgres_bundle(
     ops_test: OpsTest, pgb_config: dict = {}, pg_config: dict = {}, db_units=3
 ):
-    """Build pgbouncer charm, deploy and relate it to postgresql charm.
-
-    Returns:
-        libjuju Relation object describing the relation between pgbouncer and postgres.
-    """
+    """Build pgbouncer charm, deploy and relate it to postgresql charm."""
     async with ops_test.fast_forward():
-        await ops_test.model.deploy("./releases/latest/postgresql-bundle.yaml", trust=True)
+        await ops_test.model.deploy("./releases/latest/postgresql-bundle.yaml")
         await asyncio.gather(
             # ops_test.model.deploy(PGB, config=pgb_config, channel="edge"),
             # ops_test.model.deploy(
@@ -250,17 +246,8 @@ async def deploy_postgres_bundle(
             #     config=pg_config,
             # ),
         )
-        await asyncio.gather(
-            ops_test.model.wait_for_idle(
-                apps=[PG], status="active", timeout=1000, wait_for_exact_units=db_units
-            ),
-            ops_test.model.wait_for_idle(apps=[PGB], status="blocked", timeout=1000),
-        )
-        relation = await ops_test.model.add_relation(f"{PGB}:backend-database", f"{PG}:database")
         wait_for_relation_joined_between(ops_test, PG, PGB)
         await ops_test.model.wait_for_idle(apps=[PG, PGB], status="active", timeout=1000)
-
-        return relation
 
 
 async def deploy_and_relate_application_with_pgbouncer_bundle(
