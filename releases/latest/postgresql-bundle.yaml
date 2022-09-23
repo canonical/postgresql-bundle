@@ -9,7 +9,7 @@ applications:
     - "1"
     constraints: arch=amd64
   postgresql:
-    charm: cs:postgresql
+    charm: postgresql
     channel: edge
     revision: 254
     num_units: 1
