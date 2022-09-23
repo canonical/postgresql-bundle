@@ -240,6 +240,7 @@ async def deploy_postgres_bundle(
         libjuju Relation object describing the relation between pgbouncer and postgres.
     """
     async with ops_test.fast_forward():
+        await ops_test.model.deploy("./releases/latest/postgresql-bundle.yaml")
         await asyncio.gather(
             ops_test.model.deploy(PGB, config=pgb_config, channel="edge"),
             ops_test.model.deploy(

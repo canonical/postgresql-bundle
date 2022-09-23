@@ -20,6 +20,7 @@ applications:
     constraints: arch=amd64
     storage:
       pgdata: rootfs,1,1024M
+    trust: true
 machines:
   "0":
     constraints: arch=amd64
