@@ -12,8 +12,6 @@ applications:
     charm: cs:postgresql
     channel: edge
     revision: 254
-    resources:
-      patroni: 1
     num_units: 1
     to:
     - "0"
