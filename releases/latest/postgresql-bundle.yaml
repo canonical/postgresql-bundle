@@ -3,7 +3,7 @@ applications:
   pgbouncer:
     charm: cs:pgbouncer
     channel: edge
-    revision: 7
+    revision: 6 # TODO latest version is 7 - add scaling tests!
     num_units: 1
     to:
     - "1"
