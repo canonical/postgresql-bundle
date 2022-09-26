@@ -7,19 +7,20 @@ import psycopg2 as psycopg2
 import pytest
 from mailmanclient import Client
 from pytest_operator.plugin import OpsTest
+
+from constants import PG
 from tests.integration.helpers.helpers import (
     deploy_and_relate_application_with_pgbouncer_bundle,
     deploy_postgres_bundle,
+    get_backend_relation,
     get_backend_user_pass,
     get_legacy_relation_username,
 )
-
 from tests.integration.helpers.postgresql_helpers import (
     build_connection_string,
     check_database_users_existence,
     check_databases_creation,
 )
-from constants import PG
 
 PGB = "pgbouncer"
 
@@ -34,9 +35,10 @@ RELATION_NAME = "db"
 @pytest.mark.legacy_relation
 async def test_mailman3_core_db(ops_test: OpsTest) -> None:
     """Deploy Mailman3 Core to test the 'db' relation."""
-    backend_relation = await deploy_postgres_bundle(
+    await deploy_postgres_bundle(
         ops_test, db_units=DATABASE_UNITS, pgb_config={"listen_port": "5432"}
     )
+    backend_relation = await get_backend_relation(ops_test)
 
     async with ops_test.fast_forward():
         # Extra config option for Mailman3 Core.
