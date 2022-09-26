@@ -14,6 +14,7 @@ from tests.integration.helpers.helpers import (
     get_backend_user_pass,
     get_cfg,
     wait_for_relation_removed_between,
+    get_backend_relation,
 )
 from tests.integration.helpers.postgresql_helpers import check_database_users_existence
 
@@ -28,7 +29,8 @@ RELATION = "backend-database"
 async def test_relate_pgbouncer_to_postgres(ops_test: OpsTest):
     """Test that the pgbouncer and postgres charms can relate to one another."""
     # Build, deploy, and relate charms.
-    relation = await deploy_postgres_bundle(ops_test)
+    await deploy_postgres_bundle(ops_test)
+    relation = await get_backend_relation(ops_test)
 
     cfg = await get_cfg(ops_test, f"{PGB}/0")
     logger.info(cfg.render())
