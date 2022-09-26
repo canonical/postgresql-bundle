@@ -30,7 +30,7 @@ async def test_relate_pgbouncer_to_postgres(ops_test: OpsTest):
     """Test that the pgbouncer and postgres charms can relate to one another."""
     # Build, deploy, and relate charms.
     await deploy_postgres_bundle(ops_test)
-    relation = await get_backend_relation(ops_test)
+    relation = get_backend_relation(ops_test)
 
     cfg = await get_cfg(ops_test, f"{PGB}/0")
     logger.info(cfg.render())

@@ -38,7 +38,7 @@ async def test_mailman3_core_db(ops_test: OpsTest) -> None:
     await deploy_postgres_bundle(
         ops_test, db_units=DATABASE_UNITS, pgb_config={"listen_port": "5432"}
     )
-    backend_relation = await get_backend_relation(ops_test)
+    backend_relation = get_backend_relation(ops_test)
 
     async with ops_test.fast_forward():
         # Extra config option for Mailman3 Core.
