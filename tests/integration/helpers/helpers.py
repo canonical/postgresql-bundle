@@ -130,13 +130,10 @@ async def run_sql(ops_test, unit_name, command, pgpass, user, host, port, dbname
 
 def get_backend_relation(ops_test: OpsTest):
     """Gets the backend-database relation used to connect pgbouncer to the backend."""
-    pgb_name = ops_test.model.applications[PGB].name
-
     for rel in ops_test.model.relations:
         apps = [endpoint["application-name"] for endpoint in rel.data["endpoints"]]
-        if (pgb_name in apps and "postgresql" in apps):
+        if (PGB in apps and PG in apps):
             return rel
-
     return None
 
 
