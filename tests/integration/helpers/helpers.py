@@ -132,9 +132,10 @@ def get_backend_relation(ops_test: OpsTest):
     """Gets the backend-database relation used to connect pgbouncer to the backend."""
     app_name = ops_test.model.applications[PGB].name
     for rel in ops_test.model.relations:
+        endpoints = rel.data["endpoints"]
         if (
-            f"{app_name}:{BACKEND_RELATION_NAME}" in rel.endpoints
-            and f"postgresql:{BACKEND_RELATION_NAME}" in rel.endpoints
+            f"{app_name}:{BACKEND_RELATION_NAME}" in endpoints
+            and f"postgresql:{BACKEND_RELATION_NAME}" in endpoints
         ):
             return rel
 
