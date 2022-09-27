@@ -11,7 +11,7 @@ from charms.pgbouncer_k8s.v0 import pgb
 from pytest_operator.plugin import OpsTest
 from tenacity import RetryError, Retrying, stop_after_delay, wait_fixed
 
-from constants import AUTH_FILE_PATH, INI_PATH, LOG_PATH
+from constants import AUTH_FILE_PATH, BACKEND_RELATION_NAME, INI_PATH, LOG_PATH
 
 PGB = "pgbouncer"
 PG = "postgresql"
@@ -132,7 +132,10 @@ def get_backend_relation(ops_test: OpsTest):
     """Gets the backend-database relation used to connect pgbouncer to the backend."""
     app_name = ops_test.model.applications[PGB].name
     for rel in ops_test.model.relations:
-        if app_name in rel.endpoints and "postgresql" in rel.endpoints:
+        if (
+            f"{app_name}:{BACKEND_RELATION_NAME}" in rel.endpoints
+            and f"postgresql:{BACKEND_RELATION_NAME}" in rel.endpoints
+        ):
             return rel
 
     return None
@@ -148,9 +151,7 @@ def get_legacy_relation_username(ops_test: OpsTest, relation_id: int):
 async def get_backend_user_pass(ops_test, backend_relation):
     pgb_unit = ops_test.model.applications[PGB].units[0]
     backend_databag = await get_app_relation_databag(ops_test, pgb_unit.name, backend_relation.id)
-    pgb_user = backend_databag["username"]
-    pgb_password = backend_databag["password"]
-    return (pgb_user, pgb_password)
+    return (backend_databag["username"], backend_databag["password"])
 
 
 async def get_app_relation_databag(ops_test: OpsTest, unit_name: str, relation_id: int) -> Dict:
@@ -231,21 +232,10 @@ def relation_exited(ops_test: OpsTest, endpoint_one: str, endpoint_two: str) -> 
     return False
 
 
-async def deploy_postgres_bundle(
-    ops_test: OpsTest
-):
+async def deploy_postgres_bundle(ops_test: OpsTest):
     """Build pgbouncer charm, deploy and relate it to postgresql charm."""
     async with ops_test.fast_forward():
         await ops_test.model.deploy("./releases/latest/postgresql-bundle.yaml")
-        await asyncio.gather(
-            # ops_test.model.deploy(PGB, config=pgb_config, channel="edge"),
-            # ops_test.model.deploy(
-            #     PG,
-            #     channel="edge",
-            #     num_units=db_units,
-            #     config=pg_config,
-            # ),
-        )
         wait_for_relation_joined_between(ops_test, PG, PGB)
         await ops_test.model.wait_for_idle(apps=[PG, PGB], status="active", timeout=1000)
 

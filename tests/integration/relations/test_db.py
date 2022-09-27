@@ -35,9 +35,7 @@ RELATION_NAME = "db"
 @pytest.mark.legacy_relation
 async def test_mailman3_core_db(ops_test: OpsTest) -> None:
     """Deploy Mailman3 Core to test the 'db' relation."""
-    await deploy_postgres_bundle(
-        ops_test,
-    )
+    await deploy_postgres_bundle(ops_test)
     backend_relation = get_backend_relation(ops_test)
 
     async with ops_test.fast_forward():

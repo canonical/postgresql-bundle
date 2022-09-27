@@ -11,10 +11,10 @@ from tenacity import RetryError, Retrying, stop_after_delay, wait_fixed
 from tests.integration.helpers.helpers import (
     deploy_postgres_bundle,
     get_app_relation_databag,
+    get_backend_relation,
     get_backend_user_pass,
     get_cfg,
     wait_for_relation_removed_between,
-    get_backend_relation,
 )
 from tests.integration.helpers.postgresql_helpers import check_database_users_existence
 
