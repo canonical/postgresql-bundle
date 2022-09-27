@@ -232,7 +232,7 @@ def relation_exited(ops_test: OpsTest, endpoint_one: str, endpoint_two: str) -> 
 
 
 async def deploy_postgres_bundle(ops_test: OpsTest):
-    """Build pgbouncer charm, deploy and relate it to postgresql charm."""
+    """Deploy postgresql bundle."""
     async with ops_test.fast_forward():
         await ops_test.model.deploy("./releases/latest/postgresql-bundle.yaml")
         wait_for_relation_joined_between(ops_test, PG, PGB)
