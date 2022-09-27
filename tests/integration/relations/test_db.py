@@ -37,8 +37,13 @@ async def test_mailman3_core_db(ops_test: OpsTest) -> None:
     """Deploy Mailman3 Core to test the 'db' relation."""
     await deploy_postgres_bundle(ops_test)
     backend_relation = get_backend_relation(ops_test)
+    await ops_test.model.applications[PGB].set_config({"listen_port": "5432"})
 
     async with ops_test.fast_forward():
+        await ops_test.model.wait_for_idle(
+            apps=[PG], status="active", timeout=1000, wait_for_exact_units=3
+        )
+
         # Extra config option for Mailman3 Core.
         mailman_config = {"hostname": "example.org"}
         # Deploy and test the deployment of Mailman3 Core.
