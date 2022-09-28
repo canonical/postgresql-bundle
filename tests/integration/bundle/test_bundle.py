@@ -91,7 +91,7 @@ async def test_kill_pg_primary(ops_test: OpsTest):
 
 @pytest.mark.bundle
 async def test_discover_dbs(ops_test: OpsTest):
-    """Check that proxy discovered new members during postgres charm scale-up."""
+    """Check that proxy discovers new members when scaling up postgres charm."""
     # Check existing relation data
     initial_relation = get_backend_relation(ops_test)
     # Get postgres primary through action
