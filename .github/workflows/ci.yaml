@@ -7,6 +7,16 @@ on:
     - cron:  '0 12 * * 3'
 
 jobs:
+  lint:
+    name: Lint
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Install dependencies
+        run: python3 -m pip install tox
+      - name: Run linters
+        run: tox -e lint
 
   integration-backend:
     name: Integration tests for backend relation
@@ -37,7 +47,7 @@ jobs:
         run: tox -e legacy-relation-integration
 
   integration-bundle:
-    name: Integration tests for legacy relations
+    name: Bundle-specific integration tests
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
