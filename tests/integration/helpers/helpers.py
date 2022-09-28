@@ -256,7 +256,7 @@ async def deploy_and_relate_application_with_pgbouncer(
             the application to.
 
     Returns:
-        the id of the created relation.
+        Relation object representing the  created relation.
     """
     # Deploy application.
     await ops_test.model.deploy(

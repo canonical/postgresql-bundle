@@ -16,7 +16,11 @@ from tests.integration.helpers.helpers import (
     scale_application,
     deploy_and_relate_application_with_pgbouncer,
     get_backend_relation,
+    get_backend_user_pass,
+    get_legacy_relation_username
 )
+
+from tests.integration.helpers.postgresql_helpers import check_databases_creation, check_database_users_existence
 
 logger = logging.getLogger(__name__)
 
@@ -52,6 +56,14 @@ async def test_setup(ops_test: OpsTest):
             1,
             mailman_config,
         )
+
+    pgb_user, pgb_pass = await get_backend_user_pass(ops_test, get_backend_relation(ops_test))
+    await check_databases_creation(ops_test, ["mailman3"], pgb_user, pgb_pass)
+
+    mailman3_core_users = get_legacy_relation_username(ops_test, db_relation.id)
+    await check_database_users_existence(
+        ops_test, [mailman3_core_users], [], pgb_user, pgb_pass
+    )
 
     # Assert Mailman3 Core is configured to use PostgreSQL instead of SQLite.
     mailman_unit = ops_test.model.applications[MAILMAN3_CORE_APP_NAME].units[0]
