@@ -25,7 +25,6 @@ jobs:
       - name: Upload bundle to edge
         uses: canonical/charming-actions/upload-bundle@1.0.0
         with:
-          bundle-path: ./releases/latest/postgresql-bundle.yaml
           credentials: "${{ secrets.CHARMHUB_TOKEN }}"
           github-token: "${{ secrets.GITHUB_TOKEN }}"
           channel: "${{ steps.channel.outputs.name }}"
