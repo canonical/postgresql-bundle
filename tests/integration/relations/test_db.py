@@ -3,7 +3,6 @@
 # See LICENSE file for licensing details.
 import logging
 
-import psycopg2 as psycopg2
 import pytest
 from mailmanclient import Client
 from pytest_operator.plugin import OpsTest
@@ -17,7 +16,6 @@ from tests.integration.helpers.helpers import (
     get_legacy_relation_username,
 )
 from tests.integration.helpers.postgresql_helpers import (
-    build_connection_string,
     check_database_users_existence,
     check_databases_creation,
 )

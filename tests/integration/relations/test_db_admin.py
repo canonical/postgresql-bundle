@@ -6,6 +6,7 @@ import logging
 import pytest
 from pytest_operator.plugin import OpsTest
 
+from constants import DB_ADMIN_RELATION_NAME, PG, PGB
 from tests.integration.helpers.helpers import (
     deploy_postgres_bundle,
     get_app_relation_databag,
@@ -15,7 +16,6 @@ from tests.integration.helpers.helpers import (
 
 logger = logging.getLogger(__name__)
 
-from constants import DB_ADMIN_RELATION_NAME, PG, PGB
 
 PSQL = "psql"
 
