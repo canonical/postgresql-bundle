@@ -11,10 +11,7 @@ from charms.pgbouncer_k8s.v0 import pgb
 from pytest_operator.plugin import OpsTest
 from tenacity import RetryError, Retrying, stop_after_delay, wait_fixed
 
-from constants import AUTH_FILE_PATH, BACKEND_RELATION_NAME, INI_PATH, LOG_PATH
-
-PGB = "pgbouncer"
-PG = "postgresql"
+from constants import AUTH_FILE_PATH, INI_PATH, LOG_PATH, PGB, PG
 
 
 async def get_unit_address(ops_test: OpsTest, application_name: str, unit_name: str) -> str:

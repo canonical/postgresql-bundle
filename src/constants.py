@@ -4,7 +4,7 @@
 """Literals for the PgBouncer machine charm."""
 
 PGB = "pgbouncer"
-PG = "postgres"
+PG = "postgresql"
 PGB_DIR = "/var/lib/postgresql/pgbouncer"
 INI_PATH = f"{PGB_DIR}/pgbouncer.ini"
 AUTH_FILE_PATH = f"{PGB_DIR}/userlist.txt"
