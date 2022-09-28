@@ -24,7 +24,7 @@ MAILMAN3_CORE_APP_NAME = "mailman3-core"
 
 @pytest.mark.bundle
 @pytest.mark.abort_on_fail
-async def deploy_bundle(ops_test: OpsTest):
+async def test_setup(ops_test: OpsTest):
     """Deploy bundle and set up mailman for testing.
 
     We're adding an application to ensure that related applications stay online during service
