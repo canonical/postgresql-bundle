@@ -74,7 +74,11 @@ async def test_setup(ops_test: OpsTest):
 
 @pytest.mark.bundle
 async def test_kill_pg_primary(ops_test: OpsTest):
-    """Kill primary, check that all proxy instances switched traffic for a new primary."""
+    """Kill primary, check that all proxy instances switched traffic for a new primary.
+
+    TODO mailman doesn't connect to all proxy instances. Spool through proxy instances and verify
+    (using their databags) that all proxy instances have switched to a new primary.
+    """
     # Get postgres primary through action
     unit_name = ops_test.model.applications[PG].units[0].name
     action = await ops_test.model.units.get(unit_name).run_action("get-primary")
