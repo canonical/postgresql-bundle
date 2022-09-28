@@ -12,7 +12,7 @@ from constants import PG, PGB
 from tests.integration.helpers.helpers import (
     deploy_postgres_bundle,
     scale_application,
-    deploy_and_relate_application_with_pgbouncer_bundle
+    deploy_and_relate_application_with_pgbouncer
 
 )
 
@@ -36,13 +36,13 @@ async def deploy_bundle(ops_test: OpsTest):
         )
         await ops_test.model.applications[PGB].set_config({"listen_port": "5432"})
         await ops_test.model.wait_for_idle(
-            apps=[PG], status="active", timeout=1000, wait_for_exact_units=1
+            apps=[PG], status="active", timeout=600
         )
 
         # Extra config option for Mailman3 Core.
         mailman_config = {"hostname": "example.org"}
         # Deploy and test the deployment of Mailman3 Core.
-        db_relation = await deploy_and_relate_application_with_pgbouncer_bundle(
+        db_relation = await deploy_and_relate_application_with_pgbouncer(
             ops_test,
             MAILMAN3_CORE_APP_NAME,
             MAILMAN3_CORE_APP_NAME,
@@ -62,6 +62,14 @@ async def test_kill_pg_primary(ops_test: OpsTest):
     """Kill primary, check that all proxy instances switched traffic for a new primary."""
 
     # TODO kill primary
+    # Get postgres primary through action
+    unit_name = ops_test.model.applications[PG].units[0].name
+    action = await ops_test.model.units.get(unit_name).run_action("get-primary")
+    action = await action.wait()
+    primary = action.results["primary"]
+
+    await ops_test.model.destroy_units(primary)
+    await ops_test.model.wait_for_idle(apps=[PG, PGB, MAILMAN3_CORE_APP_NAME], status="active", timeout=600)
 
     # Do some CRUD operations using Mailman3 Core client to ensure it's still working.
     mailman_unit = ops_test.model.applications[MAILMAN3_CORE_APP_NAME].units[0]

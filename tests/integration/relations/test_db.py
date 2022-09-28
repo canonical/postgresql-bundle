@@ -9,7 +9,7 @@ from pytest_operator.plugin import OpsTest
 
 from constants import PG, PGB
 from tests.integration.helpers.helpers import (
-    deploy_and_relate_application_with_pgbouncer_bundle,
+    deploy_and_relate_application_with_pgbouncer,
     deploy_postgres_bundle,
     get_backend_relation,
     get_backend_user_pass,
@@ -41,7 +41,7 @@ async def test_mailman3_core_db(ops_test: OpsTest) -> None:
         # Extra config option for Mailman3 Core.
         mailman_config = {"hostname": "example.org"}
         # Deploy and test the deployment of Mailman3 Core.
-        db_relation = await deploy_and_relate_application_with_pgbouncer_bundle(
+        db_relation = await deploy_and_relate_application_with_pgbouncer(
             ops_test,
             "mailman3-core",
             MAILMAN3_CORE_APP_NAME,

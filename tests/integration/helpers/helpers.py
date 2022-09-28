@@ -232,7 +232,7 @@ async def deploy_postgres_bundle(ops_test: OpsTest):
         await ops_test.model.wait_for_idle(apps=[PG, PGB], status="active", timeout=1000)
 
 
-async def deploy_and_relate_application_with_pgbouncer_bundle(
+async def deploy_and_relate_application_with_pgbouncer(
     ops_test: OpsTest,
     charm: str,
     application_name: str,
@@ -241,7 +241,7 @@ async def deploy_and_relate_application_with_pgbouncer_bundle(
     channel: str = "stable",
     relation: str = "db",
 ):
-    """Helper function to deploy and relate application with Pgbouncer cluster.
+    """Helper function to deploy and relate application with pgbouncer.
 
     This assumes pgbouncer already exists and is related to postgres
 
