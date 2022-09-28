@@ -11,9 +11,11 @@ from constants import PG, PGB
 
 from tests.integration.helpers.helpers import (
     deploy_postgres_bundle,
+    get_app_relation_databag,
+    get_backend_relation,
     scale_application,
-    deploy_and_relate_application_with_pgbouncer
-
+    deploy_and_relate_application_with_pgbouncer,
+    get_backend_relation,
 )
 
 logger = logging.getLogger(__name__)
@@ -28,12 +30,13 @@ async def deploy_bundle(ops_test: OpsTest):
     We're adding an application to ensure that related applications stay online during service
     interruptions.
     """
+    await deploy_postgres_bundle(ops_test)
+    await asyncio.gather(
+        scale_application(ops_test, PG, 3),
+        scale_application(ops_test, PGB, 3),
+    )
+
     async with ops_test.fast_forward():
-        await deploy_postgres_bundle(ops_test)
-        await asyncio.gather(
-            scale_application(ops_test, PG, 3),
-            scale_application(ops_test, PGB, 3),
-        )
         await ops_test.model.applications[PGB].set_config({"listen_port": "5432"})
         await ops_test.model.wait_for_idle(
             apps=[PG], status="active", timeout=600
@@ -60,8 +63,6 @@ async def deploy_bundle(ops_test: OpsTest):
 @pytest.mark.bundle
 async def test_kill_pg_primary(ops_test: OpsTest):
     """Kill primary, check that all proxy instances switched traffic for a new primary."""
-
-    # TODO kill primary
     # Get postgres primary through action
     unit_name = ops_test.model.applications[PG].units[0].name
     action = await ops_test.model.units.get(unit_name).run_action("get-primary")
@@ -84,5 +85,51 @@ async def test_kill_pg_primary(ops_test: OpsTest):
     )
 
     # Create a domain and list the domains to check that the new one is there.
-    domain = client.create_domain(domain_name)
+    client.create_domain(domain_name)
     assert domain_name in [domain.mail_host for domain in client.domains]
+
+
+@pytest.mark.bundle
+async def test_discover_dbs(ops_test: OpsTest):
+    """Check that proxy discovered new members during postgres charm scale-up."""
+    # Check existing relation data
+    initial_relation = get_backend_relation(ops_test)
+    # Get postgres primary through action
+    unit_name = ops_test.model.applications[PG].units[0].name
+    action = await ops_test.model.units.get(unit_name).run_action("get-primary")
+    action = await action.wait()
+    primary = action.results["primary"]
+
+    pgb_unit = ops_test.model.applications[PGB].units[0].name
+    backend_databag = get_app_relation_databag(ops_test, pgb_unit, initial_relation.id)
+    read_only_endpoints = backend_databag["read-only-endpoints"].split(",")
+    assert len(read_only_endpoints) == 2
+    for unit in ops_test.model.applications[PG].units:
+        if unit.name == primary:
+            continue
+        unit_addr = f"{unit.public_address}:5432"
+        if unit_addr in read_only_endpoints:
+            read_only_endpoints.remove(unit_addr)
+        else:
+            assert False, f"unit addr: {unit_addr} not in read_only_endpoints {read_only_endpoints}"
+
+    assert read_only_endpoints == []
+
+    # Add a new unit
+    scale_application(ops_test, PG, 4)
+
+    # check relation databag updates after adding a new unit
+    updated_relation = get_backend_relation(ops_test)
+    updated_backend_databag = get_app_relation_databag(ops_test, pgb_unit, updated_relation.id)
+    read_only_endpoints = updated_backend_databag["read-only-endpoints"].split(",")
+    assert len(read_only_endpoints) == 3
+    for unit in ops_test.model.applications[PG].units:
+        if unit.name == primary:
+            continue
+        unit_addr = f"{unit.public_address}:5432"
+        if unit_addr in read_only_endpoints:
+            read_only_endpoints.remove(unit_addr)
+        else:
+            assert False, f"unit addr: {unit_addr} not in read_only_endpoints {read_only_endpoints}"
+
+    assert read_only_endpoints == []
