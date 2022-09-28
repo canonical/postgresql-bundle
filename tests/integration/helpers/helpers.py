@@ -11,7 +11,7 @@ from charms.pgbouncer_k8s.v0 import pgb
 from pytest_operator.plugin import OpsTest
 from tenacity import RetryError, Retrying, stop_after_delay, wait_fixed
 
-from constants import AUTH_FILE_PATH, INI_PATH, LOG_PATH, PGB, PG
+from constants import AUTH_FILE_PATH, INI_PATH, LOG_PATH, PG, PGB
 
 
 async def get_unit_address(ops_test: OpsTest, application_name: str, unit_name: str) -> str:
@@ -129,7 +129,7 @@ def get_backend_relation(ops_test: OpsTest):
     """Gets the backend-database relation used to connect pgbouncer to the backend."""
     for rel in ops_test.model.relations:
         apps = [endpoint["application-name"] for endpoint in rel.data["endpoints"]]
-        if (PGB in apps and PG in apps):
+        if PGB in apps and PG in apps:
             return rel
     return None
 

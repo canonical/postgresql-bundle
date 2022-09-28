@@ -8,7 +8,7 @@ import psycopg2
 import yaml
 from pytest_operator.plugin import OpsTest
 
-PG = "postgresql"
+from constants import PG
 
 
 async def build_connection_string(

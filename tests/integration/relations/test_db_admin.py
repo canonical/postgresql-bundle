@@ -15,10 +15,9 @@ from tests.integration.helpers.helpers import (
 
 logger = logging.getLogger(__name__)
 
-PGB = "pgbouncer"
-PG = "postgresql"
+from constants import DB_ADMIN_RELATION_NAME, PG, PGB
+
 PSQL = "psql"
-RELATION = "db-admin"
 
 
 @pytest.mark.legacy_relation
@@ -30,7 +29,7 @@ async def test_db_admin_with_psql(ops_test: OpsTest) -> None:
     )
     await deploy_postgres_bundle(ops_test)
 
-    psql_relation = await ops_test.model.relate(f"{PSQL}:db", f"{PGB}:{RELATION}")
+    psql_relation = await ops_test.model.relate(f"{PSQL}:db", f"{PGB}:{DB_ADMIN_RELATION_NAME}")
     wait_for_relation_joined_between(ops_test, PGB, PSQL)
     await ops_test.model.wait_for_idle(
         apps=[PSQL, PG, PGB],

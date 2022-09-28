@@ -20,9 +20,7 @@ from tests.integration.helpers.postgresql_helpers import check_database_users_ex
 
 logger = logging.getLogger(__name__)
 
-PGB = "pgbouncer"
-PG = "postgresql"
-RELATION = "backend-database"
+from constants import BACKEND_RELATION_NAME, PG, PGB
 
 
 @pytest.mark.backend
@@ -41,7 +39,9 @@ async def test_relate_pgbouncer_to_postgres(ops_test: OpsTest):
     await check_database_users_existence(ops_test, [pgb_user], [], pgb_user, pgb_password)
 
     # Remove relation but keep pg application because we're going to need it for future tests.
-    await ops_test.model.applications[PG].remove_relation(f"{PGB}:{RELATION}", f"{PG}:database")
+    await ops_test.model.applications[PG].remove_relation(
+        f"{PGB}:{BACKEND_RELATION_NAME}", f"{PG}:database"
+    )
     pgb_unit = ops_test.model.applications[PGB].units[0]
     logger.info(await get_app_relation_databag(ops_test, pgb_unit.name, relation.id))
     wait_for_relation_removed_between(ops_test, PG, PGB)

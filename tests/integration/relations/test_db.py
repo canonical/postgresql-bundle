@@ -8,6 +8,7 @@ import pytest
 from mailmanclient import Client
 from pytest_operator.plugin import OpsTest
 
+from constants import PG, PGB
 from tests.integration.helpers.helpers import (
     deploy_and_relate_application_with_pgbouncer_bundle,
     deploy_postgres_bundle,
@@ -21,15 +22,10 @@ from tests.integration.helpers.postgresql_helpers import (
     check_databases_creation,
 )
 
-PGB = "pgbouncer"
-PG = "postgresql"
-
 logger = logging.getLogger(__name__)
 
 MAILMAN3_CORE_APP_NAME = "mailman3-core"
 APPLICATION_UNITS = 1
-DATABASE_UNITS = 1
-RELATION_NAME = "db"
 
 
 @pytest.mark.legacy_relation
