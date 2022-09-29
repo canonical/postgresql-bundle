@@ -43,7 +43,7 @@ jobs:
     strategy:
       fail-fast: false
     env:
-      CHARMCRAFT_AUTH: ${{ secrets.CHARMCRAFT_CREDENTIALS }}
+      CHARMCRAFT_AUTH: ${{ secrets.CHARMHUB_TOKEN }}
     steps:
       - uses: actions/checkout@v2
       - name: Install dependencies
