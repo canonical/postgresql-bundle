@@ -1,5 +1,8 @@
 name: bundle update available
 on:
+  push:
+    branches:
+      - main
   schedule:
     - cron:  '0 */8 * * 1-5'
 
