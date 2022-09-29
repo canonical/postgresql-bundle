@@ -24,7 +24,7 @@ jobs:
           pwd
           whoami
           ls -al
-          cat ./releases/latest/postgresql-bundle.yaml
+          cat ./releases/latest
           tree
       - name: Select charmhub channel
         uses: canonical/charming-actions/channel@2.0.0-rc
@@ -32,7 +32,7 @@ jobs:
       - name: Upload bundle to edge
         uses: canonical/charming-actions/upload-bundle@1.0.0
         with:
-          bundle-path: ./releases/latest/postgresql-bundle.yaml
+          bundle-path: ./releases/latest
           credentials: "${{ secrets.CHARMHUB_TOKEN }}"
           github-token: "${{ secrets.GITHUB_TOKEN }}"
           channel: "${{ steps.channel.outputs.name }}"
