@@ -12,8 +12,6 @@ jobs:
   publish-bundle:
     name: Publish bundle
     runs-on: ubuntu-latest
-    strategy:
-      fail-fast: false
     needs:
       - integration-test
     env:
