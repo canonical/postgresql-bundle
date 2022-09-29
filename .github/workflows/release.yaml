@@ -24,7 +24,6 @@ jobs:
           pwd
           whoami
           ls -al
-          cat ./releases/latest
           tree
       - name: Select charmhub channel
         uses: canonical/charming-actions/channel@2.0.0-rc
