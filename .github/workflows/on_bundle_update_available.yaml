@@ -31,7 +31,7 @@ jobs:
           labels: |
             automated pr
           assignees: team-reviewers,WRFitch
-          reviewers: team-reviewers,WRFitch
+          reviewers: team-reviewers
           team-reviewers: |
             owners
             maintainers
