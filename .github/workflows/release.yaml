@@ -14,6 +14,8 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
+    needs:
+      - integration-test
     env:
       CHARMCRAFT_AUTH: ${{ secrets.CHARMHUB_TOKEN }}
     steps:
