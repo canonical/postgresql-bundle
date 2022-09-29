@@ -6,13 +6,13 @@ on:
       - main
 
 jobs:
-  integration-test:
-    uses: ./.github/workflows/ci.yaml
+  #integration-test:
+  #  uses: ./.github/workflows/ci.yaml
 
   release-to-charmhub:
     name: Release to CharmHub
-    needs:
-      - integration-test
+    #needs:
+    #  - integration-test
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
