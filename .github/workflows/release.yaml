@@ -19,6 +19,12 @@ jobs:
         uses: actions/checkout@v2
         with:
           fetch-depth: 0
+      - name: Test location
+        run: |
+          pwd
+          whoami
+          ls -al
+          tree
       - name: Select charmhub channel
         uses: canonical/charming-actions/channel@2.0.0-rc
         id: channel
