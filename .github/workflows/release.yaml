@@ -54,7 +54,7 @@ jobs:
           # Use a temporary directory to support publishing any of the bundles in this root dir
           BUILD_DIR=.bundle_build
           mkdir $BUILD_DIR
-          cp ./release/latest/postgresql-bundle.yaml $BUILD_DIR/bundle.yaml
+          cp ./releases/latest/postgresql-bundle.yaml $BUILD_DIR/bundle.yaml
           cp charmcraft.yaml $BUILD_DIR
           cp README.md $BUILD_DIR
           cd $BUILD_DIR
