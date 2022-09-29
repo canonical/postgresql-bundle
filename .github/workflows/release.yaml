@@ -9,29 +9,57 @@ jobs:
   #integration-test:
   #  uses: ./.github/workflows/ci.yaml
 
-  release-to-charmhub:
-    name: Release to CharmHub
-    #needs:
-    #  - integration-test
+  #release-to-charmhub:
+  #  name: Release to CharmHub
+  #  #needs:
+  #  #  - integration-test
+  #  runs-on: ubuntu-latest
+  #  steps:
+  #    - name: Checkout
+  #      uses: actions/checkout@v2
+  #      with:
+  #        fetch-depth: 0
+  #    - name: Test location
+  #      run: |
+  #        pwd
+  #
+  #whoami
+ #         ls -al
+ #         tree
+ #     - name: Select charmhub channel
+ #       uses: canonical/charming-actions/channel@2.0.0-rc
+ #       id: channel
+ #     - name: Upload bundle to edge
+ #       uses: canonical/charming-actions/upload-bundle@1.0.0
+ #       with:
+ #         bundle-path: ./releases/latest
+ #         credentials: "${{ secrets.CHARMHUB_TOKEN }}"
+ #         github-token: "${{ secrets.GITHUB_TOKEN }}"
+ #         channel: "${{ steps.channel.outputs.name }}"
+          
+  publish-bundle:
+    name: Publish bundle
     runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+    env:
+      CHARMCRAFT_AUTH: ${{ secrets.CHARMCRAFT_CREDENTIALS }}
     steps:
-      - name: Checkout
-        uses: actions/checkout@v2
-        with:
-          fetch-depth: 0
-      - name: Test location
+      - uses: actions/checkout@v2
+      - name: Install dependencies
+        run: sudo snap install charmcraft --classic
+      - name: Pack and publish bundle
         run: |
-          pwd
-          whoami
-          ls -al
-          tree
-      - name: Select charmhub channel
-        uses: canonical/charming-actions/channel@2.0.0-rc
-        id: channel
-      - name: Upload bundle to edge
-        uses: canonical/charming-actions/upload-bundle@1.0.0
-        with:
-          bundle-path: ./releases/latest
-          credentials: "${{ secrets.CHARMHUB_TOKEN }}"
-          github-token: "${{ secrets.GITHUB_TOKEN }}"
-          channel: "${{ steps.channel.outputs.name }}"
+          set -ex
+          # Use a temporary directory to support publishing any of the bundles in this root dir
+          BUILD_DIR=.bundle_build
+          mkdir $BUILD_DIR
+          cp ./release/latest/postgresql-bundle.yaml $BUILD_DIR/bundle.yaml
+          cp charmcraft.yaml $BUILD_DIR
+          cp README.md $BUILD_DIR
+          cd $BUILD_DIR
+          charmcraft pack --destructive-mode
+          charmcraft upload ./*.zip
+          export REVISION=$(charmcraft revisions postgresql-bundle 2>&1 | awk 'NR==2 {print $1}')
+          charmcraft release postgresql-bundle --revision $REVISION --channel=latest/edge
+
