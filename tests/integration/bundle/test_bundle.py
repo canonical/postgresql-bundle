@@ -5,26 +5,28 @@ import asyncio
 import logging
 
 import pytest
-from pytest_operator.plugin import OpsTest
 from mailmanclient import Client
-from constants import PG, PGB
+from pytest_operator.plugin import OpsTest
 
+from constants import PG, PGB
 from tests.integration.helpers.helpers import (
+    deploy_and_relate_application_with_pgbouncer,
     deploy_postgres_bundle,
     get_app_relation_databag,
     get_backend_relation,
-    scale_application,
-    deploy_and_relate_application_with_pgbouncer,
-    get_backend_relation,
     get_backend_user_pass,
-    get_legacy_relation_username
+    get_legacy_relation_username,
+    scale_application,
 )
-
-from tests.integration.helpers.postgresql_helpers import check_databases_creation, check_database_users_existence
+from tests.integration.helpers.postgresql_helpers import (
+    check_database_users_existence,
+    check_databases_creation,
+)
 
 logger = logging.getLogger(__name__)
 
 MAILMAN3_CORE_APP_NAME = "mailman3-core"
+
 
 @pytest.mark.bundle
 @pytest.mark.abort_on_fail
@@ -42,9 +44,7 @@ async def test_setup(ops_test: OpsTest):
 
     async with ops_test.fast_forward():
         await ops_test.model.applications[PGB].set_config({"listen_port": "5432"})
-        await ops_test.model.wait_for_idle(
-            apps=[PG], status="active", timeout=600
-        )
+        await ops_test.model.wait_for_idle(apps=[PG], status="active", timeout=600)
 
         # Extra config option for Mailman3 Core.
         mailman_config = {"hostname": "example.org"}
@@ -61,9 +61,7 @@ async def test_setup(ops_test: OpsTest):
     await check_databases_creation(ops_test, ["mailman3"], pgb_user, pgb_pass)
 
     mailman3_core_users = get_legacy_relation_username(ops_test, db_relation.id)
-    await check_database_users_existence(
-        ops_test, [mailman3_core_users], [], pgb_user, pgb_pass
-    )
+    await check_database_users_existence(ops_test, [mailman3_core_users], [], pgb_user, pgb_pass)
 
     # Assert Mailman3 Core is configured to use PostgreSQL instead of SQLite.
     mailman_unit = ops_test.model.applications[MAILMAN3_CORE_APP_NAME].units[0]
@@ -86,7 +84,9 @@ async def test_kill_pg_primary(ops_test: OpsTest):
     primary = action.results["primary"]
 
     await ops_test.model.destroy_units(primary)
-    await ops_test.model.wait_for_idle(apps=[PG, PGB, MAILMAN3_CORE_APP_NAME], status="active", timeout=600)
+    await ops_test.model.wait_for_idle(
+        apps=[PG, PGB, MAILMAN3_CORE_APP_NAME], status="active", timeout=600
+    )
 
     # Do some CRUD operations using Mailman3 Core client to ensure it's still working.
     mailman_unit = ops_test.model.applications[MAILMAN3_CORE_APP_NAME].units[0]
@@ -127,7 +127,9 @@ async def test_discover_dbs(ops_test: OpsTest):
         if unit_addr in read_only_endpoints:
             read_only_endpoints.remove(unit_addr)
         else:
-            assert False, f"unit addr: {unit_addr} not in read_only_endpoints {read_only_endpoints}"
+            assert (
+                False
+            ), f"unit addr: {unit_addr} not in read_only_endpoints {read_only_endpoints}"
 
     assert read_only_endpoints == []
 
@@ -146,6 +148,8 @@ async def test_discover_dbs(ops_test: OpsTest):
         if unit_addr in read_only_endpoints:
             read_only_endpoints.remove(unit_addr)
         else:
-            assert False, f"unit addr: {unit_addr} not in read_only_endpoints {read_only_endpoints}"
+            assert (
+                False
+            ), f"unit addr: {unit_addr} not in read_only_endpoints {read_only_endpoints}"
 
     assert read_only_endpoints == []

@@ -297,7 +297,8 @@ async def scale_application(ops_test: OpsTest, application_name: str, count: int
             await ops_test.model.applications[application_name].add_units(change)
         elif change < 0:
             units = [
-                unit.name for unit in ops_test.model.applications[application_name].units[0:-change]
+                unit.name
+                for unit in ops_test.model.applications[application_name].units[0:-change]
             ]
             await ops_test.model.applications[application_name].destroy_units(*units)
         await ops_test.model.wait_for_idle(
