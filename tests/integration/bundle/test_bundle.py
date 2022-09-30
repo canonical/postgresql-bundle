@@ -1,7 +1,6 @@
 # Copyright 2022 Canonical Ltd.
 # See LICENSE file for licensing details.
 
-import asyncio
 import logging
 
 import pytest
@@ -120,6 +119,7 @@ async def test_kill_pg_primary(ops_test: OpsTest):
         unit_cfg = await get_cfg(ops_test, unit.name)
         assert unit_cfg["database"]["mailman3"]["host"] == primary_ip
         assert unit_cfg["database"]["mailman3_standby"]["host"] != primary_ip
+
 
 @pytest.mark.bundle
 async def test_discover_dbs(ops_test: OpsTest):
