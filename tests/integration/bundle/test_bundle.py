@@ -110,6 +110,7 @@ async def test_kill_pg_primary(ops_test: OpsTest):
     assert domain_name in [domain.mail_host for domain in client.domains]
 
     # Assert pgbouncer config points to the new correct primary
+    unit_name = ops_test.model.applications[PG].units[0].name
     action = await ops_test.model.units.get(unit_name).run_action("get-primary")
     action = await action.wait()
     new_primary = action.results["primary"]
@@ -126,8 +127,6 @@ async def test_kill_pg_primary(ops_test: OpsTest):
 async def test_discover_dbs(ops_test: OpsTest):
     """Check that proxy discovers new members when scaling up postgres charm."""
     scale_application(ops_test, PG, 3)
-    # Check existing relation data
-    initial_relation = get_backend_relation(ops_test)
     # Get postgres primary through action
     unit_name = ops_test.model.applications[PG].units[0].name
     action = await ops_test.model.units.get(unit_name).run_action("get-primary")
@@ -135,21 +134,18 @@ async def test_discover_dbs(ops_test: OpsTest):
     primary = action.results["primary"]
 
     pgb_unit = ops_test.model.applications[PGB].units[0].name
+    # Check existing relation data
+    initial_relation = get_backend_relation(ops_test)
     backend_databag = await get_app_relation_databag(ops_test, pgb_unit, initial_relation.id)
+    logging.info(backend_databag)
     read_only_endpoints = backend_databag["read-only-endpoints"].split(",")
     assert len(read_only_endpoints) == 2
-    for unit in ops_test.model.applications[PG].units:
-        if unit.name == primary:
-            continue
-        unit_addr = f"{unit.public_address}:5432"
-        if unit_addr in read_only_endpoints:
-            read_only_endpoints.remove(unit_addr)
-        else:
-            assert (
-                False
-            ), f"unit addr: {unit_addr} not in read_only_endpoints {read_only_endpoints}"
-
-    assert read_only_endpoints == []
+    existing_endpoints = [
+        f"{unit.public_address}:5432" if unit.name != primary else None
+        for unit in ops_test.model.applications[PG].units
+    ]
+    existing_endpoints.remove(None)
+    assert read_only_endpoints == existing_endpoints
 
     # Add a new unit
     scale_application(ops_test, PG, 4)
@@ -159,17 +155,12 @@ async def test_discover_dbs(ops_test: OpsTest):
     updated_backend_databag = await get_app_relation_databag(
         ops_test, pgb_unit, updated_relation.id
     )
+    logging.info(updated_backend_databag)
     read_only_endpoints = updated_backend_databag["read-only-endpoints"].split(",")
     assert len(read_only_endpoints) == 3
-    for unit in ops_test.model.applications[PG].units:
-        if unit.name == primary:
-            continue
-        unit_addr = f"{unit.public_address}:5432"
-        if unit_addr in read_only_endpoints:
-            read_only_endpoints.remove(unit_addr)
-        else:
-            assert (
-                False
-            ), f"unit addr: {unit_addr} not in read_only_endpoints {read_only_endpoints}"
-
-    assert read_only_endpoints == []
+    existing_endpoints = [
+        f"{unit.public_address}:5432" if unit.name != primary else None
+        for unit in ops_test.model.applications[PG].units
+    ]
+    existing_endpoints.remove(None)
+    assert set(read_only_endpoints) == set(existing_endpoints)
