@@ -15,6 +15,7 @@ from tests.integration.helpers.helpers import (
     get_app_relation_databag,
     get_backend_relation,
     get_backend_user_pass,
+    get_cfg,
     get_legacy_relation_username,
     scale_application,
 )
@@ -37,10 +38,7 @@ async def test_setup(ops_test: OpsTest):
     interruptions.
     """
     await deploy_postgres_bundle(ops_test)
-    await asyncio.gather(
-        scale_application(ops_test, PG, 3),
-        scale_application(ops_test, PGB, 3),
-    )
+    await scale_application(ops_test, PG, 3)
 
     async with ops_test.fast_forward():
         await ops_test.model.applications[PGB].set_config({"listen_port": "5432"})
@@ -69,6 +67,10 @@ async def test_setup(ops_test: OpsTest):
     result = action.results.get("Stdout", action.results.get("Stderr", None))
     assert "db url: postgres://" in result, f"no postgres db url, Stderr: {result}"
 
+    # mailman doesn't like to connect to multiple pgbouncers at once, so we have to scale up after
+    # relation
+    await scale_application(ops_test, PGB, 3)
+
 
 @pytest.mark.bundle
 async def test_kill_pg_primary(ops_test: OpsTest):
@@ -82,6 +84,14 @@ async def test_kill_pg_primary(ops_test: OpsTest):
     action = await ops_test.model.units.get(unit_name).run_action("get-primary")
     action = await action.wait()
     primary = action.results["primary"]
+
+    # Get primary connection string from each pgbouncer unit and assert they're pointing to the
+    # correct PG unit
+    primary_ip = ops_test.model.units.get(primary).public_address
+    for unit in ops_test.model.applications[PGB].units:
+        unit_cfg = await get_cfg(ops_test, unit.name)
+        assert unit_cfg["database"]["mailman3"]["host"] == primary_ip
+        assert unit_cfg["database"]["mailman3_standby"]["host"] != primary_ip
 
     await ops_test.model.destroy_units(primary)
     await ops_test.model.wait_for_idle(
@@ -104,6 +114,12 @@ async def test_kill_pg_primary(ops_test: OpsTest):
     client.create_domain(domain_name)
     assert domain_name in [domain.mail_host for domain in client.domains]
 
+    # Assert primaries
+    primary_ip = ops_test.model.units.get(primary).public_address
+    for unit in ops_test.model.applications[PGB].units:
+        unit_cfg = await get_cfg(ops_test, unit.name)
+        assert unit_cfg["database"]["mailman3"]["host"] == primary_ip
+        assert unit_cfg["database"]["mailman3_standby"]["host"] != primary_ip
 
 @pytest.mark.bundle
 async def test_discover_dbs(ops_test: OpsTest):
@@ -117,7 +133,7 @@ async def test_discover_dbs(ops_test: OpsTest):
     primary = action.results["primary"]
 
     pgb_unit = ops_test.model.applications[PGB].units[0].name
-    backend_databag = get_app_relation_databag(ops_test, pgb_unit, initial_relation.id)
+    backend_databag = await get_app_relation_databag(ops_test, pgb_unit, initial_relation.id)
     read_only_endpoints = backend_databag["read-only-endpoints"].split(",")
     assert len(read_only_endpoints) == 2
     for unit in ops_test.model.applications[PG].units:
