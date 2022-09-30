@@ -89,8 +89,8 @@ async def test_kill_pg_primary(ops_test: OpsTest):
     old_primary_ip = ops_test.model.units.get(primary).public_address
     for unit in ops_test.model.applications[PGB].units:
         unit_cfg = await get_cfg(ops_test, unit.name)
-        assert unit_cfg["database"]["mailman3"]["host"] == old_primary_ip
-        assert unit_cfg["database"]["mailman3_standby"]["host"] != old_primary_ip
+        assert unit_cfg["databases"]["mailman3"]["host"] == old_primary_ip
+        assert unit_cfg["databases"]["mailman3_standby"]["host"] != old_primary_ip
 
     await ops_test.model.destroy_units(primary)
     await ops_test.model.wait_for_idle(
@@ -118,9 +118,9 @@ async def test_kill_pg_primary(ops_test: OpsTest):
     assert new_primary_ip != old_primary_ip
     for unit in ops_test.model.applications[PGB].units:
         unit_cfg = await get_cfg(ops_test, unit.name)
-        assert unit_cfg["database"]["mailman3"]["host"] == new_primary_ip
-        assert unit_cfg["database"]["mailman3_standby"]["host"] != new_primary_ip
-        assert unit_cfg["database"]["mailman3_standby"]["host"] != old_primary_ip
+        assert unit_cfg["databases"]["mailman3"]["host"] == new_primary_ip
+        assert unit_cfg["databases"]["mailman3_standby"]["host"] != new_primary_ip
+        assert unit_cfg["databases"]["mailman3_standby"]["host"] != old_primary_ip
 
 
 @pytest.mark.bundle
@@ -156,7 +156,7 @@ async def test_discover_dbs(ops_test: OpsTest):
 
     # check relation databag updates after adding a new unit
     updated_relation = get_backend_relation(ops_test)
-    updated_backend_databag = get_app_relation_databag(ops_test, pgb_unit, updated_relation.id)
+    updated_backend_databag = await get_app_relation_databag(ops_test, pgb_unit, updated_relation.id)
     read_only_endpoints = updated_backend_databag["read-only-endpoints"].split(",")
     assert len(read_only_endpoints) == 3
     for unit in ops_test.model.applications[PG].units:
