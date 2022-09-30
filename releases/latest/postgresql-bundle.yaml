@@ -1,6 +1,5 @@
 name: postgresql-bundle
 type: bundle
-series: focal
 applications:
   pgbouncer:
     channel: edge
