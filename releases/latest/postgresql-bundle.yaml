@@ -1,26 +1,26 @@
-series: focal
 applications:
   pgbouncer:
+    channel: edge
     charm: pgbouncer
-    channel: edge
-    revision: 7
-    num_units: 1
-    to:
-    - "1"
     constraints: arch=amd64
+    num_units: 1
+    revision: 5
+    to:
+    - '1'
   postgresql:
-    charm: postgresql
     channel: edge
-    revision: 254
-    num_units: 1
-    to:
-    - "0"
-    constraints: arch=amd64 # TODO is this necessary?
-machines:
-  "0":
+    charm: postgresql
     constraints: arch=amd64
-  "1":
+    num_units: 1
+    revision: 225
+    to:
+    - '0'
+machines:
+  '0':
+    constraints: arch=amd64
+  '1':
     constraints: arch=amd64
 relations:
 - - pgbouncer:backend-database
   - postgresql:database
+series: focal
