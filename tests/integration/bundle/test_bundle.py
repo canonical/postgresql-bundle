@@ -73,11 +73,7 @@ async def test_setup(ops_test: OpsTest):
 
 @pytest.mark.bundle
 async def test_kill_pg_primary(ops_test: OpsTest):
-    """Kill primary, check that all proxy instances switched traffic for a new primary.
-
-    TODO mailman doesn't connect to all proxy instances. Spool through proxy instances and verify
-    (using their databags) that all proxy instances have switched to a new primary.
-    """
+    """Kill primary, check that all proxy instances switched traffic for a new primary."""
     # Get postgres primary through action
     unit_name = ops_test.model.applications[PG].units[0].name
     action = await ops_test.model.units.get(unit_name).run_action("get-primary")
@@ -114,7 +110,10 @@ async def test_kill_pg_primary(ops_test: OpsTest):
     assert domain_name in [domain.mail_host for domain in client.domains]
 
     # Assert pgbouncer config points to the new correct primary
-    new_primary_ip = ops_test.model.units.get(primary).public_address
+    action = await ops_test.model.units.get(unit_name).run_action("get-primary")
+    action = await action.wait()
+    new_primary = action.results["primary"]
+    new_primary_ip = ops_test.model.units.get(new_primary).public_address
     assert new_primary_ip != old_primary_ip
     for unit in ops_test.model.applications[PGB].units:
         unit_cfg = await get_cfg(ops_test, unit.name)
@@ -137,7 +136,7 @@ async def test_discover_dbs(ops_test: OpsTest):
     pgb_unit = ops_test.model.applications[PGB].units[0].name
     backend_databag = await get_app_relation_databag(ops_test, pgb_unit, initial_relation.id)
     read_only_endpoints = backend_databag["read-only-endpoints"].split(",")
-    assert len(read_only_endpoints) == 2
+    assert len(read_only_endpoints) == 1
     for unit in ops_test.model.applications[PG].units:
         if unit.name == primary:
             continue
