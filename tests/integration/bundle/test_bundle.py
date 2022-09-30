@@ -125,6 +125,7 @@ async def test_kill_pg_primary(ops_test: OpsTest):
 @pytest.mark.bundle
 async def test_discover_dbs(ops_test: OpsTest):
     """Check that proxy discovers new members when scaling up postgres charm."""
+    scale_application(ops_test, PG, 3)
     # Check existing relation data
     initial_relation = get_backend_relation(ops_test)
     # Get postgres primary through action
@@ -136,7 +137,7 @@ async def test_discover_dbs(ops_test: OpsTest):
     pgb_unit = ops_test.model.applications[PGB].units[0].name
     backend_databag = await get_app_relation_databag(ops_test, pgb_unit, initial_relation.id)
     read_only_endpoints = backend_databag["read-only-endpoints"].split(",")
-    assert len(read_only_endpoints) == 1
+    assert len(read_only_endpoints) == 2
     for unit in ops_test.model.applications[PG].units:
         if unit.name == primary:
             continue
