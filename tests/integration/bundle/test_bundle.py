@@ -156,7 +156,9 @@ async def test_discover_dbs(ops_test: OpsTest):
 
     # check relation databag updates after adding a new unit
     updated_relation = get_backend_relation(ops_test)
-    updated_backend_databag = await get_app_relation_databag(ops_test, pgb_unit, updated_relation.id)
+    updated_backend_databag = await get_app_relation_databag(
+        ops_test, pgb_unit, updated_relation.id
+    )
     read_only_endpoints = updated_backend_databag["read-only-endpoints"].split(",")
     assert len(read_only_endpoints) == 3
     for unit in ops_test.model.applications[PG].units:
