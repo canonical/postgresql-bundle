@@ -93,16 +93,12 @@ async def test_kill_pg_primary(ops_test: OpsTest):
         apps=[PG, PGB, MAILMAN3_CORE_APP_NAME], status="active", timeout=600
     )
 
-    # Assert Mailman3 Core is configured to use PostgreSQL instead of SQLite.
-    mailman_unit = ops_test.model.applications[MAILMAN3_CORE_APP_NAME].units[0]
-    action = await mailman_unit.run("mailman info")
-    result = action.results.get("Stdout", action.results.get("Stderr", None))
-    assert "db url: postgres://" in result, f"no postgres db url, Stderr: {result}"
-
     # Do some CRUD operations using Mailman3 Core client to ensure it's still working.
     mailman_unit = ops_test.model.applications[MAILMAN3_CORE_APP_NAME].units[0]
     action = await mailman_unit.run("mailman info")
     result = action.results.get("Stdout", action.results.get("Stderr", None))
+    logging.info(result)
+    assert "db url: postgres://" in result, f"no postgres db url, Stderr: {result}"
     domain_name = "canonical.com"
     credentials = (
         result.split("credentials: ")[1].strip().split(":")
@@ -144,8 +140,7 @@ async def test_discover_dbs(ops_test: OpsTest):
     initial_relation = get_backend_relation(ops_test)
     backend_databag = await get_app_relation_databag(ops_test, pgb_unit, initial_relation.id)
     logging.info(backend_databag)
-    read_only_endpoints = backend_databag["read-only-endpoints"].split(",")
-    assert len(read_only_endpoints) == 2
+    read_only_endpoints = backend_databag["read-only-endpoints"]
     existing_endpoints = [
         f"{unit.public_address}:5432" if unit.name != primary else None
         for unit in ops_test.model.applications[PG].units

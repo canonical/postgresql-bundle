@@ -293,6 +293,8 @@ async def scale_application(ops_test: OpsTest, application_name: str, count: int
     """
     async with ops_test.fast_forward():
         change = count - len(ops_test.model.applications[application_name].units)
+        import logging
+        logging.info(change)
         if change > 0:
             await ops_test.model.applications[application_name].add_units(change)
         elif change < 0:
