@@ -93,6 +93,12 @@ async def test_kill_pg_primary(ops_test: OpsTest):
         apps=[PG, PGB, MAILMAN3_CORE_APP_NAME], status="active", timeout=600
     )
 
+    # Assert Mailman3 Core is configured to use PostgreSQL instead of SQLite.
+    mailman_unit = ops_test.model.applications[MAILMAN3_CORE_APP_NAME].units[0]
+    action = await mailman_unit.run("mailman info")
+    result = action.results.get("Stdout", action.results.get("Stderr", None))
+    assert "db url: postgres://" in result, f"no postgres db url, Stderr: {result}"
+
     # Do some CRUD operations using Mailman3 Core client to ensure it's still working.
     mailman_unit = ops_test.model.applications[MAILMAN3_CORE_APP_NAME].units[0]
     action = await mailman_unit.run("mailman info")
