@@ -1,5 +1,3 @@
-name: postgresql-bundle
-type: bundle
 applications:
   pgbouncer:
     channel: edge
@@ -22,7 +20,9 @@ machines:
     constraints: arch=amd64
   '1':
     constraints: arch=amd64
+name: postgresql-bundle
 relations:
 - - pgbouncer:backend-database
   - postgresql:database
 series: focal
+type: bundle
