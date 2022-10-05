@@ -61,7 +61,7 @@ async def test_setup(ops_test: OpsTest):
 
     # mailman doesn't like to connect to multiple pgbouncers at once, so we have to scale up after
     # relation
-    await scale_application(ops_test, PGB, 3)
+    await scale_application(ops_test, application_name=PGB, count=3)
 
 
 @pytest.mark.bundle

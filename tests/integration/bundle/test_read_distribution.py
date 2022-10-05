@@ -27,8 +27,8 @@ async def test_read_distribution(ops_test: OpsTest):
     """
     async with ops_test.fast_forward():
         await asyncio.gather(
-            await deploy_postgres_bundle(ops_test, scale_postgres=3),
-            await ops_test.model.deploy(
+            deploy_postgres_bundle(ops_test, scale_postgres=3),
+            ops_test.model.deploy(
                 "postgresql-charmers-postgresql-client",
                 application_name=PSQL,
             ),
