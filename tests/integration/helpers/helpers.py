@@ -265,27 +265,28 @@ async def deploy_and_relate_application_with_pgbouncer(
     Returns:
         Relation object representing the  created relation.
     """
-    # Deploy application.
-    await ops_test.model.deploy(
-        charm,
-        channel=channel,
-        application_name=application_name,
-        num_units=number_of_units,
-        config=config,
-    )
-    await ops_test.model.wait_for_idle(
-        apps=[application_name],
-        timeout=1000,
-    )
+    async with ops_test.fast_forward():
+        # Deploy application.
+        await ops_test.model.deploy(
+            charm,
+            channel=channel,
+            application_name=application_name,
+            num_units=number_of_units,
+            config=config,
+        )
+        await ops_test.model.wait_for_idle(
+            apps=[application_name],
+            timeout=1000,
+        )
 
-    # Relate application to pgbouncer.
-    relation = await ops_test.model.relate(application_name, f"{PGB}:{relation}")
-    wait_for_relation_joined_between(ops_test, PGB, application_name)
-    await ops_test.model.wait_for_idle(
-        apps=[application_name, PG, PGB],
-        status="active",
-        timeout=1000,
-    )
+        # Relate application to pgbouncer.
+        relation = await ops_test.model.relate(application_name, f"{PGB}:{relation}")
+        wait_for_relation_joined_between(ops_test, PGB, application_name)
+        await ops_test.model.wait_for_idle(
+            apps=[application_name, PG, PGB],
+            status="active",
+            timeout=1000,
+        )
 
     return relation
 
@@ -298,22 +299,22 @@ async def scale_application(ops_test: OpsTest, application_name: str, count: int
         application_name: The name of the application
         count: The desired number of units to scale to. If count <= 0, remove application.
     """
-    if count <= 0:
-        ops_test.model.applications[application_name].destroy()
-        async with ops_test.fast_forward():
-            ops_test.model.wait_for_idle()
-        return
-
-    change = count - len(ops_test.model.applications[application_name].units)
-    if change > 0:
-        await ops_test.model.applications[application_name].add_units(change)
-    elif change < 0:
-        units = [
-            unit.name for unit in ops_test.model.applications[application_name].units[0:-change]
-        ]
-        await ops_test.model.applications[application_name].destroy_units(*units)
 
     async with ops_test.fast_forward():
+        if count <= 0:
+            ops_test.model.applications[application_name].destroy()
+            ops_test.model.wait_for_idle()
+            return
+
+        change = count - len(ops_test.model.applications[application_name].units)
+        if change > 0:
+            await ops_test.model.applications[application_name].add_units(change)
+        elif change < 0:
+            units = [
+                unit.name for unit in ops_test.model.applications[application_name].units[0:-change]
+            ]
+            await ops_test.model.applications[application_name].destroy_units(*units)
+
         await ops_test.model.wait_for_idle(
             apps=[application_name], status="active", timeout=1000, wait_for_exact_units=count
         )
