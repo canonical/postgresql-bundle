@@ -12,7 +12,6 @@ from tests.integration.helpers.helpers import (
     deploy_postgres_bundle,
     get_app_relation_databag,
     run_sql,
-    scale_application,
     wait_for_relation_joined_between,
 )
 
