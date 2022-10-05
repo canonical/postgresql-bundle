@@ -5,30 +5,18 @@ import asyncio
 import logging
 
 import pytest
-from mailmanclient import Client
 from pytest_operator.plugin import OpsTest
 
 from constants import PG, PGB
 from tests.integration.helpers.helpers import (
-    deploy_and_relate_application_with_pgbouncer,
     deploy_postgres_bundle,
     get_app_relation_databag,
-    get_backend_relation,
-    get_backend_user_pass,
-    get_cfg,
-    get_legacy_relation_username,
     run_sql,
     scale_application,
     wait_for_relation_joined_between,
 )
-from tests.integration.helpers.postgresql_helpers import (
-    check_database_users_existence,
-    check_databases_creation,
-)
 
 logger = logging.getLogger(__name__)
-
-
 PSQL = "psql"
 
 
@@ -58,14 +46,13 @@ async def test_read_distribution(ops_test: OpsTest):
             timeout=600,
         )
 
-
     unit_name = f"{PSQL}/0"
     psql_databag = await get_app_relation_databag(ops_test, unit_name, psql_relation.id)
     pgpass = psql_databag.get("password")
     user = psql_databag.get("user")
     host = psql_databag.get("host")
     port = psql_databag.get("port")
-    dbname = psql_databag.get("database")
+    dbname = f"{psql_databag.get('database')}_standby"
     assert None not in [pgpass, user, host, port, dbname], "databag incorrectly populated"
 
     user_command = "SELECT reset_val FROM pg_settings WHERE name='listen_addresses';"
