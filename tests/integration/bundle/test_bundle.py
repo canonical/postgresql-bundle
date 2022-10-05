@@ -60,11 +60,7 @@ async def test_setup(ops_test: OpsTest):
     mailman3_core_users = get_legacy_relation_username(ops_test, db_relation.id)
     await check_database_users_existence(ops_test, [mailman3_core_users], [], pgb_user, pgb_pass)
 
-    # Assert Mailman3 Core is configured to use PostgreSQL instead of SQLite.
-    mailman_unit = ops_test.model.applications[MAILMAN3_CORE_APP_NAME].units[0]
-    action = await mailman_unit.run("mailman info")
-    result = action.results.get("Stdout", action.results.get("Stderr", None))
-    assert "db url: postgres://" in result, f"no postgres db url, Stderr: {result}"
+    await _check_mailman_still_works(ops_test)
 
     # mailman doesn't like to connect to multiple pgbouncers at once, so we have to scale up after
     # relation
@@ -95,10 +91,7 @@ async def test_kill_pg_primary(ops_test: OpsTest):
 
     # Do some CRUD operations using Mailman3 Core client to ensure it's still working.
     mailman_unit = ops_test.model.applications[MAILMAN3_CORE_APP_NAME].units[0]
-    action = await mailman_unit.run("mailman info")
-    result = action.results.get("Stdout", action.results.get("Stderr", None))
-    logging.info(result)
-    assert "db url: postgres://" in result, f"no postgres db url, Stderr: {result}"
+    result = await _check_mailman_still_works(ops_test)
     domain_name = "canonical.com"
     credentials = (
         result.split("credentials: ")[1].strip().split(":")
@@ -128,7 +121,7 @@ async def test_kill_pg_primary(ops_test: OpsTest):
 @pytest.mark.bundle
 async def test_discover_dbs(ops_test: OpsTest):
     """Check that proxy discovers new members when scaling up postgres charm."""
-    scale_application(ops_test, PG, 3)
+    await scale_application(ops_test, PG, 3)
     # Get postgres primary through action
     unit_name = ops_test.model.applications[PG].units[0].name
     action = await ops_test.model.units.get(unit_name).run_action("get-primary")
@@ -141,6 +134,7 @@ async def test_discover_dbs(ops_test: OpsTest):
     backend_databag = await get_app_relation_databag(ops_test, pgb_unit, initial_relation.id)
     logging.info(backend_databag)
     read_only_endpoints = backend_databag["read-only-endpoints"].split(",")
+    assert len(read_only_endpoints) == 2
     existing_endpoints = [
         f"{unit.public_address}:5432" if unit.name != primary else None
         for unit in ops_test.model.applications[PG].units
@@ -149,7 +143,7 @@ async def test_discover_dbs(ops_test: OpsTest):
     assert set(read_only_endpoints) == set(existing_endpoints)
 
     # Add a new unit
-    scale_application(ops_test, PG, 4)
+    await scale_application(ops_test, PG, 4)
 
     # check relation databag updates after adding a new unit
     updated_relation = get_backend_relation(ops_test)
@@ -165,3 +159,25 @@ async def test_discover_dbs(ops_test: OpsTest):
     ]
     existing_endpoints.remove(None)
     assert set(read_only_endpoints) == set(existing_endpoints)
+
+
+async def _check_mailman_still_works(ops_test: OpsTest) -> str:
+    """Checks mailman is still running.
+
+    We can't rely on mailman's active status to verify that it's working as intended; the
+    application may still be running, but that doesn't mean it's a functional service. This
+    function checks that the service still works.
+
+    Args:
+        ops_test: ops_test instance for the test
+
+    Returns:
+        The results of running `mailman info` on a random mailman unit.
+    """
+    # Assert Mailman3 Core is configured to use PostgreSQL instead of SQLite.
+    mailman_unit = ops_test.model.applications[MAILMAN3_CORE_APP_NAME].units[0]
+    action = await mailman_unit.run("mailman info")
+    result = action.results.get("Stdout", action.results.get("Stderr", None))
+    assert "db url: postgres://" in result, f"no postgres db url, Stderr: {result}"
+
+    return result
