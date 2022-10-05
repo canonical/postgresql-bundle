@@ -140,7 +140,7 @@ async def test_discover_dbs(ops_test: OpsTest):
     initial_relation = get_backend_relation(ops_test)
     backend_databag = await get_app_relation_databag(ops_test, pgb_unit, initial_relation.id)
     logging.info(backend_databag)
-    read_only_endpoints = backend_databag["read-only-endpoints"]
+    read_only_endpoints = backend_databag["read-only-endpoints"].split(",")
     existing_endpoints = [
         f"{unit.public_address}:5432" if unit.name != primary else None
         for unit in ops_test.model.applications[PG].units
