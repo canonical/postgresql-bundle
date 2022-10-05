@@ -36,8 +36,7 @@ async def test_setup(ops_test: OpsTest):
     We're adding an application to ensure that related applications stay online during service
     interruptions.
     """
-    await deploy_postgres_bundle(ops_test)
-    await scale_application(ops_test, PG, 3)
+    await deploy_postgres_bundle(ops_test, scale_postgres=3)
 
     async with ops_test.fast_forward():
         await ops_test.model.applications[PGB].set_config({"listen_port": "5432"})
@@ -56,10 +55,8 @@ async def test_setup(ops_test: OpsTest):
 
     pgb_user, pgb_pass = await get_backend_user_pass(ops_test, get_backend_relation(ops_test))
     await check_databases_creation(ops_test, ["mailman3"], pgb_user, pgb_pass)
-
     mailman3_core_users = get_legacy_relation_username(ops_test, db_relation.id)
     await check_database_users_existence(ops_test, [mailman3_core_users], [], pgb_user, pgb_pass)
-
     await _check_mailman_still_works(ops_test)
 
     # mailman doesn't like to connect to multiple pgbouncers at once, so we have to scale up after

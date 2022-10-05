@@ -4,7 +4,8 @@
 
 import json
 from multiprocessing import ProcessError
-from typing import Dict
+from typing import Dict, Optional
+import asyncio
 
 from charms.pgbouncer_k8s.v0 import pgb
 from pytest_operator.plugin import OpsTest
@@ -224,10 +225,16 @@ def relation_exited(ops_test: OpsTest, endpoint_one: str, endpoint_two: str) -> 
     return False
 
 
-async def deploy_postgres_bundle(ops_test: OpsTest):
+async def deploy_postgres_bundle(
+    ops_test: OpsTest, scale_pgbouncer: int = 1, scale_postgres: int = 1
+):
     """Deploy postgresql bundle."""
     async with ops_test.fast_forward():
         await ops_test.model.deploy("./releases/latest/postgresql-bundle.yaml")
+        await asyncio.gather(
+            await scale_application(ops_test, PGB, scale_pgbouncer),
+            await scale_application(ops_test, PGB, scale_postgres)
+        )
         wait_for_relation_joined_between(ops_test, PG, PGB)
         await ops_test.model.wait_for_idle(apps=[PG, PGB], status="active", timeout=1000)
 
@@ -298,9 +305,6 @@ async def scale_application(ops_test: OpsTest, application_name: str, count: int
         return
 
     change = count - len(ops_test.model.applications[application_name].units)
-    import logging
-
-    logging.info(change)
     if change > 0:
         await ops_test.model.applications[application_name].add_units(change)
     elif change < 0:

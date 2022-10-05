@@ -30,13 +30,12 @@ async def test_read_distribution(ops_test: OpsTest):
     """
     async with ops_test.fast_forward():
         await asyncio.gather(
-            await deploy_postgres_bundle(ops_test),
+            await deploy_postgres_bundle(ops_test, scale_postgres=3),
             await ops_test.model.deploy(
                 "postgresql-charmers-postgresql-client",
                 application_name=PSQL,
             ),
         )
-        await scale_application(ops_test, PG, 3)
 
         psql_relation = await ops_test.model.relate(f"{PSQL}:db", f"{PGB}:db-admin")
         wait_for_relation_joined_between(ops_test, PGB, PSQL)
