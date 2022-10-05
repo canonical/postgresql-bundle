@@ -289,8 +289,14 @@ async def scale_application(ops_test: OpsTest, application_name: str, count: int
     Args:
         ops_test: The ops test framework instance
         application_name: The name of the application
-        count: The desired number of units to scale to
+        count: The desired number of units to scale to. If count <= 0, remove application.
     """
+    if count <= 0:
+        ops_test.model.applications[application_name].destroy()
+        async with ops_test.fast_forward():
+            ops_test.model.wait_for_idle()
+        return
+
     change = count - len(ops_test.model.applications[application_name].units)
     import logging
 
