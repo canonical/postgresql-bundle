@@ -146,7 +146,7 @@ async def test_discover_dbs(ops_test: OpsTest):
         for unit in ops_test.model.applications[PG].units
     ]
     existing_endpoints.remove(None)
-    assert read_only_endpoints == existing_endpoints
+    assert set(read_only_endpoints) == set(existing_endpoints)
 
     # Add a new unit
     scale_application(ops_test, PG, 4)
