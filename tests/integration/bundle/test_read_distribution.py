@@ -19,9 +19,7 @@ logger = logging.getLogger(__name__)
 PSQL = "psql"
 
 
-@pytest.mark.dev
 @pytest.mark.bundle
-@pytest.mark.abort_on_fail
 async def test_read_distribution(ops_test: OpsTest):
     """Check that read instance changed during reconnection to proxy.
 
