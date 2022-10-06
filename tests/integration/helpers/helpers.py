@@ -263,7 +263,7 @@ async def deploy_and_relate_application_with_pgbouncer(
             the application to.
 
     Returns:
-        Relation object representing the  created relation.
+        Relation object representing the created relation.
     """
     async with ops_test.fast_forward():
         # Deploy application.
