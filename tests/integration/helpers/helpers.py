@@ -2,6 +2,7 @@
 # Copyright 2022 Canonical Ltd.
 # See LICENSE file for licensing details.
 
+import asyncio
 import json
 from multiprocessing import ProcessError
 from typing import Dict
@@ -224,15 +225,21 @@ def relation_exited(ops_test: OpsTest, endpoint_one: str, endpoint_two: str) -> 
     return False
 
 
-async def deploy_postgres_bundle(ops_test: OpsTest):
+async def deploy_postgres_bundle(
+    ops_test: OpsTest, scale_pgbouncer: int = 1, scale_postgres: int = 1
+):
     """Deploy postgresql bundle."""
     async with ops_test.fast_forward():
         await ops_test.model.deploy("./releases/latest/postgresql-bundle.yaml")
+        await asyncio.gather(
+            scale_application(ops_test, PGB, scale_pgbouncer),
+            scale_application(ops_test, PG, scale_postgres),
+        )
         wait_for_relation_joined_between(ops_test, PG, PGB)
-        await ops_test.model.wait_for_idle(apps=[PG, PGB], status="active", timeout=1000)
+        await ops_test.model.wait_for_idle(apps=[PG, PGB], status="active", timeout=600)
 
 
-async def deploy_and_relate_application_with_pgbouncer_bundle(
+async def deploy_and_relate_application_with_pgbouncer(
     ops_test: OpsTest,
     charm: str,
     application_name: str,
@@ -241,7 +248,7 @@ async def deploy_and_relate_application_with_pgbouncer_bundle(
     channel: str = "stable",
     relation: str = "db",
 ):
-    """Helper function to deploy and relate application with Pgbouncer cluster.
+    """Helper function to deploy and relate application with pgbouncer.
 
     This assumes pgbouncer already exists and is related to postgres
 
@@ -256,28 +263,58 @@ async def deploy_and_relate_application_with_pgbouncer_bundle(
             the application to.
 
     Returns:
-        the id of the created relation.
+        Relation object representing the created relation.
     """
-    # Deploy application.
-    await ops_test.model.deploy(
-        charm,
-        channel=channel,
-        application_name=application_name,
-        num_units=number_of_units,
-        config=config,
-    )
-    await ops_test.model.wait_for_idle(
-        apps=[application_name],
-        timeout=1000,
-    )
+    async with ops_test.fast_forward():
+        # Deploy application.
+        await ops_test.model.deploy(
+            charm,
+            channel=channel,
+            application_name=application_name,
+            num_units=number_of_units,
+            config=config,
+        )
+        await ops_test.model.wait_for_idle(
+            apps=[application_name],
+            timeout=1000,
+        )
 
-    # Relate application to pgbouncer.
-    relation = await ops_test.model.relate(application_name, f"{PGB}:{relation}")
-    wait_for_relation_joined_between(ops_test, PGB, application_name)
-    await ops_test.model.wait_for_idle(
-        apps=[application_name, PG, PGB],
-        status="active",
-        timeout=1000,
-    )
+        # Relate application to pgbouncer.
+        relation = await ops_test.model.relate(application_name, f"{PGB}:{relation}")
+        wait_for_relation_joined_between(ops_test, PGB, application_name)
+        await ops_test.model.wait_for_idle(
+            apps=[application_name, PG, PGB],
+            status="active",
+            timeout=1000,
+        )
 
     return relation
+
+
+async def scale_application(ops_test: OpsTest, application_name: str, count: int) -> None:
+    """Scale a given application to a specific unit count.
+
+    Args:
+        ops_test: The ops test framework instance
+        application_name: The name of the application
+        count: The desired number of units to scale to. If count <= 0, remove application.
+    """
+    async with ops_test.fast_forward():
+        if count <= 0:
+            await ops_test.model.applications[application_name].destroy()
+            await ops_test.model.wait_for_idle()
+            return
+
+        change = count - len(ops_test.model.applications[application_name].units)
+        if change > 0:
+            await ops_test.model.applications[application_name].add_units(change)
+        elif change < 0:
+            units = [
+                unit.name
+                for unit in ops_test.model.applications[application_name].units[0:-change]
+            ]
+            await ops_test.model.applications[application_name].destroy_units(*units)
+
+        await ops_test.model.wait_for_idle(
+            apps=[application_name], status="active", timeout=600, wait_for_exact_units=count
+        )
