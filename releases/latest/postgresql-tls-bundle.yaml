@@ -20,6 +20,8 @@ applications:
     charm: tls-certificates-operator
     constraints: arch=amd64
     options:
+      # generate self signed certs. This is insecure, so we'll document that the user should
+      # replace these with their own later on.
       generate-self-signed-certificates: true
       ca-common-name: postgresql_tls_bundle_ca
     num_units: 1

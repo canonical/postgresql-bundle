@@ -1,2 +1,2 @@
-# A requirement of ops_test
+# A requirement of ops_test, unrelated to building the bundle. TODO check that's completely true
 name: postgresql-bundle

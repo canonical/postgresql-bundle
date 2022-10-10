@@ -11,6 +11,7 @@ jobs:
       - name: check for updates
         run: |
           ./update_bundle.py releases/latest/postgresql-bundle.yaml
+          ./update_bundle.py releases/latest/postgresql-tls-bundle.yaml
       - name: create pull request
         id: cpr
         uses: peter-evans/create-pull-request@v4
