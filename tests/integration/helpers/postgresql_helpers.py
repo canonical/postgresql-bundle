@@ -128,7 +128,7 @@ async def check_databases_creation(
 
 def enable_connections_logging(ops_test: OpsTest, unit_name: str) -> None:
     """Turn on the log of all connections made to a PostgreSQL instance.
-    
+
     Args:
         ops_test: The ops test framework instance
         unit_name: The name of the unit to turn on the connection logs
@@ -212,4 +212,3 @@ async def run_command_on_unit(ops_test: OpsTest, unit_name: str, command: str) -
             "Expected command %s to succeed instead it failed: %s", command, return_code
         )
     return stdout
-
