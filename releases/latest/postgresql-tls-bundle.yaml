@@ -1,0 +1,40 @@
+applications:
+  pgbouncer:
+    channel: edge
+    charm: pgbouncer
+    constraints: arch=amd64
+    num_units: 1
+    revision: 10
+    to:
+    - '1'
+  postgresql:
+    channel: edge
+    charm: postgresql
+    constraints: arch=amd64
+    num_units: 1
+    revision: 254
+    to:
+    - '0'
+  tls-certificates-operator:
+    channel: edge
+    charm: tls-certificates-operator
+    constraints: arch=amd64
+    num_units: 1
+    revision: 11
+    to:
+    - '2'
+machines:
+  '0':
+    constraints: arch=amd64
+  '1':
+    constraints: arch=amd64
+  '2':
+    constraints: arch=amd64
+name: postgresql-tls-bundle
+relations:
+- - pgbouncer:backend-database
+  - postgresql:database
+- - postgresql:certificates
+  - tls-certificates-operator:certificates
+series: focal
+type: bundle

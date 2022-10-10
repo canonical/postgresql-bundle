@@ -4,25 +4,21 @@ applications:
     charm: pgbouncer
     constraints: arch=amd64
     num_units: 1
-    revision: 5
+    revision: 10
     to:
     - '1'
   postgresql:
     channel: edge
     charm: postgresql
-    constraints: arch=amd64
     num_units: 1
-    revision: 225
+    revision: 254
     to:
     - '0'
 machines:
   '0':
-    constraints: arch=amd64
   '1':
-    constraints: arch=amd64
 name: postgresql-bundle
 relations:
 - - pgbouncer:backend-database
   - postgresql:database
-series: focal
 type: bundle
