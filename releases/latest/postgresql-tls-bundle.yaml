@@ -4,7 +4,6 @@ applications:
     charm: pgbouncer
     constraints: arch=amd64
     num_units: 1
-    revision: 10
     to:
     - '1'
   postgresql:
@@ -12,7 +11,6 @@ applications:
     charm: postgresql
     constraints: arch=amd64
     num_units: 1
-    revision: 254
     to:
     - '0'
   tls-certificates-operator:
@@ -25,7 +23,6 @@ applications:
       generate-self-signed-certificates: true
       ca-common-name: postgresql_tls_bundle_ca
     num_units: 1
-    revision: 11
     to:
     - '2'
 machines:
