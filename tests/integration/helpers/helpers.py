@@ -226,7 +226,7 @@ def relation_exited(ops_test: OpsTest, endpoint_one: str, endpoint_two: str) -> 
 
 
 async def deploy_postgres_bundle(
-    ops_test: OpsTest, scale_pgbouncer: int=1, scale_postgres: int=1, tls=False
+    ops_test: OpsTest, scale_pgbouncer: int = 1, scale_postgres: int = 1, tls=False
 ):
     """Deploy postgresql bundle."""
     bundle_path = f"./releases/latest/postgresql-{'tls-' if tls else ''}bundle.yaml"

@@ -12,11 +12,8 @@ from tests.integration.helpers.helpers import (
     deploy_postgres_bundle,
     get_backend_relation,
     get_backend_user_pass,
-    get_cfg,
-    wait_for_relation_joined_between,
 )
 from tests.integration.helpers.postgresql_helpers import (
-    check_database_users_existence,
     enable_connections_logging,
     get_postgres_primary,
     run_command_on_unit,
@@ -30,6 +27,7 @@ PGB = METADATA["name"]
 PG = "postgresql"
 TLS = "tls-certificates-operator"
 RELATION = "backend-database"
+
 
 @pytest.mark.tls
 async def test_tls_bundle(ops_test: OpsTest):
