@@ -61,7 +61,7 @@ jobs:
         run: tox -e bundle-integration
 
   integration-tls:
-    name: Bundle-specific integration tests
+    name: Integration tests for TLS.
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
