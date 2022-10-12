@@ -11,7 +11,7 @@ from charms.pgbouncer_k8s.v0 import pgb
 from pytest_operator.plugin import OpsTest
 from tenacity import RetryError, Retrying, stop_after_delay, wait_fixed
 
-from constants import AUTH_FILE_PATH, INI_PATH, LOG_PATH, PG, PGB
+from constants import AUTH_FILE_PATH, INI_PATH, LOG_PATH, PG, PGB, TLS_APP_NAME
 
 
 async def get_unit_address(ops_test: OpsTest, application_name: str, unit_name: str) -> str:
@@ -226,17 +226,22 @@ def relation_exited(ops_test: OpsTest, endpoint_one: str, endpoint_two: str) -> 
 
 
 async def deploy_postgres_bundle(
-    ops_test: OpsTest, scale_pgbouncer: int = 1, scale_postgres: int = 1
+    ops_test: OpsTest, scale_pgbouncer: int=1, scale_postgres: int=1, tls=False
 ):
     """Deploy postgresql bundle."""
+    bundle_path = f"./releases/latest/postgresql-{'tls-' if tls else ''}bundle.yaml"
     async with ops_test.fast_forward():
-        await ops_test.model.deploy("./releases/latest/postgresql-bundle.yaml")
+        await ops_test.model.deploy(bundle_path)
         await asyncio.gather(
             scale_application(ops_test, PGB, scale_pgbouncer),
             scale_application(ops_test, PG, scale_postgres),
         )
         wait_for_relation_joined_between(ops_test, PG, PGB)
-        await ops_test.model.wait_for_idle(apps=[PG, PGB], status="active", timeout=600)
+        apps = [PG, PGB]
+        if tls:
+            apps.append(TLS_APP_NAME)
+            wait_for_relation_joined_between(PG, TLS_APP_NAME)
+        await ops_test.model.wait_for_idle(apps=apps, status="active", timeout=600)
 
 
 async def deploy_and_relate_application_with_pgbouncer(
