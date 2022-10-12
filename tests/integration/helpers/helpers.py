@@ -240,7 +240,7 @@ async def deploy_postgres_bundle(
         apps = [PG, PGB]
         if tls:
             apps.append(TLS_APP_NAME)
-            wait_for_relation_joined_between(PG, TLS_APP_NAME)
+            wait_for_relation_joined_between(ops_test, PG, TLS_APP_NAME)
         await ops_test.model.wait_for_idle(apps=apps, status="active", timeout=600)
 
 
