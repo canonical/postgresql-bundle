@@ -237,7 +237,9 @@ async def deploy_postgres_bundle(
         )
         wait_for_relation_joined_between(ops_test, PG, PGB)
         wait_for_relation_joined_between(ops_test, PG, TLS_APP_NAME)
-        await ops_test.model.wait_for_idle(apps=[PG, PGB, TLS_APP_NAME], status="active", timeout=600)
+        await ops_test.model.wait_for_idle(
+            apps=[PG, PGB, TLS_APP_NAME], status="active", timeout=600
+        )
 
 
 async def deploy_and_relate_application_with_pgbouncer(
