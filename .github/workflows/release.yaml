@@ -18,7 +18,7 @@ jobs:
       CHARMCRAFT_AUTH: ${{ secrets.CHARMHUB_TOKEN }}
     strategy:
       matrix:
-        bundle-name: [postgresql-bundle, postgresql-tls-bundle]
+        bundle-name: [postgresql-bundle]
     steps:
       - uses: actions/checkout@v2
       - name: Install dependencies

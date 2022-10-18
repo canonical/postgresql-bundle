@@ -226,22 +226,18 @@ def relation_exited(ops_test: OpsTest, endpoint_one: str, endpoint_two: str) -> 
 
 
 async def deploy_postgres_bundle(
-    ops_test: OpsTest, scale_pgbouncer: int = 1, scale_postgres: int = 1, tls=False
+    ops_test: OpsTest, scale_pgbouncer: int = 1, scale_postgres: int = 1
 ):
     """Deploy postgresql bundle."""
-    bundle_path = f"./releases/latest/postgresql-{'tls-' if tls else ''}bundle.yaml"
     async with ops_test.fast_forward():
-        await ops_test.model.deploy(bundle_path)
+        await ops_test.model.deploy("./releases/latest/postgresql-bundle.yaml")
         await asyncio.gather(
             scale_application(ops_test, PGB, scale_pgbouncer),
             scale_application(ops_test, PG, scale_postgres),
         )
         wait_for_relation_joined_between(ops_test, PG, PGB)
-        apps = [PG, PGB]
-        if tls:
-            apps.append(TLS_APP_NAME)
-            wait_for_relation_joined_between(ops_test, PG, TLS_APP_NAME)
-        await ops_test.model.wait_for_idle(apps=apps, status="active", timeout=600)
+        wait_for_relation_joined_between(ops_test, PG, TLS_APP_NAME)
+        await ops_test.model.wait_for_idle(apps=[PG, PGB, TLS_APP_NAME], status="active", timeout=600)
 
 
 async def deploy_and_relate_application_with_pgbouncer(
@@ -315,10 +311,7 @@ async def scale_application(ops_test: OpsTest, application_name: str, count: int
         if change > 0:
             await application.add_units(change)
         elif change < 0:
-            units = [
-                unit.name
-                for unit in application.units[0:-change]
-            ]
+            units = [unit.name for unit in application.units[0:-change]]
             await application.destroy_units(*units)
 
         await ops_test.model.wait_for_idle(
