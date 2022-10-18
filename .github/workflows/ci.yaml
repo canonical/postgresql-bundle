@@ -68,6 +68,8 @@ jobs:
 
   integration-tls:
     name: Integration tests for TLS.
+    needs:
+      - lint
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
