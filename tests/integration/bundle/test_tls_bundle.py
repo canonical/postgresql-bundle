@@ -2,12 +2,11 @@
 # See LICENSE file for licensing details.
 
 import logging
-from pathlib import Path
 
 import pytest
-import yaml
 from pytest_operator.plugin import OpsTest
 
+from constants import PG, PGB
 from tests.integration.helpers.helpers import (
     deploy_postgres_bundle,
     get_backend_relation,
@@ -22,12 +21,8 @@ from tests.integration.helpers.postgresql_helpers import (
 
 logger = logging.getLogger(__name__)
 
-METADATA = yaml.safe_load(Path("./metadata.yaml").read_text())
+
 MAILMAN3 = "mailman3-core"
-PGB = METADATA["name"]
-PG = "postgresql"
-TLS = "tls-certificates-operator"
-RELATION = "backend-database"
 
 
 @pytest.mark.tls
@@ -35,7 +30,6 @@ async def test_tls(ops_test: OpsTest):
     await deploy_postgres_bundle(ops_test)
 
     async with ops_test.fast_forward():
-        await ops_test.model.wait_for_idle(apps=[PGB], status="active", timeout=600)
         await ops_test.model.applications[PGB].set_config({"listen_port": "5432"})
         await ops_test.model.wait_for_idle(apps=[PGB], status="active", timeout=600)
         relation = get_backend_relation(ops_test)
