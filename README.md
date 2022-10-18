@@ -1,7 +1,5 @@
 # postgresql-bundle
 
-A repo containing Juju bundles for deploying PostgreSQL and PGBouncer on VMs.
+A juju bundle for deploying PostgreSQL and PGBouncer VM charms.
 
-## TODO finish writing docs!
-
-## Include that the user should replace the self-generated certs in the TLS operator with their own at the earliest opportunity.
+NB: The TLS implementation is self-signed - if other certificates are required, please follow the [TLS Certificate Operator Documentation](https://charmhub.io/tls-certificates-operator) to upload your own.
