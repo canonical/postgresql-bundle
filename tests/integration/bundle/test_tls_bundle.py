@@ -33,7 +33,9 @@ RELATION = "backend-database"
 @pytest.mark.tls
 async def test_tls(ops_test: OpsTest):
     await deploy_postgres_bundle(ops_test)
+
     async with ops_test.fast_forward():
+        await ops_test.model.wait_for_idle(apps=[PGB], status="active", timeout=600)
         await ops_test.model.applications[PGB].set_config({"listen_port": "5432"})
         await ops_test.model.wait_for_idle(apps=[PGB], status="active", timeout=600)
         relation = get_backend_relation(ops_test)
