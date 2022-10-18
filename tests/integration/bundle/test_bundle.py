@@ -39,7 +39,7 @@ async def test_setup(ops_test: OpsTest):
     await deploy_postgres_bundle(ops_test, scale_postgres=3)
 
     async with ops_test.fast_forward():
-        await ops_test.model.applications[PGB].set_config({"listen_port": "5432"})
+        await ops_test.model.applications[PGB].set_config({"listen_port": 5432})
         await ops_test.model.wait_for_idle(apps=[PGB], status="active", timeout=600)
 
         # Extra config option for Mailman3 Core.
