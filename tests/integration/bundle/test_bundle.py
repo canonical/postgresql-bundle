@@ -175,6 +175,8 @@ async def _check_mailman_still_works(ops_test: OpsTest) -> str:
     mailman_unit = ops_test.model.applications[MAILMAN3_CORE_APP_NAME].units[0]
     action = await mailman_unit.run("mailman info")
     result = action.results.get("Stdout", action.results.get("Stderr", None))
-    assert "db url: postgres://" in result, f"no postgres db url, Stderr: {result}"
+    assert (
+        "db url: postgres://" in result
+    ), f"no postgres db url, `mailman info` output: {action.results}"
 
     return result
