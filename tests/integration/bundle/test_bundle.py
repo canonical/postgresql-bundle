@@ -40,7 +40,7 @@ async def test_setup(ops_test: OpsTest):
 
     async with ops_test.fast_forward():
         await ops_test.model.applications[PGB].set_config({"listen_port": "5432"})
-        await ops_test.model.wait_for_idle(apps=[PG], status="active", timeout=600)
+        await ops_test.model.wait_for_idle(apps=[PGB], status="active", timeout=600)
 
         # Extra config option for Mailman3 Core.
         mailman_config = {"hostname": "example.org"}
