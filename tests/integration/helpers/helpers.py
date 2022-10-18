@@ -231,12 +231,13 @@ async def deploy_postgres_bundle(
     """Deploy postgresql bundle."""
     async with ops_test.fast_forward():
         await ops_test.model.deploy("./releases/latest/postgresql-bundle.yaml")
+        wait_for_relation_joined_between(ops_test, PG, TLS_APP_NAME)
+        wait_for_relation_joined_between(ops_test, PG, PGB)
+        await ops_test.model.wait_for_idle(apps=[PG, PGB, TLS_APP_NAME], timeout=600)
         await asyncio.gather(
             scale_application(ops_test, PGB, scale_pgbouncer),
             scale_application(ops_test, PG, scale_postgres),
         )
-        wait_for_relation_joined_between(ops_test, PG, PGB)
-        wait_for_relation_joined_between(ops_test, PG, TLS_APP_NAME)
         await ops_test.model.wait_for_idle(
             apps=[PG, PGB, TLS_APP_NAME], status="active", timeout=600
         )
