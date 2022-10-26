@@ -17,10 +17,17 @@ def fetch_revision(charm, charm_channel):
     charm_info = requests.get(
         f"https://api.snapcraft.io/v2/charms/info/{charm}?fields=channel-map"
     ).json()
+    revision = 0
     for channel in charm_info["channel-map"]:
-        if channel["channel"]["risk"] == charm_channel:
-            return channel["revision"]["revision"]
-    raise ValueError("Revision not found.")
+        if (
+            channel["channel"]["risk"] == charm_channel
+            and channel["revision"]["revision"] > revision
+        ):
+            revision = channel["revision"]["revision"]
+    if revision:
+        return revision
+    else:
+        raise ValueError("Revision not found.")
 
 def update_bundle(bundle_path):
     """Updates a bundle's revision number."""
