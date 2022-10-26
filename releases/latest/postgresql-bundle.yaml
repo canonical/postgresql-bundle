@@ -4,7 +4,7 @@ applications:
     charm: pgbouncer
     constraints: arch=amd64
     num_units: 1
-    revision: 5
+    revision: 11
     to:
     - '1'
   postgresql:
