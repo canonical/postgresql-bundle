@@ -303,7 +303,7 @@ async def scale_application(ops_test: OpsTest, application_name: str, count: int
         application_name: The name of the application
         count: The desired number of units to scale to. If count <= 0, remove application.
     """
-    async with ops_test.fast_forward():
+    async with ops_test.fast_forward(fast_interval="30s"):
         if count <= 0:
             await ops_test.model.applications[application_name].destroy()
             await ops_test.model.wait_for_idle()
