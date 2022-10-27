@@ -8,7 +8,7 @@ on:
 jobs:
   integration-test:
     uses: ./.github/workflows/ci.yaml
-        
+
   publish-bundle:
     name: Publish bundle
     runs-on: ubuntu-latest
@@ -16,6 +16,9 @@ jobs:
       - integration-test
     env:
       CHARMCRAFT_AUTH: ${{ secrets.CHARMHUB_TOKEN }}
+    strategy:
+      matrix:
+        bundle-name: [postgresql-bundle]
     steps:
       - uses: actions/checkout@v2
       - name: Install dependencies
@@ -26,12 +29,12 @@ jobs:
           # Use a temporary directory to support publishing any of the bundles in this root dir
           BUILD_DIR=.bundle_build
           mkdir $BUILD_DIR
-          cp ./releases/latest/postgresql-bundle.yaml $BUILD_DIR/bundle.yaml
+          cp ./releases/latest/${{ matrix.bundle-name }}.yaml $BUILD_DIR/bundle.yaml
           cp charmcraft.yaml $BUILD_DIR
           cp README.md $BUILD_DIR
           cd $BUILD_DIR
           charmcraft pack --destructive-mode
           charmcraft upload ./*.zip
-          export REVISION=$(charmcraft revisions postgresql-bundle 2>&1 | awk 'NR==2 {print $1}')
-          charmcraft release postgresql-bundle --revision $REVISION --channel=latest/edge
+          export REVISION=$(charmcraft revisions ${{ matrix.bundle-name }} 2>&1 | awk 'NR==2 {print $1}')
+          charmcraft release ${{ matrix.bundle-name }} --revision $REVISION --channel=latest/edge
 

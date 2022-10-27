@@ -11,7 +11,7 @@ from charms.pgbouncer_k8s.v0 import pgb
 from pytest_operator.plugin import OpsTest
 from tenacity import RetryError, Retrying, stop_after_delay, wait_fixed
 
-from constants import AUTH_FILE_PATH, INI_PATH, LOG_PATH, PG, PGB
+from constants import AUTH_FILE_PATH, INI_PATH, LOG_PATH, PG, PGB, TLS_APP_NAME
 
 
 async def get_unit_address(ops_test: OpsTest, application_name: str, unit_name: str) -> str:
@@ -231,12 +231,16 @@ async def deploy_postgres_bundle(
     """Deploy postgresql bundle."""
     async with ops_test.fast_forward():
         await ops_test.model.deploy("./releases/latest/postgresql-bundle.yaml")
+        wait_for_relation_joined_between(ops_test, PG, TLS_APP_NAME)
+        wait_for_relation_joined_between(ops_test, PG, PGB)
+        await ops_test.model.wait_for_idle(apps=[PG, PGB, TLS_APP_NAME], timeout=600)
         await asyncio.gather(
             scale_application(ops_test, PGB, scale_pgbouncer),
             scale_application(ops_test, PG, scale_postgres),
         )
-        wait_for_relation_joined_between(ops_test, PG, PGB)
-        await ops_test.model.wait_for_idle(apps=[PG, PGB], status="active", timeout=600)
+        await ops_test.model.wait_for_idle(
+            apps=[PG, PGB, TLS_APP_NAME], status="active", timeout=600
+        )
 
 
 async def deploy_and_relate_application_with_pgbouncer(
@@ -299,21 +303,19 @@ async def scale_application(ops_test: OpsTest, application_name: str, count: int
         application_name: The name of the application
         count: The desired number of units to scale to. If count <= 0, remove application.
     """
-    async with ops_test.fast_forward():
+    async with ops_test.fast_forward(fast_interval="30s"):
         if count <= 0:
             await ops_test.model.applications[application_name].destroy()
             await ops_test.model.wait_for_idle()
             return
 
-        change = count - len(ops_test.model.applications[application_name].units)
+        application = ops_test.model.applications[application_name]
+        change = count - len(application.units)
         if change > 0:
-            await ops_test.model.applications[application_name].add_units(change)
+            await application.add_units(change)
         elif change < 0:
-            units = [
-                unit.name
-                for unit in ops_test.model.applications[application_name].units[0:-change]
-            ]
-            await ops_test.model.applications[application_name].destroy_units(*units)
+            units = [unit.name for unit in application.units[0:-change]]
+            await application.destroy_units(*units)
 
         await ops_test.model.wait_for_idle(
             apps=[application_name], status="active", timeout=1000, wait_for_exact_units=count

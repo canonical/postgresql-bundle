@@ -40,7 +40,7 @@ async def test_setup(ops_test: OpsTest):
 
     async with ops_test.fast_forward():
         await ops_test.model.applications[PGB].set_config({"listen_port": "5432"})
-        await ops_test.model.wait_for_idle(apps=[PG], status="active", timeout=600)
+        await ops_test.model.wait_for_idle(apps=[PGB], status="active", timeout=600)
 
         # Extra config option for Mailman3 Core.
         mailman_config = {"hostname": "example.org"}
@@ -175,6 +175,8 @@ async def _check_mailman_still_works(ops_test: OpsTest) -> str:
     mailman_unit = ops_test.model.applications[MAILMAN3_CORE_APP_NAME].units[0]
     action = await mailman_unit.run("mailman info")
     result = action.results.get("Stdout", action.results.get("Stderr", None))
-    assert "db url: postgres://" in result, f"no postgres db url, Stderr: {result}"
+    assert (
+        "db url: postgres://" in result
+    ), f"no postgres db url, `mailman info` output: {action.results}"
 
     return result
