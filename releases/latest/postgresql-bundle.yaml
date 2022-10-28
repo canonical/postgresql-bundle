@@ -23,7 +23,7 @@ applications:
       # generate self signed certs. This is insecure, so we'll document that the user should
       # replace these with their own later on.
       generate-self-signed-certificates: true
-      ca-common-name: postgresql_tls_bundle_ca
+      ca-common-name: postgresql_bundle_ca
     num_units: 1
     revision: 11
     to:
@@ -35,7 +35,7 @@ machines:
     constraints: arch=amd64
   '2':
     constraints: arch=amd64
-name: postgresql-tls-bundle
+name: postgresql-bundle
 relations:
 - - pgbouncer:backend-database
   - postgresql:database
