@@ -34,6 +34,7 @@ machines:
     constraints: arch=amd64
   '1':
     constraints: arch=amd64
+    series: jammy
   '2':
     constraints: arch=amd64
 name: postgresql-bundle
