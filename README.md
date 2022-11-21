@@ -1,6 +1,6 @@
 # PostgreSQL Bundle
 
-A juju bundle for deploying PostgreSQL and PGBouncer VM charms, with TLS.
+A juju bundle for deploying PostgreSQL and PGBouncer machine charms, with TLS enabled by default. For kubernetes, see the [postgresql-k8s-bundle](https://github.com/canonical/postgresql-k8s-bundle).
 
 Included charms:
 - [postgresql-operator](https://github.com/canonical/postgresql-operator)
@@ -11,6 +11,13 @@ Included charms:
   - Note: TLS not implemented in this proxy yet
 - [tls-certificates-operator](https://github.com/canonical/tls-certificates-operator)
   - The TLS implementation is self-signed - if other certificates are required, please follow the [TLS Certificate Operator Documentation](https://charmhub.io/tls-certificates-operator) to upload your own.
+
+## Deployment
+
+To deploy in a VM juju model:
+```bash
+juju
+```
 
 ## License
 

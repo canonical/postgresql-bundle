@@ -3,7 +3,7 @@
 ## Overview
 
 This documents explains the processes and practices recommended for contributing enhancements to
-this operator.
+this bundle.
 
 - Generally, before developing enhancements to this charm, you should consider [opening an issue
   ](https://github.com/canonical/postgresql-bundle/issues) explaining your use case.
@@ -24,7 +24,7 @@ this operator.
 You can use the environments created by `tox` for development:
 
 ```shell
-tox --notest -e unit
+tox --notest -e lint
 source .tox/unit/bin/activate
 ```
 
