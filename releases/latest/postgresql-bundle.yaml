@@ -16,14 +16,14 @@ applications:
     to:
     - '0'
   tls-certificates-operator:
-    channel: edge
+    channel: beta
     charm: tls-certificates-operator
     constraints: arch=amd64
     num_units: 1
     options:
       ca-common-name: postgresql_bundle_ca
       generate-self-signed-certificates: true
-    revision: 17
+    revision: 13
     to:
     - '2'
 machines:
