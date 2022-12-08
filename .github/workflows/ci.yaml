@@ -9,7 +9,7 @@ on:
 jobs:
   lint:
     name: Lint
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     steps:
       - name: Checkout
         uses: actions/checkout@v3
@@ -22,7 +22,7 @@ jobs:
     name: Integration tests for backend relation
     needs:
       - lint
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     steps:
       - name: Checkout
         uses: actions/checkout@v3
@@ -38,7 +38,7 @@ jobs:
     name: Integration tests for legacy relations
     needs:
       - lint
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     steps:
       - name: Checkout
         uses: actions/checkout@v3
@@ -54,7 +54,7 @@ jobs:
     name: Bundle-specific integration tests
     needs:
       - lint
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     steps:
       - name: Checkout
         uses: actions/checkout@v3
@@ -70,7 +70,7 @@ jobs:
     name: Integration tests for TLS.
     needs:
       - lint
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     steps:
       - name: Checkout
         uses: actions/checkout@v3
