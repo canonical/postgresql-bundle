@@ -5,6 +5,7 @@ applications:
     constraints: arch=amd64
     num_units: 1
     revision: 13
+    series: focal
     to:
     - '1'
   postgresql:
@@ -13,6 +14,7 @@ applications:
     constraints: arch=amd64
     num_units: 1
     revision: 260
+    series: focal
     to:
     - '0'
   tls-certificates-operator:
@@ -24,6 +26,7 @@ applications:
       ca-common-name: postgresql_bundle_ca
       generate-self-signed-certificates: true
     revision: 13
+    series: focal
     to:
     - '2'
 machines:
@@ -39,5 +42,4 @@ relations:
   - postgresql:database
 - - postgresql:certificates
   - tls-certificates-operator:certificates
-series: focal
 type: bundle
