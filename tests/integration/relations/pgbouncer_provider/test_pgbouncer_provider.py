@@ -56,7 +56,7 @@ async def test_database_relation_with_charm_libraries(ops_test: OpsTest, applica
             ),
             deploy_postgres_bundle(ops_test),
         )
-        await ops_test.model.wait_for_idle(timeout=1200)
+        await ops_test.model.wait_for_idle(timeout=1500)
         # Relate the charms and wait for them exchanging some connection data.
         global client_relation
         client_relation = await ops_test.model.add_relation(
