@@ -35,7 +35,7 @@ async def test_mailman3_core_db(ops_test: OpsTest) -> None:
 
     async with ops_test.fast_forward():
         await ops_test.model.wait_for_idle(
-            apps=[PG], status="active", timeout=1000, wait_for_exact_units=1
+            apps=[PG], status="active", timeout=1000
         )
 
         # Extra config option for Mailman3 Core.

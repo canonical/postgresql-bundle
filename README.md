@@ -16,7 +16,8 @@ Included charms:
 
 To deploy in a VM juju model:
 ```bash
-juju
+juju deploy postgresql-bundle
+juju add-relation pgbouncer:database my-app:backend-database
 ```
 
 ## License
