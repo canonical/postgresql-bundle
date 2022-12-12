@@ -11,4 +11,3 @@ async def application_charm(ops_test: OpsTest):
     """Build the application charm."""
     test_charm_path = "./tests/integration/relations/pgbouncer_provider/application-charm"
     return await ops_test.build_charm(test_charm_path)
-

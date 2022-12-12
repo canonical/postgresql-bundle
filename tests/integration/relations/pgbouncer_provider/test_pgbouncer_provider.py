@@ -11,6 +11,7 @@ from pytest_operator.plugin import OpsTest
 
 from constants import BACKEND_RELATION_NAME
 from tests.integration.helpers.helpers import (
+    deploy_postgres_bundle,
     get_app_relation_databag,
     get_backend_relation,
     get_backend_user_pass,
@@ -56,8 +57,7 @@ async def test_database_relation_with_charm_libraries(
                 application_charm,
                 application_name=CLIENT_APP_NAME,
             ),
-        await deploy_postgres_bundle(ops_test)
-        backend_relation = get_backend_relation(ops_test)
+            deploy_postgres_bundle(ops_test),
         )
         await ops_test.model.wait_for_idle(timeout=1200)
         # Relate the charms and wait for them exchanging some connection data.
