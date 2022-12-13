@@ -7,16 +7,17 @@ applications:
     revision: 15
     series: jammy
     to:
-    - '1'
+    - '3'
   postgresql:
     channel: edge
     charm: postgresql
     constraints: arch=amd64
-    num_units: 1
+    num_units: 2
     revision: 260
     series: focal
     to:
     - '0'
+    - '1'
   tls-certificates-operator:
     channel: beta
     charm: tls-certificates-operator
@@ -34,9 +35,11 @@ machines:
     constraints: arch=amd64
   '1':
     constraints: arch=amd64
-    series: jammy
   '2':
     constraints: arch=amd64
+  '3':
+    constraints: arch=amd64
+    series: jammy
 name: postgresql-bundle
 relations:
 - - pgbouncer:backend-database
