@@ -9,7 +9,6 @@ import time
 import pytest
 from pytest_operator.plugin import OpsTest
 
-from constants import BACKEND_RELATION_NAME
 from tests.integration.helpers.helpers import (
     deploy_postgres_bundle,
     get_app_relation_databag,
@@ -46,9 +45,7 @@ MULTIPLE_DATABASE_CLUSTERS_RELATION_NAME = "multiple-database-clusters"
 @pytest.mark.dev
 @pytest.mark.abort_on_fail
 @pytest.mark.client_relation
-async def test_database_relation_with_charm_libraries(
-    ops_test: OpsTest, application_charm, pgb_charm
-):
+async def test_database_relation_with_charm_libraries(ops_test: OpsTest, application_charm):
     """Test basic functionality of database relation interface."""
     # Deploy both charms (multiple units for each application to test that later they correctly
     # set data in the relation application databag using only the leader unit).
@@ -60,7 +57,7 @@ async def test_database_relation_with_charm_libraries(
             ),
             deploy_postgres_bundle(ops_test),
         )
-        await ops_test.model.wait_for_idle(timeout=1200)
+        await ops_test.model.wait_for_idle(timeout=1500)
         # Relate the charms and wait for them exchanging some connection data.
         global client_relation
         client_relation = await ops_test.model.add_relation(
@@ -236,56 +233,7 @@ async def test_two_applications_dont_share_the_same_relation_data(
 
 
 @pytest.mark.client_relation
-async def test_an_application_can_connect_to_multiple_database_clusters(
-    ops_test: OpsTest, pgb_charm
-):
-    """Test that an application can connect to different clusters of the same database."""
-    async with ops_test.fast_forward():
-        await asyncio.gather(
-            ops_test.model.deploy(
-                pgb_charm,
-                application_name=PGB_2,
-                num_units=2,
-            ),
-            ops_test.model.deploy(
-                PG,
-                application_name=PG_2,
-                num_units=2,
-                channel="edge",
-                trust=True,
-            ),
-        )
-        await ops_test.model.add_relation(f"{PGB_2}:{BACKEND_RELATION_NAME}", f"{PG_2}:database")
-        await ops_test.model.wait_for_idle(status="active", timeout=1400)
-    # Relate the application with both database clusters
-    # and wait for them exchanging some connection data.
-    first_cluster_relation = await ops_test.model.add_relation(
-        f"{CLIENT_APP_NAME}:{MULTIPLE_DATABASE_CLUSTERS_RELATION_NAME}", PGB
-    )
-    second_cluster_relation = await ops_test.model.add_relation(
-        f"{CLIENT_APP_NAME}:{MULTIPLE_DATABASE_CLUSTERS_RELATION_NAME}", PGB_2
-    )
-    await ops_test.model.wait_for_idle(status="active")
-
-    # Retrieve the connection string to both database clusters using the relation ids and assert
-    # they are different.
-    application_connection_string = await build_connection_string(
-        ops_test,
-        CLIENT_APP_NAME,
-        MULTIPLE_DATABASE_CLUSTERS_RELATION_NAME,
-        relation_id=first_cluster_relation.id,
-    )
-    another_application_connection_string = await build_connection_string(
-        ops_test,
-        CLIENT_APP_NAME,
-        MULTIPLE_DATABASE_CLUSTERS_RELATION_NAME,
-        relation_id=second_cluster_relation.id,
-    )
-    assert application_connection_string != another_application_connection_string
-
-
-@pytest.mark.client_relation
-async def test_an_application_can_request_multiple_databases(ops_test: OpsTest, application_charm):
+async def test_an_application_can_request_multiple_databases(ops_test: OpsTest):
     """Test that an application can request additional databases using the same interface.
 
     This occurs using a new relation per interface (for now).
