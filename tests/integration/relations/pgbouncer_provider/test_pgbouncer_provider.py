@@ -55,7 +55,7 @@ async def test_database_relation_with_charm_libraries(ops_test: OpsTest, applica
                 application_charm,
                 application_name=CLIENT_APP_NAME,
             ),
-            deploy_postgres_bundle(ops_test, scale_pgbouncer=2 timeout=1500),
+            deploy_postgres_bundle(ops_test, scale_pgbouncer=2, timeout=1500),
         )
         await ops_test.model.wait_for_idle(timeout=1500)
 
