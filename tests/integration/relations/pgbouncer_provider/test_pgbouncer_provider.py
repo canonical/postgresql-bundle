@@ -43,6 +43,7 @@ SECOND_DATABASE_RELATION_NAME = "second-database"
 MULTIPLE_DATABASE_CLUSTERS_RELATION_NAME = "multiple-database-clusters"
 
 
+@pytest.mark.dev
 @pytest.mark.abort_on_fail
 @pytest.mark.client_relation
 async def test_database_relation_with_charm_libraries(
@@ -69,6 +70,7 @@ async def test_database_relation_with_charm_libraries(
     await ops_test.model.wait_for_idle(status="active", raise_on_blocked=True)
 
 
+@pytest.mark.dev
 @pytest.mark.client_relation
 async def test_database_usage(ops_test: OpsTest):
     """Check we can update and delete things."""
@@ -108,6 +110,7 @@ async def test_database_version(ops_test: OpsTest):
     assert version in json.loads(run_version_query["results"])[0][0]
 
 
+@pytest.mark.dev
 @pytest.mark.client_relation
 async def test_readonly_reads(ops_test: OpsTest):
     """Check we can read things in readonly."""
