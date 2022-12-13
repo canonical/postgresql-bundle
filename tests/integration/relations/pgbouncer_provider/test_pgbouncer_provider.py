@@ -42,9 +42,9 @@ SECOND_DATABASE_RELATION_NAME = "second-database"
 MULTIPLE_DATABASE_CLUSTERS_RELATION_NAME = "multiple-database-clusters"
 
 
-@pytest.mark.dev
 @pytest.mark.abort_on_fail
 @pytest.mark.client_relation
+@pytest.mark.dev
 async def test_database_relation_with_charm_libraries(ops_test: OpsTest, application_charm):
     """Test basic functionality of database relation interface."""
     # Deploy both charms (multiple units for each application to test that later they correctly
@@ -55,16 +55,17 @@ async def test_database_relation_with_charm_libraries(ops_test: OpsTest, applica
                 application_charm,
                 application_name=CLIENT_APP_NAME,
             ),
-            deploy_postgres_bundle(ops_test),
+            deploy_postgres_bundle(ops_test, scale_pgbouncer=2 timeout=1500),
         )
         await ops_test.model.wait_for_idle(timeout=1500)
-        # Relate the charms and wait for them exchanging some connection data.
-        global client_relation
-        client_relation = await ops_test.model.add_relation(
-            f"{CLIENT_APP_NAME}:{FIRST_DATABASE_RELATION_NAME}", PGB
-        )
 
-    await ops_test.model.wait_for_idle(status="active", raise_on_blocked=True)
+    # Relate the charms and wait for them exchanging some connection data.
+    global client_relation
+    client_relation = await ops_test.model.add_relation(
+        f"{CLIENT_APP_NAME}:{FIRST_DATABASE_RELATION_NAME}", PGB
+    )
+    async with ops_test.fast_forward():
+        await ops_test.model.wait_for_idle(status="active", raise_on_blocked=True)
 
 
 @pytest.mark.dev

@@ -226,20 +226,20 @@ def relation_exited(ops_test: OpsTest, endpoint_one: str, endpoint_two: str) -> 
 
 
 async def deploy_postgres_bundle(
-    ops_test: OpsTest, scale_pgbouncer: int = 1, scale_postgres: int = 2
+    ops_test: OpsTest, scale_pgbouncer: int = 1, scale_postgres: int = 2, timeout=600
 ):
     """Deploy postgresql bundle."""
     async with ops_test.fast_forward():
         await ops_test.model.deploy("./releases/latest/postgresql-bundle.yaml")
         wait_for_relation_joined_between(ops_test, PG, TLS_APP_NAME)
         wait_for_relation_joined_between(ops_test, PG, PGB)
-        await ops_test.model.wait_for_idle(apps=[PG, PGB, TLS_APP_NAME], timeout=600)
+        await ops_test.model.wait_for_idle(apps=[PG, PGB, TLS_APP_NAME], timeout=timeout)
         await asyncio.gather(
             scale_application(ops_test, PGB, scale_pgbouncer),
             scale_application(ops_test, PG, scale_postgres),
         )
         await ops_test.model.wait_for_idle(
-            apps=[PG, PGB, TLS_APP_NAME], status="active", timeout=600
+            apps=[PG, PGB, TLS_APP_NAME], status="active", timeout=timeout
         )
 
 

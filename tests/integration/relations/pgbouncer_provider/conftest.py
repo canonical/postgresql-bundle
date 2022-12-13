@@ -6,6 +6,7 @@ import pytest
 from pytest_operator.plugin import OpsTest
 
 
+@pytest.mark.abort_on_fail
 @pytest.fixture(scope="module")
 async def application_charm(ops_test: OpsTest):
     """Build the application charm."""
