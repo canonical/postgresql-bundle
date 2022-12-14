@@ -4,8 +4,6 @@
 import asyncio
 import json
 import logging
-
-# import socket
 from typing import Optional
 
 import yaml
@@ -113,9 +111,10 @@ async def build_connection_string(
     return f"dbname='{database}' user='{username}' host='{host}' password='{password}' connect_timeout=10"
 
 
-async def check_new_relation(ops_test: OpsTest, unit_name, relation_id, dbname):
+async def check_new_relation(
+    ops_test: OpsTest, unit_name, relation_id, dbname, table_name="quick_test"
+):
     """Smoke test to check relation is online."""
-    table_name = "quick_test"
     smoke_query = (
         f"DROP TABLE IF EXISTS {table_name};"
         f"CREATE TABLE {table_name}(data TEXT);"

@@ -226,7 +226,7 @@ def relation_exited(ops_test: OpsTest, endpoint_one: str, endpoint_two: str) -> 
 
 
 async def deploy_postgres_bundle(
-    ops_test: OpsTest, scale_pgbouncer: int = 1, scale_postgres: int = 2, timeout=600
+    ops_test: OpsTest, scale_pgbouncer: int = 1, scale_postgres: int = 2, timeout=(60 * 10)
 ):
     """Deploy postgresql bundle."""
     async with ops_test.fast_forward():

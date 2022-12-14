@@ -67,25 +67,13 @@ async def test_database_relation_with_charm_libraries(ops_test: OpsTest, applica
     async with ops_test.fast_forward():
         await ops_test.model.wait_for_idle(status="active", raise_on_blocked=True)
 
-
-@pytest.mark.dev
-@pytest.mark.client_relation
-async def test_database_usage(ops_test: OpsTest):
-    """Check we can update and delete things."""
-    update_query = (
-        "DROP TABLE IF EXISTS test;"
-        "CREATE TABLE test(data TEXT);"
-        "INSERT INTO test(data) VALUES('some data');"
-        "SELECT data FROM test;"
-    )
-    run_update_query = await run_sql_on_application_charm(
+    # Check we can add data
+    await check_new_relation(
         ops_test,
-        unit_name=CLIENT_UNIT_NAME,
-        query=update_query,
-        dbname=TEST_DBNAME,
+        unit_name=ops_test.model.applications[CLIENT_APP_NAME].units[0].name,
         relation_id=client_relation.id,
+        dbname=TEST_DBNAME,
     )
-    assert "some data" in json.loads(run_update_query["results"])[0]
 
 
 @pytest.mark.client_relation
@@ -112,7 +100,7 @@ async def test_database_version(ops_test: OpsTest):
 @pytest.mark.client_relation
 async def test_readonly_reads(ops_test: OpsTest):
     """Check we can read things in readonly."""
-    select_query = "SELECT data FROM test;"
+    select_query = "SELECT data FROM quick_test;"  # Added in the check_new_relation()
     run_select_query_readonly = await run_sql_on_application_charm(
         ops_test,
         unit_name=CLIENT_UNIT_NAME,
@@ -121,7 +109,6 @@ async def test_readonly_reads(ops_test: OpsTest):
         relation_id=client_relation.id,
         readonly=True,
     )
-    # "some data" is added in test_database_usage()
     assert "some data" in json.loads(run_select_query_readonly["results"])[0]
 
 
@@ -342,8 +329,7 @@ async def test_relation_broken(ops_test: OpsTest):
     # Retrieve the relation user.
     databag = await get_app_relation_databag(ops_test, client_unit_name, client_relation.id)
     relation_user = databag.get("username", None)
-    logging.error(f"relation user: {relation_user}")
-    assert relation_user, f"no relation user in client databag: {databag}"
+    assert relation_user, f"no relation user {relation_user} in client databag: {databag} "
 
     # Break the relation.
     await ops_test.model.applications[PGB].remove_relation(
