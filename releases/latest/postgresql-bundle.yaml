@@ -46,4 +46,5 @@ relations:
   - postgresql:database
 - - postgresql:certificates
   - tls-certificates-operator:certificates
+series: focal
 type: bundle
