@@ -11,7 +11,7 @@ jobs:
 
   publish-bundle:
     name: Publish bundle
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     needs:
       - integration-test
     env:
