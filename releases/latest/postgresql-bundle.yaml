@@ -33,10 +33,13 @@ applications:
 machines:
   '0':
     constraints: arch=amd64
+    series: focal
   '1':
     constraints: arch=amd64
+    series: focal
   '2':
     constraints: arch=amd64
+    series: focal
   '3':
     constraints: arch=amd64
     series: jammy

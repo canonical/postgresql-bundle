@@ -34,8 +34,8 @@ jobs:
       - name: Run integration tests
         run: tox -e backend-integration
 
-  integration-legacy-relations:
-    name: Integration tests for legacy relations
+  integration-client-relations:
+    name: Integration tests for client relations
     needs:
       - lint
     runs-on: ubuntu-22.04
@@ -48,8 +48,24 @@ jobs:
           provider: lxd
           lxd-channel: 5.7/stable
       - name: Run integration tests
-        run: tox -e legacy-relation-integration
+        run: tox -e client-relation-integration
 
+  integration-legacy-client-relations:
+    name: Integration tests for legacy client relations
+    needs:
+      - lint
+    runs-on: ubuntu-22.04
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Setup operator environment
+        uses: charmed-kubernetes/actions-operator@main
+        with:
+          provider: lxd
+          lxd-channel: 5.7/stable
+      - name: Run integration tests
+        run: tox -e legacy-client-relation-integration
+        
   integration-bundle:
     name: Bundle-specific integration tests
     needs:
