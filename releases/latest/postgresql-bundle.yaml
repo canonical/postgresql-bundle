@@ -13,7 +13,7 @@ applications:
     charm: postgresql
     constraints: arch=amd64
     num_units: 2
-    revision: 262
+    revision: 263
     series: focal
     to:
     - '0'
