@@ -3,11 +3,11 @@
 # See LICENSE file for licensing details.
 import logging
 
-import pytest
 from pytest_operator.plugin import OpsTest
 
 from constants import DB_ADMIN_RELATION_NAME, PG, PGB
-from tests.integration.helpers.helpers import (
+
+from ..helpers.helpers import (
     deploy_postgres_bundle,
     get_app_relation_databag,
     run_sql,
@@ -20,7 +20,6 @@ logger = logging.getLogger(__name__)
 PSQL = "psql"
 
 
-@pytest.mark.legacy_relation
 async def test_db_admin_with_psql(ops_test: OpsTest) -> None:
     # Deploy application.
     await ops_test.model.deploy(

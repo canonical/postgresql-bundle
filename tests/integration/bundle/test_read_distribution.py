@@ -8,7 +8,8 @@ import pytest
 from pytest_operator.plugin import OpsTest
 
 from constants import PG, PGB
-from tests.integration.helpers.helpers import (
+
+from ..helpers.helpers import (
     deploy_postgres_bundle,
     get_app_relation_databag,
     run_sql,
@@ -21,7 +22,6 @@ PSQL = "psql"
 
 # This test is being skipped until pbouncer 1.17 is implemented in a snap next cycle
 @pytest.mark.skip
-@pytest.mark.bundle
 async def test_read_distribution(ops_test: OpsTest):
     """Check that read instance changed during reconnection to proxy.
 

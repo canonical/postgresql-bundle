@@ -3,17 +3,17 @@
 
 import logging
 
-import pytest
 from pytest_operator.plugin import OpsTest
 
 from constants import PG, PGB
-from tests.integration.helpers.helpers import (
+
+from ..helpers.helpers import (
     deploy_postgres_bundle,
     get_backend_relation,
     get_backend_user_pass,
     wait_for_relation_joined_between,
 )
-from tests.integration.helpers.postgresql_helpers import (
+from ..helpers.postgresql_helpers import (
     enable_connections_logging,
     get_postgres_primary,
     run_command_on_unit,
@@ -25,7 +25,6 @@ logger = logging.getLogger(__name__)
 MAILMAN3 = "mailman3-core"
 
 
-@pytest.mark.tls
 async def test_tls(ops_test: OpsTest):
     await deploy_postgres_bundle(ops_test)
 
