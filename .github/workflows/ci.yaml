@@ -32,7 +32,7 @@ jobs:
       matrix:
         tox-environments:
           - backend-integration
-#          - client-relation-integration
+          - client-relation-integration
           - legacy-client-relation-integration
           - legacy-client-relation-integration-admin
           - bundle-integration
