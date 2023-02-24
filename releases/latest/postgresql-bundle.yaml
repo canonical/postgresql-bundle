@@ -19,15 +19,15 @@ applications:
     - '0'
     - '1'
   tls-certificates-operator:
-    channel: latest/beta
+    channel: latest/stable
     charm: tls-certificates-operator
     constraints: arch=amd64
     num_units: 1
     options:
       ca-common-name: postgresql_bundle_ca
       generate-self-signed-certificates: true
-    revision: 13
-    series: focal
+    revision: 22
+    series: jammy
     to:
     - '2'
 machines:
@@ -39,7 +39,7 @@ machines:
     series: focal
   '2':
     constraints: arch=amd64
-    series: focal
+    series: jammy
   '3':
     constraints: arch=amd64
     series: jammy

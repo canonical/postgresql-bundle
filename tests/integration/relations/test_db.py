@@ -3,19 +3,19 @@
 # See LICENSE file for licensing details.
 import logging
 
-import pytest
 from mailmanclient import Client
 from pytest_operator.plugin import OpsTest
 
 from constants import PG, PGB
-from tests.integration.helpers.helpers import (
+
+from ..helpers.helpers import (
     deploy_and_relate_application_with_pgbouncer,
     deploy_postgres_bundle,
     get_backend_relation,
     get_backend_user_pass,
     get_legacy_relation_username,
 )
-from tests.integration.helpers.postgresql_helpers import (
+from ..helpers.postgresql_helpers import (
     check_database_users_existence,
     check_databases_creation,
 )
@@ -26,7 +26,6 @@ MAILMAN3_CORE_APP_NAME = "mailman3-core"
 APPLICATION_UNITS = 1
 
 
-@pytest.mark.legacy_relation
 async def test_mailman3_core_db(ops_test: OpsTest) -> None:
     """Deploy Mailman3 Core to test the 'db' relation."""
     await deploy_postgres_bundle(ops_test)

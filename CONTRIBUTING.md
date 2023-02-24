@@ -21,20 +21,21 @@ this bundle.
 
 ## Developing
 
-You can use the environments created by `tox` for development:
+You can create an environment for development with `tox`:
 
 ```shell
-tox --notest -e lint
-source .tox/unit/bin/activate
+tox devenv -e integration
+source venv/bin/activate
 ```
 
 ### Testing
 
 ```shell
-tox -e fmt           # update your code according to linting rules
-tox -e lint          # code style
-tox -e integration   # integration tests
-tox                  # runs 'lint' environment
+tox run -e format        # update your code according to linting rules
+tox run -e lint          # code style
+tox run -e unit          # unit tests
+tox run -e integration   # integration tests
+tox                      # runs 'lint' and 'unit' environments
 ```
 
 For more test options, see tox.ini.

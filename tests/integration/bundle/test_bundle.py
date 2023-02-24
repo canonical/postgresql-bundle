@@ -8,7 +8,8 @@ from mailmanclient import Client
 from pytest_operator.plugin import OpsTest
 
 from constants import PG, PGB
-from tests.integration.helpers.helpers import (
+
+from ..helpers.helpers import (
     deploy_and_relate_application_with_pgbouncer,
     deploy_postgres_bundle,
     get_app_relation_databag,
@@ -18,7 +19,7 @@ from tests.integration.helpers.helpers import (
     get_legacy_relation_username,
     scale_application,
 )
-from tests.integration.helpers.postgresql_helpers import (
+from ..helpers.postgresql_helpers import (
     check_database_users_existence,
     check_databases_creation,
 )
@@ -28,7 +29,6 @@ logger = logging.getLogger(__name__)
 MAILMAN3_CORE_APP_NAME = "mailman3-core"
 
 
-@pytest.mark.bundle
 @pytest.mark.abort_on_fail
 async def test_setup(ops_test: OpsTest):
     """Deploy bundle and set up mailman for testing.
@@ -64,7 +64,6 @@ async def test_setup(ops_test: OpsTest):
     await scale_application(ops_test, application_name=PGB, count=3)
 
 
-@pytest.mark.bundle
 async def test_kill_pg_primary(ops_test: OpsTest):
     """Kill primary, check that all proxy instances switched traffic for a new primary."""
     # Get postgres primary through action
@@ -115,7 +114,6 @@ async def test_kill_pg_primary(ops_test: OpsTest):
         assert unit_cfg["databases"]["mailman3_standby"]["host"] != old_primary_ip
 
 
-@pytest.mark.bundle
 async def test_discover_dbs(ops_test: OpsTest):
     """Check that proxy discovers new members when scaling up postgres charm."""
     await scale_application(ops_test, PG, 3)
