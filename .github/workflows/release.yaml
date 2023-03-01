@@ -12,6 +12,7 @@ jobs:
   publish-bundle:
     name: Publish bundle
     runs-on: ubuntu-22.04
+    timeout-minutes: 5
     needs:
       - integration-test
     env:
