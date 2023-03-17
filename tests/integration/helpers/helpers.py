@@ -13,6 +13,10 @@ from tenacity import RetryError, Retrying, stop_after_delay, wait_fixed
 
 from constants import AUTH_FILE_PATH, INI_PATH, LOG_PATH, PG, PGB, TLS_APP_NAME
 
+CLIENT_APP_NAME = "application"
+FIRST_DATABASE_RELATION_NAME = "first-database"
+SECOND_DATABASE_RELATION_NAME = "second-database"
+
 
 async def get_unit_address(ops_test: OpsTest, application_name: str, unit_name: str) -> str:
     """Get unit IP address.
@@ -239,7 +243,7 @@ async def deploy_postgres_bundle(
             scale_application(ops_test, PG, scale_postgres),
         )
         await ops_test.model.wait_for_idle(
-            apps=[PG, PGB, TLS_APP_NAME], status="active", timeout=timeout
+            apps=[PG, TLS_APP_NAME], status="active", timeout=timeout
         )
 
 
