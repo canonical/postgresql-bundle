@@ -11,7 +11,7 @@ from charms.pgbouncer_k8s.v0 import pgb
 from pytest_operator.plugin import OpsTest
 from tenacity import RetryError, Retrying, stop_after_delay, wait_fixed
 
-from constants import AUTH_FILE_PATH, INI_PATH, LOG_PATH, PG, PGB, TLS_APP_NAME
+from constants import AUTH_FILE_PATH, INI_NAME, LOG_PATH, PG, PGB, PGB_DIR, TLS_APP_NAME
 
 CLIENT_APP_NAME = "application"
 FIRST_DATABASE_RELATION_NAME = "first-database"
@@ -106,8 +106,11 @@ async def cat_file_from_unit(ops_test: OpsTest, filepath: str, unit_name: str) -
     return output
 
 
-async def get_cfg(ops_test: OpsTest, unit_name: str, path: str = INI_PATH) -> pgb.PgbConfig:
+async def get_cfg(ops_test: OpsTest, unit_name: str, path: str = None) -> pgb.PgbConfig:
     """Gets pgbouncer config from unit filesystem."""
+    if path is None:
+        app_name = unit_name.split("/")[0]
+        path = f"{PGB_DIR}/{app_name}/{INI_NAME}"
     cat = await cat_file_from_unit(ops_test, path, unit_name)
     return pgb.PgbConfig(cat)
 
@@ -250,8 +253,11 @@ async def deploy_and_relate_application_with_pgbouncer(
     config: dict = {},
     channel: str = "stable",
     relation: str = "db",
+    series: str = "jammy",
+    force: bool = False,
+    wait: bool = True,
 ):
-    """Helper function to deploy and relate application with pgbouncer.
+    """Helper function to deploy and relate application with Pgbouncer cluster.
 
     This assumes pgbouncer already exists and is related to postgres
 
@@ -264,32 +270,62 @@ async def deploy_and_relate_application_with_pgbouncer(
         channel: The channel to use for the charm.
         relation: Name of the pgbouncer relation to relate
             the application to.
+        series: The series on which to deploy.
+        force: Allow charm to be deployed to a machine running an unsupported series.
+        wait: Wait for model to idle
 
     Returns:
-        Relation object representing the created relation.
+        the id of the created relation.
     """
-    async with ops_test.fast_forward():
-        # Deploy application.
+    # Deploy application.
+    if not force:
         await ops_test.model.deploy(
             charm,
             channel=channel,
             application_name=application_name,
             num_units=number_of_units,
             config=config,
+            series=series,
         )
+    else:
+        # Dirty hack to force the series
+        status = await ops_test.model.get_status()
+        args = [
+            "juju",
+            "deploy",
+            charm,
+            application_name,
+            "-m",
+            status.model.name,
+            "--force",
+            "-n",
+            str(number_of_units),
+            "--series",
+            series,
+            "--channel",
+            channel,
+        ]
+        if config:
+            for key, val in config.items():
+                args += ["--config", f"{key}={val}"]
+        subprocess.run(args)
+
+    async with ops_test.fast_forward():
         await ops_test.model.wait_for_idle(
             apps=[application_name],
-            timeout=1000,
+            timeout=600,
         )
 
-        # Relate application to pgbouncer.
-        relation = await ops_test.model.relate(application_name, f"{PGB}:{relation}")
-        wait_for_relation_joined_between(ops_test, PGB, application_name)
-        await ops_test.model.wait_for_idle(
-            apps=[application_name, PG, PGB],
-            status="active",
-            timeout=1000,
-        )
+    # Relate application to pgbouncer.
+    relation = await ops_test.model.relate(application_name, f"{PGB}:{relation}")
+    wait_for_relation_joined_between(ops_test, PGB, application_name)
+    if wait:
+        async with ops_test.fast_forward():
+            await ops_test.model.wait_for_idle(
+                apps=[application_name, PG, PGB],
+                status="active",
+                timeout=600,
+            )
 
     return relation
 
@@ -319,35 +355,3 @@ async def scale_application(ops_test: OpsTest, application_name: str, count: int
         await ops_test.model.wait_for_idle(
             apps=[application_name], status="active", timeout=1000, wait_for_exact_units=count
         )
-
-
-async def force_deploy(
-    ops_test: OpsTest,
-    charm: str,
-    application_name: str,
-    number_of_units: int = 1,
-    config: dict = {},
-    channel: str = "stable",
-    series: str = "jammy",
-):
-    # Dirty hack to force the series
-    status = await ops_test.model.get_status()
-    args = [
-        "juju",
-        "deploy",
-        charm,
-        application_name,
-        "-m",
-        status.model.name,
-        "--force",
-        "-n",
-        str(number_of_units),
-        "--series",
-        series,
-        "--channel",
-        channel,
-    ]
-    if config:
-        for key, val in config.items():
-            args += ["--config", f"{key}={val}"]
-    subprocess.run(args)
