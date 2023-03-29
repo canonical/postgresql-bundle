@@ -3,6 +3,7 @@
 # See LICENSE file for licensing details.
 
 import json
+import subprocess
 from multiprocessing import ProcessError
 from typing import Dict
 
@@ -318,3 +319,35 @@ async def scale_application(ops_test: OpsTest, application_name: str, count: int
         await ops_test.model.wait_for_idle(
             apps=[application_name], status="active", timeout=1000, wait_for_exact_units=count
         )
+
+
+async def force_deploy(
+    ops_test: OpsTest,
+    charm: str,
+    application_name: str,
+    number_of_units: int = 1,
+    config: dict = {},
+    channel: str = "stable",
+    series: str = "jammy",
+):
+    # Dirty hack to force the series
+    status = await ops_test.model.get_status()
+    args = [
+        "juju",
+        "deploy",
+        charm,
+        application_name,
+        "-m",
+        status.model.name,
+        "--force",
+        "-n",
+        str(number_of_units),
+        "--series",
+        series,
+        "--channel",
+        channel,
+    ]
+    if config:
+        for key, val in config.items():
+            args += ["--config", f"{key}={val}"]
+    subprocess.run(args)
