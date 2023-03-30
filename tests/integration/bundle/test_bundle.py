@@ -65,7 +65,7 @@ async def test_kill_pg_primary(ops_test: OpsTest):
 
     await ops_test.model.destroy_units(primary)
     await ops_test.model.wait_for_idle(
-        apps=[PG, PGB, CLIENT_APP_NAME], status="active", timeout=1000
+        apps=[PG, PGB, CLIENT_APP_NAME], status="active", timeout=600
     )
 
     # Assert pgbouncer config points to the new correct primary

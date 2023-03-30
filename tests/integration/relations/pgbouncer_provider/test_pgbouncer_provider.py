@@ -34,7 +34,7 @@ PG = "postgresql"
 PG_2 = "another-postgresql"
 PGB = "pgbouncer"
 PGB_2 = "another-pgbouncer"
-APP_NAMES = [CLIENT_APP_NAME, PG, PGB]
+APP_NAMES = [CLIENT_APP_NAME, PG]
 FIRST_DATABASE_RELATION_NAME = "first-database"
 SECOND_DATABASE_RELATION_NAME = "second-database"
 MULTIPLE_DATABASE_CLUSTERS_RELATION_NAME = "multiple-database-clusters"
@@ -51,6 +51,7 @@ async def test_database_relation_with_charm_libraries(ops_test: OpsTest, applica
                 application_charm,
                 application_name=CLIENT_APP_NAME,
                 num_units=2,
+                series="jammy",
             ),
             deploy_postgres_bundle(ops_test, timeout=1500),
         )
