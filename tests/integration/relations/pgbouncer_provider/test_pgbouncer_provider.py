@@ -185,7 +185,7 @@ async def test_an_application_can_request_multiple_databases(ops_test: OpsTest, 
         config={"listen_port": 7432},
     )
     await asyncio.gather(
-        ops_test.model.add_relation(f"{PGB_2}:backend-database", f"{PG_2}:database"),
+        ops_test.model.add_relation(f"{PGB_2}:backend-database", f"{PG}:database"),
         ops_test.model.add_relation(f"{CLIENT_APP_NAME}:{SECOND_DATABASE_RELATION_NAME}", PGB_2),
     )
     async with ops_test.fast_forward():
