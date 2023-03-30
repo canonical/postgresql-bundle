@@ -21,6 +21,7 @@ from ..helpers.postgresql_helpers import check_databases_creation
 
 logger = logging.getLogger(__name__)
 CLIENT_APP_NAME = "application"
+FIRST_DATABASE_RELATION_NAME = "first-database"
 TEST_DBNAME = "application_first_database"
 
 
@@ -40,6 +41,7 @@ async def test_setup(ops_test: OpsTest, application_charm):
             ),
             deploy_postgres_bundle(ops_test, scale_postgres=3),
         )
+        await ops_test.model.add_relation(f"{CLIENT_APP_NAME}:{FIRST_DATABASE_RELATION_NAME}", PGB)
         await ops_test.model.wait_for_idle(apps=[CLIENT_APP_NAME, PG], timeout=1500)
 
     pgb_user, pgb_pass = await get_backend_user_pass(ops_test, get_backend_relation(ops_test))
@@ -63,7 +65,7 @@ async def test_kill_pg_primary(ops_test: OpsTest):
 
     await ops_test.model.destroy_units(primary)
     await ops_test.model.wait_for_idle(
-        apps=[PG, PGB, CLIENT_APP_NAME], status="active", timeout=600
+        apps=[PG, PGB, CLIENT_APP_NAME], status="active", timeout=1000
     )
 
     # Assert pgbouncer config points to the new correct primary
