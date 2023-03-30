@@ -50,6 +50,7 @@ async def test_database_relation_with_charm_libraries(ops_test: OpsTest, applica
             ops_test.model.deploy(
                 application_charm,
                 application_name=CLIENT_APP_NAME,
+                num_units=2,
             ),
             deploy_postgres_bundle(ops_test, timeout=1500),
         )

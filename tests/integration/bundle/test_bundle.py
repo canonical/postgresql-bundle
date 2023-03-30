@@ -2,6 +2,7 @@
 # See LICENSE file for licensing details.
 
 import logging
+from asyncio import gather
 
 import pytest
 from pytest_operator.plugin import OpsTest
@@ -9,7 +10,6 @@ from pytest_operator.plugin import OpsTest
 from constants import PG, PGB
 
 from ..helpers.helpers import (
-    deploy_and_relate_application_with_pgbouncer,
     deploy_postgres_bundle,
     get_app_relation_databag,
     get_backend_relation,
@@ -20,33 +20,30 @@ from ..helpers.helpers import (
 from ..helpers.postgresql_helpers import check_databases_creation
 
 logger = logging.getLogger(__name__)
-
-WEEBL = "weebl"
+CLIENT_APP_NAME = "application"
+TEST_DBNAME = "application_first_database"
 
 
 @pytest.mark.abort_on_fail
-async def test_setup(ops_test: OpsTest):
+async def test_setup(ops_test: OpsTest, application_charm):
     """Deploy bundle and set up mailman for testing.
 
     We're adding an application to ensure that related applications stay online during service
     interruptions.
     """
-    await deploy_postgres_bundle(ops_test, scale_postgres=3)
-
     async with ops_test.fast_forward():
-        # Deploy and test the deployment of Weebl.
-        await deploy_and_relate_application_with_pgbouncer(
-            ops_test,
-            WEEBL,
-            WEEBL,
-            series="jammy",
-            force=True,
+        await gather(
+            ops_test.model.deploy(
+                application_charm,
+                application_name=CLIENT_APP_NAME,
+                num_units=2,
+            ),
+            deploy_postgres_bundle(ops_test, scale_postgres=3),
         )
+        await ops_test.model.wait_for_idle(apps=[CLIENT_APP_NAME, PG], timeout=1500)
 
     pgb_user, pgb_pass = await get_backend_user_pass(ops_test, get_backend_relation(ops_test))
-    await check_databases_creation(ops_test, ["bugs_database"], pgb_user, pgb_pass)
-
-    await scale_application(ops_test, application_name=WEEBL, count=3)
+    await check_databases_creation(ops_test, [TEST_DBNAME], pgb_user, pgb_pass)
 
 
 async def test_kill_pg_primary(ops_test: OpsTest):
@@ -65,7 +62,9 @@ async def test_kill_pg_primary(ops_test: OpsTest):
         assert unit_cfg["databases"]["bugs_database"]["host"] == old_primary_ip
 
     await ops_test.model.destroy_units(primary)
-    await ops_test.model.wait_for_idle(apps=[PG, PGB, WEEBL], status="active", timeout=600)
+    await ops_test.model.wait_for_idle(
+        apps=[PG, PGB, CLIENT_APP_NAME], status="active", timeout=600
+    )
 
     # Assert pgbouncer config points to the new correct primary
     unit_name = ops_test.model.applications[PG].units[0].name
