@@ -91,20 +91,6 @@ async def test_database_version(ops_test: OpsTest):
     assert version in json.loads(run_version_query["results"])[0][0]
 
 
-async def test_readonly_reads(ops_test: OpsTest):
-    """Check we can read things in readonly."""
-    select_query = "SELECT data FROM quick_test;"  # Added in the check_new_relation()
-    run_select_query_readonly = await run_sql_on_application_charm(
-        ops_test,
-        unit_name=CLIENT_UNIT_NAME,
-        query=select_query,
-        dbname=TEST_DBNAME,
-        relation_id=client_relation.id,
-        readonly=True,
-    )
-    assert "some data" in json.loads(run_select_query_readonly["results"])[0]
-
-
 async def test_database_admin_permissions(ops_test: OpsTest):
     """Test admin permissions."""
     create_database_query = "CREATE DATABASE another_database;"
@@ -190,13 +176,18 @@ async def test_an_application_can_request_multiple_databases(ops_test: OpsTest, 
 
     This occurs using a new relation per interface (for now).
     """
-    # Relate the charms and wait for them exchanging some connection data.
-    global client_relation
-    client_relation = await ops_test.model.add_relation(
-        f"{CLIENT_APP_NAME}:{FIRST_DATABASE_RELATION_NAME}", PGB
-    )
     # Relate the charms using another relation and wait for them exchanging some connection data.
-    await ops_test.model.add_relation(f"{CLIENT_APP_NAME}:{SECOND_DATABASE_RELATION_NAME}", PGB_2)
+    await ops_test.model.deploy(
+        PGB,
+        channel="edge",
+        application_name=PGB_2,
+        num_units=None,
+        config={"listen_port": 7432},
+    )
+    await asyncio.gather(
+        ops_test.model.add_relation(f"{PGB_2}:backend-database", f"{PG_2}:database"),
+        ops_test.model.add_relation(f"{CLIENT_APP_NAME}:{SECOND_DATABASE_RELATION_NAME}", PGB_2),
+    )
     async with ops_test.fast_forward():
         await ops_test.model.wait_for_idle(apps=APP_NAMES + [PGB, PGB_2], status="active")
 

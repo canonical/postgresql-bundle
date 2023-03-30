@@ -31,16 +31,19 @@ async def test_setup(ops_test: OpsTest):
     We're adding an application to ensure that related applications stay online during service
     interruptions.
     """
-    backend_relation = await deploy_postgres_bundle(ops_test, scale_postgres=3)
+    await deploy_postgres_bundle(ops_test, scale_postgres=3)
 
     async with ops_test.fast_forward():
-        await ops_test.model.applications[PGB].set_config({"listen_port": "5432"})
-        await ops_test.model.wait_for_idle(apps=[PGB], status="active", timeout=600)
+        # Deploy and test the deployment of Weebl.
+        await deploy_and_relate_application_with_pgbouncer(
+            ops_test,
+            WEEBL,
+            WEEBL,
+            series="jammy",
+            force=True,
+        )
 
-        # Deploy and test the deployment of Mailman3 Core.
-        await deploy_and_relate_application_with_pgbouncer(ops_test, WEEBL, WEEBL)
-
-    pgb_user, pgb_pass = await get_backend_user_pass(ops_test, backend_relation)
+    pgb_user, pgb_pass = await get_backend_user_pass(ops_test, get_backend_relation(ops_test))
     await check_databases_creation(ops_test, ["bugs_database"], pgb_user, pgb_pass)
 
     await scale_application(ops_test, application_name=WEEBL, count=3)
