@@ -39,7 +39,7 @@ async def test_setup(ops_test: OpsTest, application_charm):
                 application_name=CLIENT_APP_NAME,
                 num_units=2,
             ),
-            deploy_postgres_bundle(ops_test, scale_postgres=3),
+            deploy_postgres_bundle(ops_test, scale_postgres=3, timeout=1500),
         )
         await ops_test.model.add_relation(f"{CLIENT_APP_NAME}:{FIRST_DATABASE_RELATION_NAME}", PGB)
         await ops_test.model.wait_for_idle(apps=[CLIENT_APP_NAME, PG], timeout=1500)
@@ -61,7 +61,7 @@ async def test_kill_pg_primary(ops_test: OpsTest):
     old_primary_ip = ops_test.model.units.get(primary).public_address
     for unit in ops_test.model.applications[PGB].units:
         unit_cfg = await get_cfg(ops_test, unit.name)
-        assert unit_cfg["databases"]["bugs_database"]["host"] == old_primary_ip
+        assert unit_cfg["databases"][TEST_DBNAME]["host"] == old_primary_ip
 
     await ops_test.model.destroy_units(primary)
     await ops_test.model.wait_for_idle(
