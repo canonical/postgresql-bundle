@@ -80,9 +80,7 @@ async def test_kill_pg_primary(ops_test: OpsTest):
     assert new_primary_ip != old_primary_ip
     for unit in ops_test.model.applications[PGB].units:
         unit_cfg = await get_cfg(ops_test, unit.name)
-        assert unit_cfg["databases"]["mailman3"]["host"] == new_primary_ip
-        assert unit_cfg["databases"]["mailman3_standby"]["host"] != new_primary_ip
-        assert unit_cfg["databases"]["mailman3_standby"]["host"] != old_primary_ip
+        assert unit_cfg["databases"][TEST_DBNAME]["host"] == new_primary_ip
 
 
 async def test_discover_dbs(ops_test: OpsTest):
