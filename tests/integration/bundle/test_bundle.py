@@ -2,7 +2,6 @@
 # See LICENSE file for licensing details.
 
 import logging
-from asyncio import gather
 
 import pytest
 from pytest_operator.plugin import OpsTest
@@ -32,14 +31,13 @@ async def test_setup(ops_test: OpsTest, application_charm):
     We're adding an application to ensure that related applications stay online during service
     interruptions.
     """
+    await deploy_postgres_bundle(ops_test, scale_postgres=3)
+
     async with ops_test.fast_forward():
-        await gather(
-            ops_test.model.deploy(
-                application_charm,
-                application_name=CLIENT_APP_NAME,
-                num_units=2,
-            ),
-            deploy_postgres_bundle(ops_test, scale_postgres=3, timeout=1500),
+        await ops_test.model.deploy(
+            application_charm,
+            application_name=CLIENT_APP_NAME,
+            num_units=2,
         )
         await ops_test.model.add_relation(f"{CLIENT_APP_NAME}:{FIRST_DATABASE_RELATION_NAME}", PGB)
         await ops_test.model.wait_for_idle(apps=[CLIENT_APP_NAME, PG], timeout=1500)
