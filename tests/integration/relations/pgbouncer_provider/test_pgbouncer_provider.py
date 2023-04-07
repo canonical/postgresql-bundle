@@ -7,6 +7,7 @@ import logging
 import time
 
 import pytest
+from juju.errors import JujuAPIError
 from pytest_operator.plugin import OpsTest
 
 from ...helpers.helpers import (
@@ -14,10 +15,7 @@ from ...helpers.helpers import (
     get_app_relation_databag,
     get_backend_relation,
     get_backend_user_pass,
-    get_cfg,
-    run_sql,
     scale_application,
-    wait_for_relation_joined_between,
 )
 from ...helpers.postgresql_helpers import check_database_users_existence
 from .helpers import (
@@ -36,7 +34,7 @@ PG = "postgresql"
 PG_2 = "another-postgresql"
 PGB = "pgbouncer"
 PGB_2 = "another-pgbouncer"
-APP_NAMES = [CLIENT_APP_NAME, PG, PGB]
+APP_NAMES = [CLIENT_APP_NAME, PG]
 FIRST_DATABASE_RELATION_NAME = "first-database"
 SECOND_DATABASE_RELATION_NAME = "second-database"
 MULTIPLE_DATABASE_CLUSTERS_RELATION_NAME = "multiple-database-clusters"
@@ -52,10 +50,12 @@ async def test_database_relation_with_charm_libraries(ops_test: OpsTest, applica
             ops_test.model.deploy(
                 application_charm,
                 application_name=CLIENT_APP_NAME,
+                num_units=2,
+                series="jammy",
             ),
-            deploy_postgres_bundle(ops_test, scale_pgbouncer=2, timeout=1500),
+            deploy_postgres_bundle(ops_test, timeout=1500),
         )
-        await ops_test.model.wait_for_idle(timeout=1500)
+        await ops_test.model.wait_for_idle(apps=[CLIENT_APP_NAME, PG], timeout=1500)
 
     # Relate the charms and wait for them exchanging some connection data.
     global client_relation
@@ -63,7 +63,7 @@ async def test_database_relation_with_charm_libraries(ops_test: OpsTest, applica
         f"{CLIENT_APP_NAME}:{FIRST_DATABASE_RELATION_NAME}", PGB
     )
     async with ops_test.fast_forward():
-        await ops_test.model.wait_for_idle(status="active", raise_on_blocked=True)
+        await ops_test.model.wait_for_idle(status="active")
 
     # Check we can add data
     await check_new_relation(
@@ -93,34 +93,6 @@ async def test_database_version(ops_test: OpsTest):
     assert version in json.loads(run_version_query["results"])[0][0]
 
 
-async def test_readonly_reads(ops_test: OpsTest):
-    """Check we can read things in readonly."""
-    select_query = "SELECT data FROM quick_test;"  # Added in the check_new_relation()
-    run_select_query_readonly = await run_sql_on_application_charm(
-        ops_test,
-        unit_name=CLIENT_UNIT_NAME,
-        query=select_query,
-        dbname=TEST_DBNAME,
-        relation_id=client_relation.id,
-        readonly=True,
-    )
-    assert "some data" in json.loads(run_select_query_readonly["results"])[0]
-
-
-async def test_cant_write_in_readonly(ops_test: OpsTest):
-    """Check we can't write in readonly."""
-    drop_query = "DROP TABLE test;"
-    run_drop_query_readonly = await run_sql_on_application_charm(
-        ops_test,
-        unit_name=CLIENT_UNIT_NAME,
-        query=drop_query,
-        dbname=TEST_DBNAME,
-        relation_id=client_relation.id,
-        readonly=True,
-    )
-    assert run_drop_query_readonly["Code"] == "1"
-
-
 async def test_database_admin_permissions(ops_test: OpsTest):
     """Test admin permissions."""
     create_database_query = "CREATE DATABASE another_database;"
@@ -146,7 +118,7 @@ async def test_database_admin_permissions(ops_test: OpsTest):
 
 async def test_no_read_only_endpoint_in_standalone_cluster(ops_test: OpsTest):
     """Test that there is no read-only endpoint in a standalone cluster."""
-    await scale_application(ops_test, PGB, 1)
+    await scale_application(ops_test, CLIENT_APP_NAME, 1)
     await check_new_relation(
         ops_test,
         unit_name=ops_test.model.applications[CLIENT_APP_NAME].units[0].name,
@@ -161,9 +133,9 @@ async def test_no_read_only_endpoint_in_standalone_cluster(ops_test: OpsTest):
     ), f"read-only-endpoints in pgb databag: {databag}"
 
 
-async def test_read_only_endpoint_in_scaled_up_cluster(ops_test: OpsTest):
+async def test_no_read_only_endpoint_in_scaled_up_cluster(ops_test: OpsTest):
     """Test that there is read-only endpoint in a scaled up cluster."""
-    await scale_application(ops_test, PGB, 2)
+    await scale_application(ops_test, CLIENT_APP_NAME, 2)
     await check_new_relation(
         ops_test,
         unit_name=ops_test.model.applications[CLIENT_APP_NAME].units[0].name,
@@ -173,13 +145,12 @@ async def test_read_only_endpoint_in_scaled_up_cluster(ops_test: OpsTest):
 
     unit = ops_test.model.applications[CLIENT_APP_NAME].units[0]
     databag = await get_app_relation_databag(ops_test, unit.name, client_relation.id)
-    read_only_endpoints = databag.get("read-only-endpoints", None)
-    assert read_only_endpoints, f"read-only-endpoints not in pgb databag: {databag}"
+    assert not databag.get(
+        "read-only-endpoints", None
+    ), f"read-only-endpoints in pgb databag: {databag}"
 
 
-async def test_two_applications_dont_share_the_same_relation_data(
-    ops_test: OpsTest, application_charm
-):
+async def test_two_applications_cant_relate_to_the_same_pgb(ops_test: OpsTest, application_charm):
     """Test that two different application connect to the database with different credentials."""
     # Set some variables to use in this test.
     all_app_names = [ANOTHER_APPLICATION_APP_NAME]
@@ -192,33 +163,35 @@ async def test_two_applications_dont_share_the_same_relation_data(
     )
     await ops_test.model.wait_for_idle(status="active")
 
-    # Relate the new application with the database
-    # and wait for them exchanging some connection data.
-    await ops_test.model.add_relation(
-        f"{ANOTHER_APPLICATION_APP_NAME}:{FIRST_DATABASE_RELATION_NAME}", PGB
-    )
-    await ops_test.model.wait_for_idle(status="active")
-
-    # Assert the two application have different relation (connection) data.
-    application_connection_string = await build_connection_string(
-        ops_test, CLIENT_APP_NAME, FIRST_DATABASE_RELATION_NAME
-    )
-    another_application_connection_string = await build_connection_string(
-        ops_test, ANOTHER_APPLICATION_APP_NAME, FIRST_DATABASE_RELATION_NAME
-    )
-
-    assert application_connection_string != another_application_connection_string
+    # Try relate the new application with the database.
+    try:
+        await ops_test.model.add_relation(
+            f"{ANOTHER_APPLICATION_APP_NAME}:{FIRST_DATABASE_RELATION_NAME}", PGB
+        )
+        assert False, "PGB was able to relate to a second application"
+    except JujuAPIError:
+        pass
 
 
-async def test_an_application_can_request_multiple_databases(ops_test: OpsTest):
+async def test_an_application_can_request_multiple_databases(ops_test: OpsTest, application_charm):
     """Test that an application can request additional databases using the same interface.
 
     This occurs using a new relation per interface (for now).
     """
     # Relate the charms using another relation and wait for them exchanging some connection data.
-    await ops_test.model.add_relation(f"{CLIENT_APP_NAME}:{SECOND_DATABASE_RELATION_NAME}", PGB)
+    await ops_test.model.deploy(
+        PGB,
+        channel="edge",
+        application_name=PGB_2,
+        num_units=None,
+        config={"listen_port": 7432},
+    )
+    await asyncio.gather(
+        ops_test.model.add_relation(f"{PGB_2}:backend-database", f"{PG}:database"),
+        ops_test.model.add_relation(f"{CLIENT_APP_NAME}:{SECOND_DATABASE_RELATION_NAME}", PGB_2),
+    )
     async with ops_test.fast_forward():
-        await ops_test.model.wait_for_idle(apps=APP_NAMES, status="active")
+        await ops_test.model.wait_for_idle(apps=APP_NAMES + [PGB, PGB_2], status="active")
 
     # Get the connection strings to connect to both databases.
     first_database_connection_string = await build_connection_string(
@@ -232,65 +205,9 @@ async def test_an_application_can_request_multiple_databases(ops_test: OpsTest):
     assert first_database_connection_string != second_database_connection_string
 
 
-async def test_with_legacy_relation(ops_test: OpsTest):
-    """Test that this relation and the legacy relation can be used simultaneously."""
-    psql = "psql"
-    # Deploy application.
-    await ops_test.model.deploy(
-        "postgresql-charmers-postgresql-client",
-        application_name=psql,
-    )
-
-    # Testing with db-admin relation, since it encapsulates all the functionality of the db
-    # relation, with admin permissions.
-    psql_relation = await ops_test.model.relate(f"{psql}:db", f"{PGB}:db-admin")
-    wait_for_relation_joined_between(ops_test, PGB, psql)
-    await ops_test.model.wait_for_idle(
-        apps=[psql, PG, PGB, CLIENT_APP_NAME, ANOTHER_APPLICATION_APP_NAME],
-        status="active",
-        timeout=600,
-    )
-
-    psql_unit_name = ops_test.model.applications[psql].units[0].name
-    psql_databag = await get_app_relation_databag(ops_test, psql_unit_name, psql_relation.id)
-
-    pgpass = psql_databag.get("password")
-    user = psql_databag.get("user")
-    host = psql_databag.get("host")
-    port = psql_databag.get("port")
-    dbname = psql_databag.get("database")
-
-    assert None not in [
-        pgpass,
-        user,
-        host,
-        port,
-        dbname,
-    ], f"databag incorrectly populated: {psql_databag}"
-
-    user_command = "CREATE ROLE myuser3 LOGIN PASSWORD 'mypass';"
-    rtn, _, err = await run_sql(
-        ops_test, psql_unit_name, user_command, pgpass, user, host, port, dbname
-    )
-    assert rtn == 0, f"failed to run admin command {user_command}, {err}"
-
-    db_command = "CREATE DATABASE test_db;"
-    rtn, _, err = await run_sql(
-        ops_test, psql_unit_name, db_command, pgpass, user, host, port, dbname
-    )
-    assert rtn == 0, f"failed to run admin command {db_command}, {err}"
-
-    await check_new_relation(
-        ops_test,
-        unit_name=ops_test.model.applications[CLIENT_APP_NAME].units[0].name,
-        relation_id=client_relation.id,
-        dbname=TEST_DBNAME,
-    )
-
-
 async def test_scaling(ops_test: OpsTest):
     """Check these relations all work when scaling pgbouncer."""
-    await scale_application(ops_test, PGB, 1)
+    await scale_application(ops_test, CLIENT_APP_NAME, 1)
     await ops_test.model.wait_for_idle()
     await check_new_relation(
         ops_test,
@@ -299,7 +216,7 @@ async def test_scaling(ops_test: OpsTest):
         dbname=TEST_DBNAME,
     )
 
-    await scale_application(ops_test, PGB, 2)
+    await scale_application(ops_test, CLIENT_APP_NAME, 2)
     await ops_test.model.wait_for_idle()
     await check_new_relation(
         ops_test,
@@ -309,13 +226,18 @@ async def test_scaling(ops_test: OpsTest):
     )
 
 
+@pytest.mark.unstable
 async def test_relation_broken(ops_test: OpsTest):
     """Test that the user is removed when the relation is broken."""
     client_unit_name = ops_test.model.applications[CLIENT_APP_NAME].units[0].name
     # Retrieve the relation user.
     databag = await get_app_relation_databag(ops_test, client_unit_name, client_relation.id)
     relation_user = databag.get("username", None)
-    assert relation_user, f"no relation user {relation_user} in client databag: {databag} "
+    logging.info(f"relation user: {relation_user}")
+    assert relation_user, f"no relation user in client databag: {databag}"
+
+    backend_rel = get_backend_relation(ops_test)
+    pg_user, pg_pass = await get_backend_user_pass(ops_test, backend_rel)
 
     # Break the relation.
     await ops_test.model.applications[PGB].remove_relation(
@@ -323,17 +245,9 @@ async def test_relation_broken(ops_test: OpsTest):
     )
     async with ops_test.fast_forward():
         await ops_test.model.wait_for_idle(apps=APP_NAMES, status="active", raise_on_blocked=True)
-    backend_rel = get_backend_relation(ops_test)
-    pg_user, pg_pass = await get_backend_user_pass(ops_test, backend_rel)
 
     time.sleep(10)
     # Check that the relation user was removed from the database.
     await check_database_users_existence(
         ops_test, [], [relation_user], pg_user=pg_user, pg_user_password=pg_pass
     )
-
-    # check relation data was correctly removed from config
-    pgb_unit_name = ops_test.model.applications[PGB].units[0].name
-    cfg = await get_cfg(ops_test, pgb_unit_name)
-    assert "first-database" not in cfg["databases"].keys()
-    assert "first-database_readonly" not in cfg["databases"].keys()

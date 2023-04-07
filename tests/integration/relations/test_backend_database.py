@@ -10,6 +10,8 @@ from tenacity import RetryError, Retrying, stop_after_delay, wait_fixed
 from constants import BACKEND_RELATION_NAME, PG, PGB
 
 from ..helpers.helpers import (
+    CLIENT_APP_NAME,
+    FIRST_DATABASE_RELATION_NAME,
     deploy_postgres_bundle,
     get_app_relation_databag,
     get_backend_relation,
@@ -22,10 +24,16 @@ from ..helpers.postgresql_helpers import check_database_users_existence
 logger = logging.getLogger(__name__)
 
 
-async def test_relate_pgbouncer_to_postgres(ops_test: OpsTest):
+async def test_relate_pgbouncer_to_postgres(ops_test: OpsTest, application_charm):
     """Test that the pgbouncer and postgres charms can relate to one another."""
     # Build, deploy, and relate charms.
     await deploy_postgres_bundle(ops_test)
+    async with ops_test.fast_forward():
+        await ops_test.model.deploy(application_charm, application_name=CLIENT_APP_NAME)
+        # Relate the charms and wait for them exchanging some connection data.
+        await ops_test.model.add_relation(f"{CLIENT_APP_NAME}:{FIRST_DATABASE_RELATION_NAME}", PGB)
+        # Pgbouncer enters a blocked status without a postgres backend database relation
+        await ops_test.model.wait_for_idle(apps=[PGB], status="active", timeout=600)
     relation = get_backend_relation(ops_test)
 
     cfg = await get_cfg(ops_test, f"{PGB}/0")
