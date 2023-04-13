@@ -2,14 +2,14 @@ applications:
   pgbouncer:
     channel: latest/edge
     charm: pgbouncer
-    revision: 26
+    revision: 27
     series: jammy
   postgresql:
     channel: latest/edge
     charm: postgresql
     constraints: arch=amd64
     num_units: 2
-    revision: 284
+    revision: 286
     series: jammy
     to:
     - '0'
