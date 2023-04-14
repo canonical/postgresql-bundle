@@ -181,7 +181,7 @@ async def test_an_application_can_request_multiple_databases(ops_test: OpsTest, 
     # Relate the charms using another relation and wait for them exchanging some connection data.
     await ops_test.model.deploy(
         PGB,
-        channel="edge",
+        channel="1/edge",
         application_name=PGB_2,
         num_units=None,
         config={"listen_port": 7432},
