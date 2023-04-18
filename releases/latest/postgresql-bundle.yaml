@@ -2,7 +2,7 @@ applications:
   pgbouncer:
     channel: 1/edge
     charm: pgbouncer
-    revision: 28
+    revision: 29
     series: jammy
   postgresql:
     channel: 14/edge
