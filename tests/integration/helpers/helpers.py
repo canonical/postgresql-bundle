@@ -2,8 +2,8 @@
 # Copyright 2022 Canonical Ltd.
 # See LICENSE file for licensing details.
 
-import asyncio
 import json
+import subprocess
 from multiprocessing import ProcessError
 from typing import Dict
 
@@ -11,7 +11,11 @@ from charms.pgbouncer_k8s.v0 import pgb
 from pytest_operator.plugin import OpsTest
 from tenacity import RetryError, Retrying, stop_after_delay, wait_fixed
 
-from constants import AUTH_FILE_PATH, INI_PATH, LOG_PATH, PG, PGB, TLS_APP_NAME
+from constants import AUTH_FILE_PATH, INI_NAME, LOG_PATH, PG, PGB, PGB_DIR, TLS_APP_NAME
+
+CLIENT_APP_NAME = "application"
+FIRST_DATABASE_RELATION_NAME = "first-database"
+SECOND_DATABASE_RELATION_NAME = "second-database"
 
 
 async def get_unit_address(ops_test: OpsTest, application_name: str, unit_name: str) -> str:
@@ -102,8 +106,11 @@ async def cat_file_from_unit(ops_test: OpsTest, filepath: str, unit_name: str) -
     return output
 
 
-async def get_cfg(ops_test: OpsTest, unit_name: str, path: str = INI_PATH) -> pgb.PgbConfig:
+async def get_cfg(ops_test: OpsTest, unit_name: str, path: str = None) -> pgb.PgbConfig:
     """Gets pgbouncer config from unit filesystem."""
+    if path is None:
+        app_name = unit_name.split("/")[0]
+        path = f"{PGB_DIR}/{app_name}/{INI_NAME}"
     cat = await cat_file_from_unit(ops_test, path, unit_name)
     return pgb.PgbConfig(cat)
 
@@ -225,21 +232,16 @@ def relation_exited(ops_test: OpsTest, endpoint_one: str, endpoint_two: str) -> 
     return False
 
 
-async def deploy_postgres_bundle(
-    ops_test: OpsTest, scale_pgbouncer: int = 1, scale_postgres: int = 2, timeout=(60 * 10)
-):
+async def deploy_postgres_bundle(ops_test: OpsTest, scale_postgres: int = 2, timeout=(60 * 10)):
     """Deploy postgresql bundle."""
     async with ops_test.fast_forward():
         await ops_test.model.deploy("./releases/latest/postgresql-bundle.yaml")
         wait_for_relation_joined_between(ops_test, PG, TLS_APP_NAME)
         wait_for_relation_joined_between(ops_test, PG, PGB)
-        await ops_test.model.wait_for_idle(apps=[PG, PGB, TLS_APP_NAME], timeout=timeout)
-        await asyncio.gather(
-            scale_application(ops_test, PGB, scale_pgbouncer),
-            scale_application(ops_test, PG, scale_postgres),
-        )
+        await ops_test.model.wait_for_idle(apps=[PG, TLS_APP_NAME], timeout=timeout)
+        await scale_application(ops_test, PG, scale_postgres)
         await ops_test.model.wait_for_idle(
-            apps=[PG, PGB, TLS_APP_NAME], status="active", timeout=timeout
+            apps=[PG, TLS_APP_NAME], status="active", timeout=timeout
         )
 
 
@@ -251,8 +253,11 @@ async def deploy_and_relate_application_with_pgbouncer(
     config: dict = {},
     channel: str = "stable",
     relation: str = "db",
+    series: str = "jammy",
+    force: bool = False,
+    wait: bool = True,
 ):
-    """Helper function to deploy and relate application with pgbouncer.
+    """Helper function to deploy and relate application with Pgbouncer cluster.
 
     This assumes pgbouncer already exists and is related to postgres
 
@@ -265,32 +270,62 @@ async def deploy_and_relate_application_with_pgbouncer(
         channel: The channel to use for the charm.
         relation: Name of the pgbouncer relation to relate
             the application to.
+        series: The series on which to deploy.
+        force: Allow charm to be deployed to a machine running an unsupported series.
+        wait: Wait for model to idle
 
     Returns:
-        Relation object representing the created relation.
+        the id of the created relation.
     """
-    async with ops_test.fast_forward():
-        # Deploy application.
+    # Deploy application.
+    if not force:
         await ops_test.model.deploy(
             charm,
             channel=channel,
             application_name=application_name,
             num_units=number_of_units,
             config=config,
+            series=series,
         )
+    else:
+        # Dirty hack to force the series
+        status = await ops_test.model.get_status()
+        args = [
+            "juju",
+            "deploy",
+            charm,
+            application_name,
+            "-m",
+            status.model.name,
+            "--force",
+            "-n",
+            str(number_of_units),
+            "--series",
+            series,
+            "--channel",
+            channel,
+        ]
+        if config:
+            for key, val in config.items():
+                args += ["--config", f"{key}={val}"]
+        subprocess.run(args)
+
+    async with ops_test.fast_forward():
         await ops_test.model.wait_for_idle(
             apps=[application_name],
-            timeout=1000,
+            timeout=600,
         )
 
-        # Relate application to pgbouncer.
-        relation = await ops_test.model.relate(application_name, f"{PGB}:{relation}")
-        wait_for_relation_joined_between(ops_test, PGB, application_name)
-        await ops_test.model.wait_for_idle(
-            apps=[application_name, PG, PGB],
-            status="active",
-            timeout=1000,
-        )
+    # Relate application to pgbouncer.
+    relation = await ops_test.model.relate(application_name, f"{PGB}:{relation}")
+    wait_for_relation_joined_between(ops_test, PGB, application_name)
+    if wait:
+        async with ops_test.fast_forward():
+            await ops_test.model.wait_for_idle(
+                apps=[application_name, PG, PGB],
+                status="active",
+                timeout=600,
+            )
 
     return relation
 

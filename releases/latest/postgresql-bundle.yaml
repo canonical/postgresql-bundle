@@ -1,19 +1,15 @@
 applications:
   pgbouncer:
-    channel: latest/edge
+    channel: 1/edge
     charm: pgbouncer
-    constraints: arch=amd64
-    num_units: 1
-    revision: 22
+    revision: 32
     series: jammy
-    to:
-    - '3'
   postgresql:
-    channel: latest/edge
+    channel: 14/edge
     charm: postgresql
     constraints: arch=amd64
     num_units: 2
-    revision: 277
+    revision: 295
     series: jammy
     to:
     - '0'
@@ -38,9 +34,6 @@ machines:
     constraints: arch=amd64
     series: jammy
   '2':
-    constraints: arch=amd64
-    series: jammy
-  '3':
     constraints: arch=amd64
     series: jammy
 name: postgresql-bundle
