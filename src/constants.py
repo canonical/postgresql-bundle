@@ -7,7 +7,7 @@ PGB = "pgbouncer"
 PG = "postgresql"
 TLS_APP_NAME = "tls-certificates-operator"
 
-PGB_DIR = "/var/lib/postgresql/pgbouncer"
+PGB_DIR = "/var/snap/charmed-postgresql/current/etc/pgbouncer"
 INI_NAME = "pgbouncer.ini"
 AUTH_FILE_PATH = f"{PGB_DIR}/userlist.txt"
 LOG_PATH = f"{PGB_DIR}/pgbouncer.log"
