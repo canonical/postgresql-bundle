@@ -14,8 +14,6 @@ repository = "https://github.com/canonical/postgresql-bundle"
 [tool.poetry.dependencies]
 python = "^3.10.6"
 ops = "2.2.0"
-pgconnstr = "1.0.1"
-tenacity = "8.2.2"
 
 [tool.poetry.group.format]
 optional = true
@@ -46,12 +44,6 @@ juju = "2.9.42.1" # Latest juju 2
 tenacity = "8.2.2"
 requests = "2.30.0"
 psycopg2 = {version = "2.9.6", extras = ["binary"]}
-
-[tool.poetry.group.relation_charm]
-optional = true
-
-[tool.poetry.group.relation_charm.dependencies]
-ops = "2.2.0"
 
 # Testing tools configuration
 [tool.coverage.run]
