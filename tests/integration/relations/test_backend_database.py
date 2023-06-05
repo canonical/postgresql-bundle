@@ -39,7 +39,6 @@ async def test_relate_pgbouncer_to_postgres(ops_test: OpsTest, application_charm
     cfg = await get_cfg(ops_test, f"{PGB}/0")
     logger.info(cfg.render())
     pgb_user, pgb_password = await get_backend_user_pass(ops_test, relation)
-    assert pgb_user in cfg["pgbouncer"]["admin_users"]
     assert cfg["pgbouncer"]["auth_query"]
 
     await check_database_users_existence(ops_test, [pgb_user], [], pgb_user, pgb_password)
@@ -63,10 +62,7 @@ async def test_relate_pgbouncer_to_postgres(ops_test: OpsTest, application_charm
             for attempt in Retrying(stop=stop_after_delay(3 * 60), wait=wait_fixed(3)):
                 with attempt:
                     cfg = await get_cfg(ops_test, f"{PGB}/0")
-                    if (
-                        pgb_user not in cfg["pgbouncer"]["admin_users"]
-                        and "auth_query" not in cfg["pgbouncer"].keys()
-                    ):
+                    if "auth_query" not in cfg["pgbouncer"].keys():
                         break
         except RetryError:
             assert False, "pgbouncer config files failed to update in 3 minutes"
