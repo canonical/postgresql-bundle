@@ -184,7 +184,7 @@ async def test_an_application_can_request_multiple_databases(ops_test: OpsTest, 
         channel="1/edge",
         application_name=PGB_2,
         num_units=None,
-        config={"listen_port": 7432},
+        config={"listen_port": 7432, "metrics_port": 9128},
     )
     await asyncio.gather(
         ops_test.model.add_relation(f"{PGB_2}:backend-database", f"{PG}:database"),
