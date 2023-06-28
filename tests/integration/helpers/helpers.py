@@ -3,7 +3,6 @@
 # See LICENSE file for licensing details.
 
 import json
-import subprocess
 from multiprocessing import ProcessError
 from typing import Dict
 
@@ -232,10 +231,16 @@ def relation_exited(ops_test: OpsTest, endpoint_one: str, endpoint_two: str) -> 
     return False
 
 
-async def deploy_postgres_bundle(ops_test: OpsTest, scale_postgres: int = 2, timeout=(60 * 10)):
+async def deploy_postgres_bundle(
+    ops_test: OpsTest, scale_postgres: int = 2, timeout: int = (60 * 10), focal: bool = False
+):
     """Deploy postgresql bundle."""
     async with ops_test.fast_forward():
         await ops_test.model.deploy("./releases/latest/postgresql-bundle.yaml")
+        if focal:
+            await ops_test.model.remove_application(PGB, block_until_done=True)
+            await ops_test.model.deploy(PGB, channel="1/edge", series="focal", num_units=0)
+            await ops_test.model.relate(PG, PGB)
         wait_for_relation_joined_between(ops_test, PG, TLS_APP_NAME)
         wait_for_relation_joined_between(ops_test, PG, PGB)
         await ops_test.model.wait_for_idle(apps=[PG, TLS_APP_NAME], timeout=timeout)
@@ -278,37 +283,15 @@ async def deploy_and_relate_application_with_pgbouncer(
         the id of the created relation.
     """
     # Deploy application.
-    if not force:
-        await ops_test.model.deploy(
-            charm,
-            channel=channel,
-            application_name=application_name,
-            num_units=number_of_units,
-            config=config,
-            series=series,
-        )
-    else:
-        # Dirty hack to force the series
-        status = await ops_test.model.get_status()
-        args = [
-            "juju",
-            "deploy",
-            charm,
-            application_name,
-            "-m",
-            status.model.name,
-            "--force",
-            "-n",
-            str(number_of_units),
-            "--series",
-            series,
-            "--channel",
-            channel,
-        ]
-        if config:
-            for key, val in config.items():
-                args += ["--config", f"{key}={val}"]
-        subprocess.run(args)
+    await ops_test.model.deploy(
+        charm,
+        channel=channel,
+        application_name=application_name,
+        num_units=number_of_units,
+        config=config,
+        series=series,
+        force=force,
+    )
 
     async with ops_test.fast_forward():
         await ops_test.model.wait_for_idle(
