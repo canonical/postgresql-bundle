@@ -28,7 +28,7 @@ APPLICATION_UNITS = 1
 
 async def test_mailman3_core_db(ops_test: OpsTest) -> None:
     """Deploy Mailman3 Core to test the 'db' relation."""
-    await deploy_postgres_bundle(ops_test)
+    await deploy_postgres_bundle(ops_test, focal=True)
     backend_relation = get_backend_relation(ops_test)
     await ops_test.model.applications[PGB].set_config({"listen_port": "5432"})
 
@@ -44,6 +44,7 @@ async def test_mailman3_core_db(ops_test: OpsTest) -> None:
             MAILMAN3_CORE_APP_NAME,
             APPLICATION_UNITS,
             mailman_config,
+            series="focal",
         )
         pgb_user, pgb_pass = await get_backend_user_pass(ops_test, backend_relation)
         await check_databases_creation(ops_test, ["mailman3"], pgb_user, pgb_pass)

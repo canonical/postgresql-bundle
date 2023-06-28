@@ -26,7 +26,7 @@ async def test_db_admin_with_psql(ops_test: OpsTest) -> None:
         "postgresql-charmers-postgresql-client",
         application_name=PSQL,
     )
-    await deploy_postgres_bundle(ops_test)
+    await deploy_postgres_bundle(ops_test, focal=True)
 
     psql_relation = await ops_test.model.relate(f"{PSQL}:db", f"{PGB}:{DB_ADMIN_RELATION_NAME}")
     wait_for_relation_joined_between(ops_test, PGB, PSQL)
