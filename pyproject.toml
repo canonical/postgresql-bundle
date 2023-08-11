@@ -1,6 +1,51 @@
 # Copyright 2022 Canonical Ltd.
 # See LICENSE file for licensing details.
 
+[tool.poetry]
+name = "postgresql-bundle"
+version = "0.0.1-dev.0"
+description = ""
+authors = []
+license = "Apache-2.0"
+readme = "README.md"
+homepage = "https://charmhub.io/postgresql-bundle"
+repository = "https://github.com/canonical/postgresql-bundle"
+
+[tool.poetry.dependencies]
+python = "^3.10.6"
+ops = "2.3.0"
+
+[tool.poetry.group.format]
+optional = true
+
+[tool.poetry.group.format.dependencies]
+black = "23.3.0"
+isort = "5.12.0"
+
+[tool.poetry.group.lint]
+optional = true
+
+[tool.poetry.group.lint.dependencies]
+flake8 = "6.0.0"
+flake8-docstrings = "1.7.0"
+flake8-copyright = "0.2.4"
+flake8-builtins = "2.1.0"
+pyproject-flake8 = "6.0.0.post1"
+pep8-naming = "0.13.3"
+codespell = "2.2.5"
+
+[tool.poetry.group.integration]
+optional = true
+
+[tool.poetry.group.integration.dependencies]
+pytest = "7.4.0"
+pytest-operator = "0.28.0"
+juju = "2.9.42.4" # Latest juju 2
+tenacity = "8.2.2"
+requests = "2.31.0"
+mailmanclient = "3.3.5"
+psycopg2 = {version = "2.9.6", extras = ["binary"]}
+
 # Testing tools configuration
 [tool.coverage.run]
 branch = true

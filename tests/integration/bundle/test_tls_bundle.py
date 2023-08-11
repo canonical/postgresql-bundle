@@ -21,12 +21,11 @@ from ..helpers.postgresql_helpers import (
 
 logger = logging.getLogger(__name__)
 
-
-WEEBL = "weebl"
+MAILMAN3_CORE_APP_NAME = "mailman3-core"
 
 
 async def test_tls(ops_test: OpsTest):
-    await deploy_postgres_bundle(ops_test)
+    await deploy_postgres_bundle(ops_test, focal=True)
 
     async with ops_test.fast_forward():
         # Enable additional logs on the PostgreSQL instance to check TLS
@@ -38,13 +37,12 @@ async def test_tls(ops_test: OpsTest):
         async with ops_test.fast_forward():
             await deploy_and_relate_application_with_pgbouncer(
                 ops_test,
-                WEEBL,
-                WEEBL,
-                series="jammy",
-                force=True,
+                MAILMAN3_CORE_APP_NAME,
+                MAILMAN3_CORE_APP_NAME,
+                series="focal",
             )
             await ops_test.model.wait_for_idle(
-                apps=[PG, PGB, WEEBL], status="active", timeout=1000
+                apps=[PG, PGB, MAILMAN3_CORE_APP_NAME], status="active", timeout=1000
             )
         relation = get_backend_relation(ops_test)
         pgb_user, _ = await get_backend_user_pass(ops_test, relation)
@@ -57,5 +55,5 @@ async def test_tls(ops_test: OpsTest):
             "journalctl -u snap.charmed-postgresql.patroni.service",
         )
         assert (
-            f"connection authorized: user={pgb_user} database=bugs_database SSL enabled" in logs
+            f"connection authorized: user={pgb_user} database=mailman3 SSL enabled" in logs
         ), f"TLS is not being used on connections to PostgreSQL for user {pgb_user}"
