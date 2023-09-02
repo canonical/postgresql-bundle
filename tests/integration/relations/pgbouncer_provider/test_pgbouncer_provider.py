@@ -161,6 +161,7 @@ async def test_two_applications_cant_relate_to_the_same_pgb(ops_test: OpsTest):
     await ops_test.model.deploy(
         CLIENT_APP_NAME,
         application_name=ANOTHER_APPLICATION_APP_NAME,
+        channel="edge",
     )
     await ops_test.model.wait_for_idle(status="active")
 
