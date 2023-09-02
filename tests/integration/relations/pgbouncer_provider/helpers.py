@@ -63,7 +63,7 @@ async def run_sql_on_application_charm(
 ):
     """Runs the given sql query on the given application charm."""
     client_unit = ops_test.model.units.get(unit_name)
-        params = {
+    params = {
         "dbname": dbname,
         "query": query,
         "relation-id": relation_id,
