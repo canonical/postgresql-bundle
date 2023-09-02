@@ -19,6 +19,7 @@ from ...helpers.helpers import (
 )
 from ...helpers.postgresql_helpers import check_database_users_existence
 from .helpers import (
+    CLIENT_APP_NAME,
     build_connection_string,
     check_new_relation,
     run_sql_on_application_charm,
@@ -26,7 +27,6 @@ from .helpers import (
 
 logger = logging.getLogger(__name__)
 
-CLIENT_APP_NAME = "application"
 CLIENT_UNIT_NAME = f"{CLIENT_APP_NAME}/0"
 TEST_DBNAME = "application_first_database"
 ANOTHER_APPLICATION_APP_NAME = "another-application"
@@ -41,14 +41,14 @@ MULTIPLE_DATABASE_CLUSTERS_RELATION_NAME = "multiple-database-clusters"
 
 
 @pytest.mark.abort_on_fail
-async def test_database_relation_with_charm_libraries(ops_test: OpsTest, application_charm):
+async def test_database_relation_with_charm_libraries(ops_test: OpsTest):
     """Test basic functionality of database relation interface."""
     # Deploy both charms (multiple units for each application to test that later they correctly
     # set data in the relation application databag using only the leader unit).
     async with ops_test.fast_forward():
         await asyncio.gather(
             ops_test.model.deploy(
-                application_charm,
+                CLIENT_APP_NAME,
                 application_name=CLIENT_APP_NAME,
                 num_units=2,
                 series="jammy",
@@ -150,7 +150,7 @@ async def test_no_read_only_endpoint_in_scaled_up_cluster(ops_test: OpsTest):
     ), f"read-only-endpoints in pgb databag: {databag}"
 
 
-async def test_two_applications_cant_relate_to_the_same_pgb(ops_test: OpsTest, application_charm):
+async def test_two_applications_cant_relate_to_the_same_pgb(ops_test: OpsTest):
     """Test that two different application connect to the database with different credentials."""
     # Set some variables to use in this test.
     all_app_names = [ANOTHER_APPLICATION_APP_NAME]
@@ -158,7 +158,7 @@ async def test_two_applications_cant_relate_to_the_same_pgb(ops_test: OpsTest, a
 
     # Deploy another application.
     await ops_test.model.deploy(
-        application_charm,
+        CLIENT_APP_NAME,
         application_name=ANOTHER_APPLICATION_APP_NAME,
     )
     await ops_test.model.wait_for_idle(status="active")
@@ -173,7 +173,7 @@ async def test_two_applications_cant_relate_to_the_same_pgb(ops_test: OpsTest, a
         pass
 
 
-async def test_an_application_can_request_multiple_databases(ops_test: OpsTest, application_charm):
+async def test_an_application_can_request_multiple_databases(ops_test: OpsTest):
     """Test that an application can request additional databases using the same interface.
 
     This occurs using a new relation per interface (for now).

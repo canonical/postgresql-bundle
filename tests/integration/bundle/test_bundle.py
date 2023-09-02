@@ -10,6 +10,7 @@ from pytest_operator.plugin import OpsTest
 from constants import PG, PGB
 
 from ..helpers.helpers import (
+    CLIENT_APP_NAME,
     deploy_postgres_bundle,
     get_app_relation_databag,
     get_backend_relation,
@@ -20,13 +21,12 @@ from ..helpers.helpers import (
 from ..helpers.postgresql_helpers import check_databases_creation
 
 logger = logging.getLogger(__name__)
-CLIENT_APP_NAME = "application"
 FIRST_DATABASE_RELATION_NAME = "first-database"
 TEST_DBNAME = "application_first_database"
 
 
 @pytest.mark.abort_on_fail
-async def test_setup(ops_test: OpsTest, application_charm):
+async def test_setup(ops_test: OpsTest):
     """Deploy bundle and set up mailman for testing.
 
     We're adding an application to ensure that related applications stay online during service
@@ -35,7 +35,7 @@ async def test_setup(ops_test: OpsTest, application_charm):
     async with ops_test.fast_forward():
         await asyncio.gather(
             ops_test.model.deploy(
-                application_charm,
+                CLIENT_APP_NAME,
                 application_name=CLIENT_APP_NAME,
                 num_units=2,
                 series="jammy",

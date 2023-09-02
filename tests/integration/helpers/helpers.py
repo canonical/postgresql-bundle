@@ -12,7 +12,7 @@ from tenacity import RetryError, Retrying, stop_after_delay, wait_fixed
 
 from constants import AUTH_FILE_PATH, INI_NAME, LOG_PATH, PG, PGB, PGB_DIR, TLS_APP_NAME
 
-CLIENT_APP_NAME = "application"
+CLIENT_APP_NAME = "postgresql-test-app"
 FIRST_DATABASE_RELATION_NAME = "first-database"
 SECOND_DATABASE_RELATION_NAME = "second-database"
 
