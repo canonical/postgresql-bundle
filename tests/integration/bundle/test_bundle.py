@@ -22,7 +22,7 @@ from ..helpers.postgresql_helpers import check_databases_creation
 
 logger = logging.getLogger(__name__)
 FIRST_DATABASE_RELATION_NAME = "first-database"
-TEST_DBNAME = "application_first_database"
+TEST_DBNAME = "postgresql_test_app_first_database"
 
 
 @pytest.mark.abort_on_fail
@@ -39,6 +39,7 @@ async def test_setup(ops_test: OpsTest):
                 application_name=CLIENT_APP_NAME,
                 num_units=2,
                 series="jammy",
+                channel="edge",
             ),
             deploy_postgres_bundle(ops_test, scale_postgres=3, timeout=1500),
         )

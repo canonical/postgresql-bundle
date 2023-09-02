@@ -29,7 +29,9 @@ async def test_relate_pgbouncer_to_postgres(ops_test: OpsTest):
     # Build, deploy, and relate charms.
     await deploy_postgres_bundle(ops_test)
     async with ops_test.fast_forward():
-        await ops_test.model.deploy(CLIENT_APP_NAME, application_name=CLIENT_APP_NAME)
+        await ops_test.model.deploy(
+            CLIENT_APP_NAME, application_name=CLIENT_APP_NAME, channel="edge"
+        )
         # Relate the charms and wait for them exchanging some connection data.
         await ops_test.model.add_relation(f"{CLIENT_APP_NAME}:{FIRST_DATABASE_RELATION_NAME}", PGB)
         # Pgbouncer enters a blocked status without a postgres backend database relation
