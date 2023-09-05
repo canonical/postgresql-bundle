@@ -63,7 +63,13 @@ async def run_sql_on_application_charm(
 ):
     """Runs the given sql query on the given application charm."""
     client_unit = ops_test.model.units.get(unit_name)
-    params = {"dbname": dbname, "query": query, "relation-id": relation_id, "readonly": readonly}
+    params = {
+        "dbname": dbname,
+        "query": query,
+        "relation-id": relation_id,
+        "relation-name": "first-database",
+        "readonly": readonly,
+    }
     logging.info(f"running query: \n {query}")
     action = await client_unit.run_action("run-sql", **params)
     result = await asyncio.wait_for(action.wait(), timeout)
