@@ -49,11 +49,10 @@ async def test_tls(ops_test: OpsTest):
 
         # Check the logs to ensure TLS is being used by PgBouncer.
         postgresql_primary_unit = await get_postgres_primary(ops_test)
-        logs = await run_command_on_unit(
+        mailman_ssl_log = f"connection authorized: user={pgb_user} database=mailman3 SSL enabled"
+        postgresql_logs = "/var/snap/charmed-postgresql/common/var/log/postgresql/postgresql-*.log"
+        await run_command_on_unit(
             ops_test,
             postgresql_primary_unit,
-            "journalctl -u snap.charmed-postgresql.patroni.service",
+            f"grep '{mailman_ssl_log}' {postgresql_logs}",
         )
-        assert (
-            f"connection authorized: user={pgb_user} database=mailman3 SSL enabled" in logs
-        ), f"TLS is not being used on connections to PostgreSQL for user {pgb_user}"
