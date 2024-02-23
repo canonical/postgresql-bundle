@@ -1,4 +1,7 @@
 # PostgreSQL Bundle
+[![Charmhub](https://charmhub.io/postgresql-bundle/badge.svg)](https://charmhub.io/postgresql-bundle)
+[![Release](https://github.com/canonical/postgresql-bundle/actions/workflows/release.yaml/badge.svg)](https://github.com/canonical/postgresql-bundle/actions/workflows/release.yaml)
+[![Tests](https://github.com/canonical/postgresql-bundle/actions/workflows/ci.yaml/badge.svg?branch=main)](https://github.com/canonical/postgresql-bundle/actions/workflows/ci.yaml)
 
 A juju bundle for deploying PostgreSQL and PGBouncer machine charms, with TLS enabled by default. For kubernetes, see the [postgresql-k8s-bundle](https://github.com/canonical/postgresql-k8s-bundle).
 
