@@ -3,6 +3,7 @@
 
 import logging
 
+import pytest
 from pytest_operator.plugin import OpsTest
 
 from constants import PG, PGB
@@ -24,6 +25,7 @@ logger = logging.getLogger(__name__)
 MAILMAN3_CORE_APP_NAME = "mailman3-core"
 
 
+@pytest.mark.unstable
 async def test_tls(ops_test: OpsTest):
     await deploy_postgres_bundle(ops_test, focal=True)
 

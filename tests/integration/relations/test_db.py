@@ -3,6 +3,7 @@
 # See LICENSE file for licensing details.
 import logging
 
+import pytest
 from mailmanclient import Client
 from pytest_operator.plugin import OpsTest
 
@@ -26,6 +27,7 @@ MAILMAN3_CORE_APP_NAME = "mailman3-core"
 APPLICATION_UNITS = 1
 
 
+@pytest.mark.unstable
 async def test_mailman3_core_db(ops_test: OpsTest) -> None:
     """Deploy Mailman3 Core to test the 'db' relation."""
     await deploy_postgres_bundle(ops_test, focal=True)
