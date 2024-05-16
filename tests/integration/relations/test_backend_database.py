@@ -25,6 +25,10 @@ from ..helpers.postgresql_helpers import check_database_users_existence
 logger = logging.getLogger(__name__)
 
 
+async def test_none(ops_test: OpsTest):
+    pass
+
+
 @pytest.mark.unstable
 async def test_relate_pgbouncer_to_postgres(ops_test: OpsTest):
     """Test that the pgbouncer and postgres charms can relate to one another."""

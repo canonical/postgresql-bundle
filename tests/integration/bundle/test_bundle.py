@@ -25,6 +25,10 @@ FIRST_DATABASE_RELATION_NAME = "first-database"
 TEST_DBNAME = "postgresql_test_app_first_database"
 
 
+async def test_none(ops_test: OpsTest):
+    pass
+
+
 @pytest.mark.unstable
 @pytest.mark.abort_on_fail
 async def test_setup(ops_test: OpsTest):
