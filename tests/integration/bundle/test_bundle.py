@@ -25,7 +25,7 @@ FIRST_DATABASE_RELATION_NAME = "first-database"
 TEST_DBNAME = "postgresql_test_app_first_database"
 
 
-async def test_none(ops_test: OpsTest):
+async def test_none():
     pass
 
 

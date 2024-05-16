@@ -25,7 +25,7 @@ from ..helpers.postgresql_helpers import check_database_users_existence
 logger = logging.getLogger(__name__)
 
 
-async def test_none(ops_test: OpsTest):
+async def test_none():
     pass
 
 

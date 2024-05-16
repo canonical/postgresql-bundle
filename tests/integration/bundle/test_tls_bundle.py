@@ -25,7 +25,7 @@ logger = logging.getLogger(__name__)
 MAILMAN3_CORE_APP_NAME = "mailman3-core"
 
 
-async def test_none(ops_test: OpsTest):
+async def test_none():
     pass
 
 

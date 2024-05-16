@@ -20,7 +20,7 @@ logger = logging.getLogger(__name__)
 PSQL = "psql"
 
 
-async def test_none(ops_test: OpsTest):
+async def test_none():
     pass
 
 
