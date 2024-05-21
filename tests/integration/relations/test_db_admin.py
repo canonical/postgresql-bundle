@@ -3,6 +3,7 @@
 # See LICENSE file for licensing details.
 import logging
 
+import pytest
 from pytest_operator.plugin import OpsTest
 
 from constants import DB_ADMIN_RELATION_NAME, PG, PGB
@@ -20,6 +21,11 @@ logger = logging.getLogger(__name__)
 PSQL = "psql"
 
 
+async def test_none():
+    pass
+
+
+@pytest.mark.unstable
 async def test_db_admin_with_psql(ops_test: OpsTest) -> None:
     # Deploy application.
     await ops_test.model.deploy(

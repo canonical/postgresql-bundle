@@ -58,7 +58,7 @@ jobs:
         uses: charmed-kubernetes/actions-operator@main
         with:
           provider: lxd
-          bootstrap-options: "--agent-version 2.9.45"  # renovate: latest
+          bootstrap-options: "--agent-version 3.5.0"  # renovate: latest
       - name: Select tests
         id: select-tests
         run: |

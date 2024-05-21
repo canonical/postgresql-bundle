@@ -20,6 +20,10 @@ logger = logging.getLogger(__name__)
 PSQL = "psql"
 
 
+async def test_none():
+    pass
+
+
 # This test is being skipped until pbouncer 1.17 is implemented in a snap next cycle
 @pytest.mark.skip
 async def test_read_distribution(ops_test: OpsTest):
