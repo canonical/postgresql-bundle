@@ -25,11 +25,13 @@ logger = logging.getLogger(__name__)
 MAILMAN3_CORE_APP_NAME = "mailman3-core"
 
 
+@pytest.mark.group(1)
 async def test_none():
     pass
 
 
 @pytest.mark.unstable
+@pytest.mark.group(1)
 async def test_tls(ops_test: OpsTest):
     await deploy_postgres_bundle(ops_test, focal=True)
 

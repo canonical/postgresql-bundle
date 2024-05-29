@@ -25,11 +25,13 @@ FIRST_DATABASE_RELATION_NAME = "first-database"
 TEST_DBNAME = "postgresql_test_app_first_database"
 
 
+@pytest.mark.group(1)
 async def test_none():
     pass
 
 
 @pytest.mark.unstable
+@pytest.mark.group(1)
 @pytest.mark.abort_on_fail
 async def test_setup(ops_test: OpsTest):
     """Deploy bundle and set up mailman for testing.
@@ -58,6 +60,7 @@ async def test_setup(ops_test: OpsTest):
 
 
 @pytest.mark.unstable
+@pytest.mark.group(1)
 async def test_kill_pg_primary(ops_test: OpsTest):
     """Kill primary, check that all proxy instances switched traffic for a new primary."""
     # Get postgres primary through action
@@ -91,6 +94,7 @@ async def test_kill_pg_primary(ops_test: OpsTest):
 
 
 @pytest.mark.unstable
+@pytest.mark.group(1)
 async def test_discover_dbs(ops_test: OpsTest):
     """Check that proxy discovers new members when scaling up postgres charm."""
     await scale_application(ops_test, PG, 3)
