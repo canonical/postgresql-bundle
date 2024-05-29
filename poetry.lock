@@ -1012,6 +1012,22 @@ docs = ["sphinx (>=5.3)", "sphinx-rtd-theme (>=1.0)"]
 testing = ["coverage (>=6.2)", "flaky (>=3.5.0)", "hypothesis (>=5.7.1)", "mypy (>=0.931)", "pytest-trio (>=0.7.0)"]
 
 [[package]]
+name = "pytest-github-secrets"
+version = "0.1.0"
+description = ""
+optional = false
+python-versions = "^3.8"
+files = []
+develop = false
+
+[package.source]
+type = "git"
+url = "https://github.com/canonical/data-platform-workflows"
+reference = "v13.3.0"
+resolved_reference = "e90eb63f28c9abc39c9a4a40dee277ae21896790"
+subdirectory = "python/pytest_plugins/github_secrets"
+
+[[package]]
 name = "pytest-operator"
 version = "0.35.0"
 description = "Fixtures for Operators"
@@ -1029,6 +1045,44 @@ juju = "*"
 pytest = "*"
 pytest-asyncio = "<0.23"
 pyyaml = "*"
+
+[[package]]
+name = "pytest-operator-cache"
+version = "0.1.0"
+description = ""
+optional = false
+python-versions = "^3.8"
+files = []
+develop = false
+
+[package.dependencies]
+pyyaml = "*"
+
+[package.source]
+type = "git"
+url = "https://github.com/canonical/data-platform-workflows"
+reference = "v13.3.0"
+resolved_reference = "e90eb63f28c9abc39c9a4a40dee277ae21896790"
+subdirectory = "python/pytest_plugins/pytest_operator_cache"
+
+[[package]]
+name = "pytest-operator-groups"
+version = "0.1.0"
+description = ""
+optional = false
+python-versions = "^3.8"
+files = []
+develop = false
+
+[package.dependencies]
+pytest = "*"
+
+[package.source]
+type = "git"
+url = "https://github.com/canonical/data-platform-workflows"
+reference = "v13.3.0"
+resolved_reference = "e90eb63f28c9abc39c9a4a40dee277ae21896790"
+subdirectory = "python/pytest_plugins/pytest_operator_groups"
 
 [[package]]
 name = "python-dateutil"
@@ -1445,4 +1499,4 @@ files = [
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.10.6"
-content-hash = "4cecc968964d38053959e43f3c49456702c8d44e2601d010d655939cee21a9b6"
+content-hash = "4acd59d2f8df135ac449a97212fa0e5b763ba8466c74560c2dafc4bc46421e39"
