@@ -41,6 +41,7 @@ tenacity = "^8.3.0"
 requests = "^2.32.2"
 mailmanclient = "^3.3.5"
 psycopg2 = {version = "^2.9.9", extras = ["binary"]}
+allure-pytest = "^2.13.5"
 
 # Testing tools configuration
 [tool.coverage.run]
