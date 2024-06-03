@@ -11,12 +11,12 @@ applications:
   grafana-agent:
     channel: latest/edge
     charm: grafana-agent
-    revision: 160
+    revision: 166
     series: jammy
   pgbouncer:
     channel: 1/edge
     charm: pgbouncer
-    revision: 187
+    revision: 191
     series: jammy
   postgresql:
     channel: 14/edge
