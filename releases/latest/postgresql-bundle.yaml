@@ -16,7 +16,7 @@ applications:
   pgbouncer:
     channel: 1/edge
     charm: pgbouncer
-    revision: 191
+    revision: 195
     series: jammy
   postgresql:
     channel: 14/edge
@@ -44,7 +44,7 @@ applications:
     num_units: 1
     options:
       ca-common-name: postgresql_bundle_ca
-    revision: 143
+    revision: 144
     series: jammy
     to:
     - '2'
