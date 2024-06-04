@@ -40,12 +40,14 @@ SECOND_DATABASE_RELATION_NAME = "second-database"
 MULTIPLE_DATABASE_CLUSTERS_RELATION_NAME = "multiple-database-clusters"
 
 
+@pytest.mark.group(1)
 async def test_none():
     pass
 
 
 @pytest.mark.unstable
 @pytest.mark.abort_on_fail
+@pytest.mark.group(1)
 async def test_database_relation_with_charm_libraries(ops_test: OpsTest):
     """Test basic functionality of database relation interface."""
     # Deploy both charms (multiple units for each application to test that later they correctly
@@ -81,6 +83,7 @@ async def test_database_relation_with_charm_libraries(ops_test: OpsTest):
 
 
 @pytest.mark.unstable
+@pytest.mark.group(1)
 async def test_database_version(ops_test: OpsTest):
     """Check version is accurate."""
     version_query = "SELECT version();"
@@ -101,6 +104,7 @@ async def test_database_version(ops_test: OpsTest):
 
 
 @pytest.mark.unstable
+@pytest.mark.group(1)
 async def test_database_admin_permissions(ops_test: OpsTest):
     """Test admin permissions."""
     create_database_query = "CREATE DATABASE another_database;"
@@ -125,6 +129,7 @@ async def test_database_admin_permissions(ops_test: OpsTest):
 
 
 @pytest.mark.unstable
+@pytest.mark.group(1)
 async def test_no_read_only_endpoint_in_standalone_cluster(ops_test: OpsTest):
     """Test that there is no read-only endpoint in a standalone cluster."""
     await scale_application(ops_test, CLIENT_APP_NAME, 1)
@@ -143,6 +148,7 @@ async def test_no_read_only_endpoint_in_standalone_cluster(ops_test: OpsTest):
 
 
 @pytest.mark.unstable
+@pytest.mark.group(1)
 async def test_no_read_only_endpoint_in_scaled_up_cluster(ops_test: OpsTest):
     """Test that there is read-only endpoint in a scaled up cluster."""
     await scale_application(ops_test, CLIENT_APP_NAME, 2)
@@ -161,6 +167,7 @@ async def test_no_read_only_endpoint_in_scaled_up_cluster(ops_test: OpsTest):
 
 
 @pytest.mark.unstable
+@pytest.mark.group(1)
 async def test_two_applications_cant_relate_to_the_same_pgb(ops_test: OpsTest):
     """Test that two different application connect to the database with different credentials."""
     # Set some variables to use in this test.
@@ -186,6 +193,7 @@ async def test_two_applications_cant_relate_to_the_same_pgb(ops_test: OpsTest):
 
 
 @pytest.mark.unstable
+@pytest.mark.group(1)
 async def test_an_application_can_request_multiple_databases(ops_test: OpsTest):
     """Test that an application can request additional databases using the same interface.
 
@@ -219,6 +227,7 @@ async def test_an_application_can_request_multiple_databases(ops_test: OpsTest):
 
 
 @pytest.mark.unstable
+@pytest.mark.group(1)
 async def test_scaling(ops_test: OpsTest):
     """Check these relations all work when scaling pgbouncer."""
     await scale_application(ops_test, CLIENT_APP_NAME, 1)
@@ -241,6 +250,7 @@ async def test_scaling(ops_test: OpsTest):
 
 
 @pytest.mark.unstable
+@pytest.mark.group(1)
 async def test_relation_broken(ops_test: OpsTest):
     """Test that the user is removed when the relation is broken."""
     client_unit_name = ops_test.model.applications[CLIENT_APP_NAME].units[0].name

@@ -21,11 +21,13 @@ logger = logging.getLogger(__name__)
 PSQL = "psql"
 
 
+@pytest.mark.group(1)
 async def test_none():
     pass
 
 
 @pytest.mark.unstable
+@pytest.mark.group(1)
 async def test_db_admin_with_psql(ops_test: OpsTest) -> None:
     # Deploy application.
     await ops_test.model.deploy(

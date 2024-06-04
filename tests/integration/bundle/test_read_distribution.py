@@ -20,12 +20,14 @@ logger = logging.getLogger(__name__)
 PSQL = "psql"
 
 
+@pytest.mark.group(1)
 async def test_none():
     pass
 
 
 # This test is being skipped until pbouncer 1.17 is implemented in a snap next cycle
 @pytest.mark.skip
+@pytest.mark.group(1)
 async def test_read_distribution(ops_test: OpsTest):
     """Check that read instance changed during reconnection to proxy.
 
