@@ -42,8 +42,6 @@ applications:
     num_units: 2
     revision: 413
     series: jammy
-    config:
-      profile: testing
     to:
     - '0'
     - '1'

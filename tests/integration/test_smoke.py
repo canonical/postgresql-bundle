@@ -30,6 +30,7 @@ BLOCKED_APPS = [
 async def test_setup(ops_test: OpsTest):
     async with ops_test.fast_forward():
         await ops_test.model.deploy("./releases/latest/postgresql-bundle.yaml")
+        await ops_test.model.applications["postgresql"].set_config({"profile": "testing"})
         await ops_test.model.wait_for_idle(
             apps=ACTIVE_APPS,
             status="active",
