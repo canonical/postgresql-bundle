@@ -11,9 +11,26 @@ applications:
   grafana-agent:
     channel: latest/edge
     charm: grafana-agent
-    revision: 166
+    revision: 164
     series: jammy
-  pgbouncer:
+  ubuntu-advantage:
+    channel: latest/edge
+    charm: ubuntu-advantage
+    revision: 79
+    series: jammy
+  landscape-client:
+    channel: latest/edge
+    charm: landscape-client
+    revision: 69
+    series: jammy
+    config:
+      ppa: "ppa:landscape/self-hosted-beta"
+  pgbouncer-data-integrator:
+    channel: 1/edge
+    charm: pgbouncer
+    revision: 195
+    series: jammy
+  pgbouncer-test-app:
     channel: 1/edge
     charm: pgbouncer
     revision: 195
@@ -25,9 +42,29 @@ applications:
     num_units: 2
     revision: 413
     series: jammy
+    config:
+      profile: testing
     to:
     - '0'
     - '1'
+  postgresql-test-app:
+    channel: latest/edge
+    charm: postgresql-test-app
+    constraints: arch=amd64
+    num_units: 1
+    revision: 142
+    series: jammy
+    to:
+    - '5'
+  sysbench:
+    channel: latest/edge
+    charm: sysbench
+    constraints: arch=amd64
+    num_units: 1
+    revision: 26
+    series: jammy
+    to:
+    - '6'
   s3-integrator:
     channel: latest/edge
     charm: s3-integrator
@@ -64,13 +101,63 @@ machines:
   '4':
     constraints: arch=amd64
     series: jammy
+  '5':
+    constraints: arch=amd64
+    series: jammy
+  '6':
+    constraints: arch=amd64
+    series: jammy
 name: postgresql-bundle
 relations:
-- - pgbouncer:backend-database
+- - pgbouncer-data-integrator:backend-database
   - postgresql:database
+- - pgbouncer-test-app:backend-database
+  - postgresql:database
+- - pgbouncer-data-integrator:database
+  - data-integrator:postgresql
+- - pgbouncer-test-app:database
+  - postgresql-test-app:first-database
 - - postgresql:certificates
   - self-signed-certificates:certificates
-- - pgbouncer:certificates
+- - pgbouncer-data-integrator:certificates
   - self-signed-certificates:certificates
+- - postgresql:s3-parameters
+  - s3-integrator:s3-credentials
+- - postgresql:database
+  - sysbench:postgresql
+- - data-integrator:juju-info
+  - grafana-agent:juju-info
+- - postgresql-test-app:juju-info
+  - grafana-agent:juju-info
+- - postgresql:cos-agent
+  - grafana-agent:cos-agent
+- - pgbouncer-data-integrator:cos-agent
+  - grafana-agent:cos-agent
+- - pgbouncer-test-app:cos-agent
+  - grafana-agent:cos-agent
+- - landscape-client:container
+  - data-integrator:juju-info
+- - landscape-client:container
+  - postgresql:juju-info
+- - landscape-client:container
+  - postgresql-test-app:juju-info
+- - landscape-client:container
+  - sysbench:juju-info
+- - landscape-client:container
+  - s3-integrator:juju-info
+- - landscape-client:container
+  - self-signed-certificates:juju-info
+- - ubuntu-advantage:juju-info
+  - data-integrator:juju-info
+- - ubuntu-advantage:juju-info
+  - postgresql:juju-info
+- - ubuntu-advantage:juju-info
+  - postgresql-test-app:juju-info
+- - ubuntu-advantage:juju-info
+  - sysbench:juju-info
+- - ubuntu-advantage:juju-info
+  - s3-integrator:juju-info
+- - ubuntu-advantage:juju-info
+  - self-signed-certificates:juju-info
 series: jammy
 type: bundle
