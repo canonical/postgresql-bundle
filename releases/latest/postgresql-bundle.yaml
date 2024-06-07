@@ -11,12 +11,12 @@ applications:
   grafana-agent:
     channel: latest/edge
     charm: grafana-agent
-    revision: 166
+    revision: 174
     series: jammy
   pgbouncer:
     channel: 1/edge
     charm: pgbouncer
-    revision: 195
+    revision: 199
     series: jammy
   postgresql:
     channel: 14/edge
@@ -44,7 +44,7 @@ applications:
     num_units: 1
     options:
       ca-common-name: postgresql_bundle_ca
-    revision: 144
+    revision: 146
     series: jammy
     to:
     - '2'
