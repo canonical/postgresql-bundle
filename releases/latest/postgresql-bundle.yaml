@@ -11,7 +11,7 @@ applications:
   grafana-agent:
     channel: latest/edge
     charm: grafana-agent
-    revision: 164
+    revision: 173
     series: jammy
   ubuntu-advantage:
     channel: latest/edge
@@ -33,7 +33,7 @@ applications:
   pgbouncer-test-app:
     channel: 1/edge
     charm: pgbouncer
-    revision: 195
+    revision: 199
     series: jammy
   postgresql:
     channel: 14/edge
@@ -79,7 +79,7 @@ applications:
     num_units: 1
     options:
       ca-common-name: postgresql_bundle_ca
-    revision: 144
+    revision: 145
     series: jammy
     to:
     - '2'
