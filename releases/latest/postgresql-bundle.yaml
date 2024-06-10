@@ -11,7 +11,7 @@ applications:
   grafana-agent:
     channel: latest/edge
     charm: grafana-agent
-    revision: 183
+    revision: 181
     series: jammy
   pgbouncer:
     channel: 1/edge
