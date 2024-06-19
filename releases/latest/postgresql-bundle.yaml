@@ -11,36 +11,31 @@ applications:
   grafana-agent:
     channel: latest/edge
     charm: grafana-agent
-    revision: 181
-    series: jammy
-  ubuntu-advantage:
-    channel: latest/edge
-    charm: ubuntu-advantage
-    revision: 79
+    revision: 209
     series: jammy
   landscape-client:
     channel: latest/edge
     charm: landscape-client
+    config:
+      ppa: ppa:landscape/self-hosted-beta
     revision: 69
     series: jammy
-    config:
-      ppa: "ppa:landscape/self-hosted-beta"
   pgbouncer-data-integrator:
     channel: 1/edge
     charm: pgbouncer
-    revision: 195
+    revision: 228
     series: jammy
   pgbouncer-test-app:
     channel: 1/edge
     charm: pgbouncer
-    revision: 203
+    revision: 228
     series: jammy
   postgresql:
     channel: 14/edge
     charm: postgresql
     constraints: arch=amd64
     num_units: 2
-    revision: 413
+    revision: 422
     series: jammy
     to:
     - '0'
@@ -50,25 +45,16 @@ applications:
     charm: postgresql-test-app
     constraints: arch=amd64
     num_units: 1
-    revision: 144
+    revision: 154
     series: jammy
     to:
     - '5'
-  sysbench:
-    channel: latest/edge
-    charm: sysbench
-    constraints: arch=amd64
-    num_units: 1
-    revision: 26
-    series: jammy
-    to:
-    - '6'
   s3-integrator:
     channel: latest/edge
     charm: s3-integrator
     constraints: arch=amd64
     num_units: 1
-    revision: 22
+    revision: 24
     series: jammy
     to:
     - '4'
@@ -79,10 +65,24 @@ applications:
     num_units: 1
     options:
       ca-common-name: postgresql_bundle_ca
-    revision: 145
+    revision: 149
     series: jammy
     to:
     - '2'
+  sysbench:
+    channel: latest/edge
+    charm: sysbench
+    constraints: arch=amd64
+    num_units: 1
+    revision: 29
+    series: jammy
+    to:
+    - '6'
+  ubuntu-advantage:
+    channel: latest/edge
+    charm: ubuntu-advantage
+    revision: 79
+    series: jammy
 machines:
   '0':
     constraints: arch=amd64
