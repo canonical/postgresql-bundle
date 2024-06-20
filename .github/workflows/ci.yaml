@@ -29,7 +29,8 @@ jobs:
       fail-fast: false
       matrix:
         juju:
-          - agent: 3.1.8  # renovate: latest juju 3
+          - agent: 3.5.1  # renovate: juju-agent-pin-minor
+            juju-snap-channel: 3.5/stable
             allure_on_amd64: true
         architecture:
           - amd64
