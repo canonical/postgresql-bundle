@@ -1,0 +1,2 @@
+"Status","Start Time","Stop Time","Duration in ms","Parent Suite","Suite","Sub Suite","Test Class","Test Method","Name","Description"
+"passed","Wed Jul 03 01:23:56 UTC 2024","Wed Jul 03 01:54:23 UTC 2024","1826806","tests.integration","test_smoke","","","","test_setup",""
