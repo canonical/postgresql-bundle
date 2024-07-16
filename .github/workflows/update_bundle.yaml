@@ -7,7 +7,7 @@ on: workflow_dispatch
 jobs:
   update-bundle:
     name: Update bundle
-    uses: canonical/data-platform-workflows/.github/workflows/update_bundle.yaml@lucas%2Fadd-arch-check
+    uses: canonical/data-platform-workflows/.github/workflows/update_bundle.yaml@lucas/add-arch-check
     with:
       path-to-bundle-file: releases/latest/postgresql-bundle.yaml
       reviewers: canonical/data-platform-postgresql
