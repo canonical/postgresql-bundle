@@ -23,19 +23,19 @@ applications:
   pgbouncer-data-integrator:
     channel: 1/edge
     charm: pgbouncer
-    revision: 294
+    revision: 298
     series: jammy
   pgbouncer-test-app:
     channel: 1/edge
     charm: pgbouncer
-    revision: 294
+    revision: 298
     series: jammy
   postgresql:
     channel: 14/edge
     charm: postgresql
     constraints: arch=amd64
     num_units: 2
-    revision: 438
+    revision: 440
     series: jammy
     to:
     - '0'
