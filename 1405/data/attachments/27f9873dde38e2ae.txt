@@ -1,0 +1,589 @@
+[32mINFO    [0m pytest_operator.plugin:plugin.py:734 Connecting to existing model localhost-localhost:test on unspecified cloud
+[32mINFO    [0m juju.bundle:bundle.py:416 Applying change: upload charm data-integrator for series jammy from channel latest/edge
+[32mINFO    [0m juju.bundle:bundle.py:416 Applying change: upload charm postgresql for series jammy from channel 14/edge
+[32mINFO    [0m juju.bundle:bundle.py:416 Applying change: upload charm postgresql-test-app for series jammy from channel latest/edge
+[32mINFO    [0m juju.bundle:bundle.py:416 Applying change: upload charm s3-integrator for series jammy from channel latest/edge
+[32mINFO    [0m juju.bundle:bundle.py:416 Applying change: upload charm self-signed-certificates for series jammy from channel latest/edge
+[32mINFO    [0m juju.bundle:bundle.py:416 Applying change: upload charm sysbench for series jammy from channel latest/edge
+[32mINFO    [0m juju.bundle:bundle.py:416 Applying change: upload charm ubuntu-advantage for series jammy from channel latest/edge
+[32mINFO    [0m juju.bundle:bundle.py:416 Applying change: upload charm grafana-agent for series jammy from channel latest/edge
+[32mINFO    [0m juju.bundle:bundle.py:416 Applying change: upload charm landscape-client for series jammy from channel latest/edge
+[32mINFO    [0m juju.bundle:bundle.py:416 Applying change: upload charm pgbouncer for series jammy from channel 1/edge
+[32mINFO    [0m juju.bundle:bundle.py:416 Applying change: add new machine
+[32mINFO    [0m juju.bundle:bundle.py:416 Applying change: add new machine
+[32mINFO    [0m juju.bundle:bundle.py:416 Applying change: deploy application data-integrator on jammy using $addCharm-0
+[32mINFO    [0m juju.model:model.py:2098 Deploying ch:amd64/jammy/data-integrator-38
+[32mINFO    [0m juju.bundle:bundle.py:416 Applying change: deploy application pgbouncer-data-integrator on jammy using $addCharm-9
+[32mINFO    [0m juju.model:model.py:2098 Deploying ch:amd64/jammy/pgbouncer-306
+[32mINFO    [0m juju.bundle:bundle.py:416 Applying change: deploy application pgbouncer-test-app on jammy using $addCharm-9
+[32mINFO    [0m juju.model:model.py:2098 Deploying ch:amd64/jammy/pgbouncer-306
+[32mINFO    [0m juju.bundle:bundle.py:416 Applying change: deploy application postgresql on jammy using $addCharm-14
+[32mINFO    [0m juju.model:model.py:2098 Deploying ch:amd64/jammy/postgresql-444
+[32mINFO    [0m juju.bundle:bundle.py:416 Applying change: deploy application postgresql-test-app on jammy using $addCharm-17
+[32mINFO    [0m juju.model:model.py:2098 Deploying ch:amd64/jammy/postgresql-test-app-186
+[32mINFO    [0m juju.bundle:bundle.py:416 Applying change: deploy application s3-integrator on jammy using $addCharm-20
+[32mINFO    [0m juju.model:model.py:2098 Deploying ch:amd64/jammy/s3-integrator-29
+[32mINFO    [0m juju.bundle:bundle.py:416 Applying change: deploy application self-signed-certificates on jammy using $addCharm-23
+[32mINFO    [0m juju.model:model.py:2098 Deploying ch:amd64/jammy/self-signed-certificates-161
+[32mINFO    [0m juju.bundle:bundle.py:416 Applying change: deploy application sysbench on jammy using $addCharm-26
+[32mINFO    [0m juju.model:model.py:2098 Deploying ch:amd64/jammy/sysbench-43
+[32mINFO    [0m juju.bundle:bundle.py:416 Applying change: deploy application ubuntu-advantage on jammy using $addCharm-29
+[32mINFO    [0m juju.model:model.py:2098 Deploying ch:amd64/jammy/ubuntu-advantage-85
+[32mINFO    [0m juju.bundle:bundle.py:416 Applying change: deploy application grafana-agent on jammy using $addCharm-3
+[32mINFO    [0m juju.model:model.py:2098 Deploying ch:amd64/jammy/grafana-agent-223
+[32mINFO    [0m juju.bundle:bundle.py:416 Applying change: deploy application landscape-client on jammy using $addCharm-6
+[32mINFO    [0m juju.model:model.py:2098 Deploying ch:amd64/jammy/landscape-client-69
+[32mINFO    [0m juju.bundle:bundle.py:416 Applying change: add new machine
+[32mINFO    [0m juju.bundle:bundle.py:416 Applying change: add relation $deploy-10:backend-database - $deploy-15:database
+[32mINFO    [0m juju.bundle:bundle.py:865 Relating pgbouncer-data-integrator:backend-database <-> postgresql:database
+[33mWARNING [0m juju.model:model.py:1564 relate is deprecated and will be removed. Use integrate instead.
+[32mINFO    [0m juju.bundle:bundle.py:416 Applying change: add relation $deploy-12:backend-database - $deploy-15:database
+[32mINFO    [0m juju.bundle:bundle.py:865 Relating pgbouncer-test-app:backend-database <-> postgresql:database
+[33mWARNING [0m juju.model:model.py:1564 relate is deprecated and will be removed. Use integrate instead.
+[32mINFO    [0m juju.bundle:bundle.py:416 Applying change: add relation $deploy-10:database - $deploy-1:postgresql
+[32mINFO    [0m juju.bundle:bundle.py:865 Relating pgbouncer-data-integrator:database <-> data-integrator:postgresql
+[33mWARNING [0m juju.model:model.py:1564 relate is deprecated and will be removed. Use integrate instead.
+[32mINFO    [0m juju.bundle:bundle.py:416 Applying change: add relation $deploy-12:database - $deploy-18:first-database
+[32mINFO    [0m juju.bundle:bundle.py:865 Relating pgbouncer-test-app:database <-> postgresql-test-app:first-database
+[33mWARNING [0m juju.model:model.py:1564 relate is deprecated and will be removed. Use integrate instead.
+[32mINFO    [0m juju.bundle:bundle.py:416 Applying change: add relation $deploy-15:certificates - $deploy-24:certificates
+[32mINFO    [0m juju.bundle:bundle.py:865 Relating postgresql:certificates <-> self-signed-certificates:certificates
+[33mWARNING [0m juju.model:model.py:1564 relate is deprecated and will be removed. Use integrate instead.
+[32mINFO    [0m juju.bundle:bundle.py:416 Applying change: add relation $deploy-10:certificates - $deploy-24:certificates
+[32mINFO    [0m juju.bundle:bundle.py:865 Relating pgbouncer-data-integrator:certificates <-> self-signed-certificates:certificates
+[33mWARNING [0m juju.model:model.py:1564 relate is deprecated and will be removed. Use integrate instead.
+[32mINFO    [0m juju.bundle:bundle.py:416 Applying change: add relation $deploy-15:s3-parameters - $deploy-21:s3-credentials
+[32mINFO    [0m juju.bundle:bundle.py:865 Relating postgresql:s3-parameters <-> s3-integrator:s3-credentials
+[33mWARNING [0m juju.model:model.py:1564 relate is deprecated and will be removed. Use integrate instead.
+[32mINFO    [0m juju.bundle:bundle.py:416 Applying change: add relation $deploy-15:database - $deploy-27:postgresql
+[32mINFO    [0m juju.bundle:bundle.py:865 Relating postgresql:database <-> sysbench:postgresql
+[33mWARNING [0m juju.model:model.py:1564 relate is deprecated and will be removed. Use integrate instead.
+[32mINFO    [0m juju.bundle:bundle.py:416 Applying change: add relation $deploy-1:juju-info - $deploy-4:juju-info
+[32mINFO    [0m juju.bundle:bundle.py:865 Relating data-integrator:juju-info <-> grafana-agent:juju-info
+[33mWARNING [0m juju.model:model.py:1564 relate is deprecated and will be removed. Use integrate instead.
+[32mINFO    [0m juju.bundle:bundle.py:416 Applying change: add relation $deploy-18:juju-info - $deploy-4:juju-info
+[32mINFO    [0m juju.bundle:bundle.py:865 Relating postgresql-test-app:juju-info <-> grafana-agent:juju-info
+[33mWARNING [0m juju.model:model.py:1564 relate is deprecated and will be removed. Use integrate instead.
+[32mINFO    [0m juju.bundle:bundle.py:416 Applying change: add relation $deploy-15:cos-agent - $deploy-4:cos-agent
+[32mINFO    [0m juju.bundle:bundle.py:865 Relating postgresql:cos-agent <-> grafana-agent:cos-agent
+[33mWARNING [0m juju.model:model.py:1564 relate is deprecated and will be removed. Use integrate instead.
+[32mINFO    [0m juju.bundle:bundle.py:416 Applying change: add relation $deploy-10:cos-agent - $deploy-4:cos-agent
+[32mINFO    [0m juju.bundle:bundle.py:865 Relating pgbouncer-data-integrator:cos-agent <-> grafana-agent:cos-agent
+[33mWARNING [0m juju.model:model.py:1564 relate is deprecated and will be removed. Use integrate instead.
+[32mINFO    [0m juju.bundle:bundle.py:416 Applying change: add relation $deploy-12:cos-agent - $deploy-4:cos-agent
+[32mINFO    [0m juju.bundle:bundle.py:865 Relating pgbouncer-test-app:cos-agent <-> grafana-agent:cos-agent
+[33mWARNING [0m juju.model:model.py:1564 relate is deprecated and will be removed. Use integrate instead.
+[32mINFO    [0m juju.bundle:bundle.py:416 Applying change: add relation $deploy-7:container - $deploy-1:juju-info
+[32mINFO    [0m juju.bundle:bundle.py:865 Relating landscape-client:container <-> data-integrator:juju-info
+[33mWARNING [0m juju.model:model.py:1564 relate is deprecated and will be removed. Use integrate instead.
+[32mINFO    [0m juju.bundle:bundle.py:416 Applying change: add relation $deploy-7:container - $deploy-15:juju-info
+[32mINFO    [0m juju.bundle:bundle.py:865 Relating landscape-client:container <-> postgresql:juju-info
+[33mWARNING [0m juju.model:model.py:1564 relate is deprecated and will be removed. Use integrate instead.
+[32mINFO    [0m juju.bundle:bundle.py:416 Applying change: add relation $deploy-7:container - $deploy-18:juju-info
+[32mINFO    [0m juju.bundle:bundle.py:865 Relating landscape-client:container <-> postgresql-test-app:juju-info
+[33mWARNING [0m juju.model:model.py:1564 relate is deprecated and will be removed. Use integrate instead.
+[32mINFO    [0m juju.bundle:bundle.py:416 Applying change: add relation $deploy-7:container - $deploy-27:juju-info
+[32mINFO    [0m juju.bundle:bundle.py:865 Relating landscape-client:container <-> sysbench:juju-info
+[33mWARNING [0m juju.model:model.py:1564 relate is deprecated and will be removed. Use integrate instead.
+[32mINFO    [0m juju.bundle:bundle.py:416 Applying change: add relation $deploy-7:container - $deploy-21:juju-info
+[32mINFO    [0m juju.bundle:bundle.py:865 Relating landscape-client:container <-> s3-integrator:juju-info
+[33mWARNING [0m juju.model:model.py:1564 relate is deprecated and will be removed. Use integrate instead.
+[32mINFO    [0m juju.bundle:bundle.py:416 Applying change: add relation $deploy-7:container - $deploy-24:juju-info
+[32mINFO    [0m juju.bundle:bundle.py:865 Relating landscape-client:container <-> self-signed-certificates:juju-info
+[33mWARNING [0m juju.model:model.py:1564 relate is deprecated and will be removed. Use integrate instead.
+[32mINFO    [0m juju.bundle:bundle.py:416 Applying change: add relation $deploy-30:juju-info - $deploy-1:juju-info
+[32mINFO    [0m juju.bundle:bundle.py:865 Relating ubuntu-advantage:juju-info <-> data-integrator:juju-info
+[33mWARNING [0m juju.model:model.py:1564 relate is deprecated and will be removed. Use integrate instead.
+[32mINFO    [0m juju.bundle:bundle.py:416 Applying change: add relation $deploy-30:juju-info - $deploy-15:juju-info
+[32mINFO    [0m juju.bundle:bundle.py:865 Relating ubuntu-advantage:juju-info <-> postgresql:juju-info
+[33mWARNING [0m juju.model:model.py:1564 relate is deprecated and will be removed. Use integrate instead.
+[32mINFO    [0m juju.bundle:bundle.py:416 Applying change: add relation $deploy-30:juju-info - $deploy-18:juju-info
+[32mINFO    [0m juju.bundle:bundle.py:865 Relating ubuntu-advantage:juju-info <-> postgresql-test-app:juju-info
+[33mWARNING [0m juju.model:model.py:1564 relate is deprecated and will be removed. Use integrate instead.
+[32mINFO    [0m juju.bundle:bundle.py:416 Applying change: add relation $deploy-30:juju-info - $deploy-27:juju-info
+[32mINFO    [0m juju.bundle:bundle.py:865 Relating ubuntu-advantage:juju-info <-> sysbench:juju-info
+[33mWARNING [0m juju.model:model.py:1564 relate is deprecated and will be removed. Use integrate instead.
+[32mINFO    [0m juju.bundle:bundle.py:416 Applying change: add relation $deploy-30:juju-info - $deploy-21:juju-info
+[32mINFO    [0m juju.bundle:bundle.py:865 Relating ubuntu-advantage:juju-info <-> s3-integrator:juju-info
+[33mWARNING [0m juju.model:model.py:1564 relate is deprecated and will be removed. Use integrate instead.
+[32mINFO    [0m juju.bundle:bundle.py:416 Applying change: add relation $deploy-30:juju-info - $deploy-24:juju-info
+[32mINFO    [0m juju.bundle:bundle.py:865 Relating ubuntu-advantage:juju-info <-> self-signed-certificates:juju-info
+[33mWARNING [0m juju.model:model.py:1564 relate is deprecated and will be removed. Use integrate instead.
+[32mINFO    [0m juju.bundle:bundle.py:416 Applying change: add $deploy-15 unit to $addMachines-32
+[32mINFO    [0m juju.bundle:bundle.py:416 Applying change: set annotations for $deploy-10
+[32mINFO    [0m juju.bundle:bundle.py:416 Applying change: set annotations for $deploy-12
+[32mINFO    [0m juju.bundle:bundle.py:416 Applying change: set annotations for $deploy-15
+[32mINFO    [0m juju.bundle:bundle.py:416 Applying change: set annotations for $deploy-18
+[32mINFO    [0m juju.bundle:bundle.py:416 Applying change: set annotations for $deploy-1
+[32mINFO    [0m juju.bundle:bundle.py:416 Applying change: set annotations for $deploy-21
+[32mINFO    [0m juju.bundle:bundle.py:416 Applying change: set annotations for $deploy-24
+[32mINFO    [0m juju.bundle:bundle.py:416 Applying change: set annotations for $deploy-27
+[32mINFO    [0m juju.bundle:bundle.py:416 Applying change: set annotations for $deploy-30
+[32mINFO    [0m juju.bundle:bundle.py:416 Applying change: set annotations for $deploy-4
+[32mINFO    [0m juju.bundle:bundle.py:416 Applying change: set annotations for $deploy-7
+[32mINFO    [0m juju.bundle:bundle.py:416 Applying change: add new machine
+[32mINFO    [0m juju.bundle:bundle.py:416 Applying change: add $deploy-15 unit to $addMachines-33
+[32mINFO    [0m juju.bundle:bundle.py:416 Applying change: add $deploy-24 unit to $addMachines-34
+[32mINFO    [0m juju.bundle:bundle.py:416 Applying change: add new machine
+[32mINFO    [0m juju.bundle:bundle.py:416 Applying change: add $deploy-1 unit to $addMachines-35
+[32mINFO    [0m juju.bundle:bundle.py:416 Applying change: add new machine
+[32mINFO    [0m juju.bundle:bundle.py:416 Applying change: add $deploy-21 unit to $addMachines-36
+[32mINFO    [0m juju.bundle:bundle.py:416 Applying change: add new machine
+[32mINFO    [0m juju.bundle:bundle.py:416 Applying change: add $deploy-18 unit to $addMachines-37
+[32mINFO    [0m juju.bundle:bundle.py:416 Applying change: add $deploy-27 unit to $addMachines-38
+[32mINFO    [0m juju.model:model.py:2972 Waiting for model:
+  pgbouncer-data-integrator (not enough units yet - 0/1)
+  pgbouncer-test-app (not enough units yet - 0/1)
+  postgresql/0 [allocating] waiting: waiting for machine
+  postgresql/1 [allocating] waiting: waiting for machine
+  postgresql-test-app/0 [allocating] waiting: waiting for machine
+  self-signed-certificates/0 [allocating] waiting: waiting for machine
+  sysbench/0 [allocating] waiting: waiting for machine
+[32mINFO    [0m juju.model:model.py:2972 Waiting for model:
+  pgbouncer-data-integrator (not enough units yet - 0/1)
+  pgbouncer-test-app (not enough units yet - 0/1)
+  postgresql/0 [allocating] waiting: waiting for machine
+  postgresql/1 [allocating] waiting: waiting for machine
+  postgresql-test-app/0 [allocating] waiting: waiting for machine
+  self-signed-certificates/0 [allocating] waiting: waiting for machine
+  sysbench/0 [allocating] waiting: waiting for machine
+[32mINFO    [0m juju.model:model.py:2972 Waiting for model:
+  pgbouncer-data-integrator (not enough units yet - 0/1)
+  pgbouncer-test-app (not enough units yet - 0/1)
+  postgresql/0 [allocating] waiting: waiting for machine
+  postgresql/1 [allocating] waiting: waiting for machine
+  postgresql-test-app/0 [allocating] waiting: waiting for machine
+  self-signed-certificates/0 [allocating] waiting: waiting for machine
+  sysbench/0 [allocating] waiting: waiting for machine
+[32mINFO    [0m juju.model:model.py:2972 Waiting for model:
+  pgbouncer-data-integrator (not enough units yet - 0/1)
+  pgbouncer-test-app (not enough units yet - 0/1)
+  postgresql/0 [allocating] waiting: waiting for machine
+  postgresql/1 [allocating] waiting: waiting for machine
+  postgresql-test-app/0 [allocating] waiting: waiting for machine
+  self-signed-certificates/0 [allocating] waiting: waiting for machine
+  sysbench/0 [allocating] waiting: waiting for machine
+[32mINFO    [0m juju.model:model.py:2972 Waiting for model:
+  pgbouncer-data-integrator (not enough units yet - 0/1)
+  pgbouncer-test-app (not enough units yet - 0/1)
+  postgresql/0 [allocating] waiting: waiting for machine
+  postgresql/1 [allocating] waiting: waiting for machine
+  postgresql-test-app/0 [allocating] waiting: waiting for machine
+  self-signed-certificates/0 [allocating] waiting: waiting for machine
+  sysbench/0 [allocating] waiting: waiting for machine
+[32mINFO    [0m juju.model:model.py:2972 Waiting for model:
+  pgbouncer-data-integrator (not enough units yet - 0/1)
+  pgbouncer-test-app (not enough units yet - 0/1)
+  postgresql/0 [allocating] waiting: waiting for machine
+  postgresql/1 [allocating] waiting: waiting for machine
+  postgresql-test-app/0 [allocating] waiting: waiting for machine
+  self-signed-certificates/0 [allocating] waiting: waiting for machine
+  sysbench/0 [allocating] waiting: waiting for machine
+[32mINFO    [0m juju.model:model.py:2972 Waiting for model:
+  pgbouncer-data-integrator (not enough units yet - 0/1)
+  pgbouncer-test-app (not enough units yet - 0/1)
+  postgresql/0 [allocating] waiting: waiting for machine
+  postgresql/1 [allocating] waiting: waiting for machine
+  postgresql-test-app/0 [allocating] waiting: waiting for machine
+  self-signed-certificates/0 [allocating] waiting: waiting for machine
+  sysbench/0 [allocating] waiting: waiting for machine
+[32mINFO    [0m juju.model:model.py:2972 Waiting for model:
+  pgbouncer-data-integrator (not enough units yet - 0/1)
+  pgbouncer-test-app (not enough units yet - 0/1)
+  postgresql/0 [allocating] waiting: waiting for machine
+  postgresql/1 [allocating] waiting: waiting for machine
+  postgresql-test-app/0 [allocating] waiting: waiting for machine
+  self-signed-certificates/0 [allocating] waiting: waiting for machine
+  sysbench/0 [allocating] waiting: waiting for machine
+[32mINFO    [0m juju.model:model.py:2972 Waiting for model:
+  pgbouncer-data-integrator (not enough units yet - 0/1)
+  pgbouncer-test-app (not enough units yet - 0/1)
+  postgresql/0 [executing] maintenance: installing PostgreSQL
+  postgresql/1 [executing] waiting: agent initialising
+  postgresql-test-app/0 [executing] maintenance: installing charm software
+  self-signed-certificates/0 [executing] active: 
+  sysbench/0 [executing] maintenance: Installing...
+[32mINFO    [0m juju.model:model.py:2972 Waiting for model:
+  pgbouncer-data-integrator/0 [allocating] waiting: agent initialising
+  pgbouncer-test-app/0 [allocating] waiting: agent initialising
+  postgresql/0 [executing] maintenance: installing PostgreSQL
+  postgresql/1 [executing] maintenance: installing PostgreSQL
+  postgresql-test-app/0 [idle] active: 
+  self-signed-certificates/0 [executing] active: 
+  sysbench/0 [executing] waiting: Waiting on data from relation
+[32mINFO    [0m juju.model:model.py:2972 Waiting for model:
+  pgbouncer-data-integrator/0 [allocating] waiting: agent initialising
+  pgbouncer-test-app/0 [executing] maintenance: Installing and configuring PgBouncer
+  postgresql/0 [executing] maintenance: installing PostgreSQL
+  postgresql/1 [executing] maintenance: installing PostgreSQL
+  sysbench/0 [idle] waiting: Waiting on data from relation
+[32mINFO    [0m juju.model:model.py:2972 Waiting for model:
+  pgbouncer-data-integrator/0 [executing] maintenance: Installing and configuring PgBouncer
+  pgbouncer-test-app/0 [executing] waiting: Waiting to start PgBouncer
+  postgresql/0 [executing] waiting: waiting to start PostgreSQL
+  postgresql/1 [executing] waiting: waiting to start PostgreSQL
+  self-signed-certificates/0 [idle] active: 
+  sysbench/0 [idle] waiting: Waiting on data from relation
+[32mINFO    [0m juju.model:model.py:2972 Waiting for model:
+  pgbouncer-data-integrator/0 [executing] waiting: Waiting to start PgBouncer
+  pgbouncer-test-app/0 [executing] waiting: Waiting to start PgBouncer
+  postgresql/0 [executing] waiting: waiting to start PostgreSQL
+  postgresql/1 [executing] waiting: waiting to start PostgreSQL
+  postgresql-test-app/0 [executing] active: 
+  sysbench/0 [idle] waiting: Waiting on data from relation
+[32mINFO    [0m juju.model:model.py:2972 Waiting for model:
+  pgbouncer-data-integrator/0 [executing] blocked: waiting for backend database relation to initialise
+  pgbouncer-test-app/0 [executing] waiting: Waiting to start PgBouncer
+  postgresql/0 [executing] waiting: waiting to start PostgreSQL
+  postgresql/1 [executing] waiting: waiting to start PostgreSQL
+  sysbench/0 [idle] waiting: Waiting on data from relation
+[32mINFO    [0m juju.model:model.py:2972 Waiting for model:
+  pgbouncer-data-integrator/0 [executing] blocked: waiting for backend database relation to initialise
+  pgbouncer-test-app/0 [executing] blocked: waiting for backend database relation to initialise
+  postgresql/0 [executing] waiting: waiting to start PostgreSQL
+  postgresql/1 [executing] waiting: awaiting passwords generation
+  sysbench/0 [idle] waiting: Waiting on data from relation
+[32mINFO    [0m juju.model:model.py:2972 Waiting for model:
+  pgbouncer-data-integrator/0 [executing] blocked: waiting for backend database relation to initialise
+  pgbouncer-test-app/0 [idle] waiting: waiting for backend-database relation to connect
+  postgresql/0 [executing] waiting: awaiting for member to start
+  postgresql/1 [executing] waiting: awaiting for cluster to start
+  postgresql-test-app/0 [idle] active: 
+  sysbench/0 [idle] waiting: Waiting on data from relation
+[32mINFO    [0m juju.model:model.py:2972 Waiting for model:
+  pgbouncer-data-integrator/0 [idle] blocked: waiting for backend database relation to initialise
+  pgbouncer-test-app/0 [executing] maintenance: Initialising backend-database relation
+  postgresql/0 [executing] active: Primary
+  postgresql/1 [executing] waiting: awaiting for cluster to start
+  sysbench/0 [idle] waiting: Waiting on data from relation
+[32mINFO    [0m juju.model:model.py:2972 Waiting for model:
+  pgbouncer-data-integrator/0 [idle] active: 
+  pgbouncer-test-app/0 [executing] active: 
+  postgresql/0 [executing] active: Primary
+  postgresql/1 [executing] waiting: awaiting for cluster to start
+  sysbench/0 [idle] active: 
+[32mINFO    [0m juju.model:model.py:2972 Waiting for model:
+  pgbouncer-test-app/0 [idle] active: 
+  postgresql/0 [executing] maintenance: reconfiguring cluster
+  postgresql/1 [executing] waiting: awaiting for cluster to start
+  self-signed-certificates/0 [idle] active: 
+[32mINFO    [0m juju.model:model.py:2972 Waiting for model:
+  pgbouncer-data-integrator/0 [idle] active: 
+  pgbouncer-test-app/0 [idle] active: 
+  postgresql/0 [executing] maintenance: reconfiguring cluster
+  postgresql/1 [executing] waiting: awaiting for cluster to start
+  sysbench/0 [idle] active: 
+[32mINFO    [0m juju.model:model.py:2972 Waiting for model:
+  postgresql/0 [executing] active: Primary
+  postgresql/1 [idle] active: 
+[32mINFO    [0m juju.model:model.py:2972 Waiting for model:
+  postgresql/0 [executing] active: Primary
+  postgresql/1 [idle] active: 
+[32mINFO    [0m juju.model:model.py:2972 Waiting for model:
+  postgresql/0 [executing] active: 
+  postgresql/1 [idle] active: 
+[32mINFO    [0m juju.model:model.py:2972 Waiting for model:
+  pgbouncer-data-integrator/0 [idle] active: 
+  postgresql/0 [executing] active: 
+  postgresql/1 [executing] waiting: Awaiting restart operation
+[32mINFO    [0m juju.model:model.py:2972 Waiting for model:
+  pgbouncer-data-integrator/0 [idle] active: 
+  pgbouncer-test-app/0 [idle] active: 
+  postgresql/0 [executing] active: Primary
+  postgresql/1 [executing] waiting: Awaiting restart operation
+[32mINFO    [0m juju.model:model.py:2972 Waiting for model:
+  postgresql/0 [executing] active: 
+  postgresql/1 [idle] active: 
+[32mINFO    [0m juju.model:model.py:2972 Waiting for model:
+  postgresql/0 [idle] active: 
+  postgresql/1 [idle] active: 
+[32mINFO    [0m juju.model:model.py:2972 Waiting for model:
+  data-integrator/0 [idle] blocked: Please specify either topic, index, or database name
+  grafana-agent/0 [idle] blocked: Missing ['grafana-cloud-config']|['grafana-dashboards-provider']|['logging-consumer']|['send-remote-write'] for cos-agent; ['grafana-cloud-config']|['logging-consumer']|['send-remote-write'] for juju-info
+  grafana-agent/1 [idle] blocked: Missing ['grafana-cloud-config']|['grafana-dashboards-provider']|['logging-consumer']|['send-remote-write'] for cos-agent; ['grafana-cloud-config']|['logging-consumer']|['send-remote-write'] for juju-info
+  grafana-agent/2 [idle] blocked: Missing ['grafana-cloud-config']|['grafana-dashboards-provider']|['logging-consumer']|['send-remote-write'] for cos-agent
+  grafana-agent/3 [idle] blocked: Missing ['grafana-cloud-config']|['grafana-dashboards-provider']|['logging-consumer']|['send-remote-write'] for cos-agent
+  landscape-client/0 [idle] blocked: Registration failed!
+  landscape-client/1 [idle] blocked: Registration failed!
+  landscape-client/2 [idle] blocked: Registration failed!
+  landscape-client/3 [idle] blocked: Registration failed!
+  landscape-client/4 [idle] blocked: Registration failed!
+  landscape-client/5 [idle] blocked: Registration failed!
+  landscape-client/6 [idle] blocked: Registration failed!
+  s3-integrator/0 [idle] blocked: Missing parameters: ['access-key', 'secret-key']
+  ubuntu-advantage/0 [idle] blocked: No token configured
+  ubuntu-advantage/1 [idle] blocked: No token configured
+  ubuntu-advantage/2 [idle] blocked: No token configured
+  ubuntu-advantage/3 [idle] blocked: No token configured
+  ubuntu-advantage/4 [idle] blocked: No token configured
+  ubuntu-advantage/5 [idle] blocked: No token configured
+  ubuntu-advantage/6 [idle] blocked: No token configured
+[32mINFO    [0m integration.test_smoke:test_smoke.py:47 Test continuous writes
+[32mINFO    [0m pytest_operator.plugin:plugin.py:862 Model status:
+
+Model  Controller           Cloud/Region         Version  SLA          Timestamp
+test   localhost-localhost  localhost/localhost  3.5.2    unsupported  01:38:44Z
+
+App                        Version  Status   Scale  Charm                     Channel      Rev  Exposed  Message
+data-integrator                     blocked      1  data-integrator           latest/edge   38  no       Please specify either topic, index, or database name
+grafana-agent                       blocked      4  grafana-agent             latest/edge  223  no       Missing ['grafana-cloud-config']|['grafana-dashboards-provider']|['logging-consumer']|['send-remote-write'] for cos-a...
+landscape-client                    blocked      7  landscape-client          latest/edge   69  no       Registration failed!
+pgbouncer-data-integrator  1.21.0   active       1  pgbouncer                 1/edge       306  no       
+pgbouncer-test-app         1.21.0   active       1  pgbouncer                 1/edge       306  no       
+postgresql                 14.12    active       2  postgresql                14/edge      444  no       
+postgresql-test-app                 active       1  postgresql-test-app       latest/edge  186  no       received database credentials of the first database
+s3-integrator                       blocked      1  s3-integrator             latest/edge   29  no       Missing parameters: ['access-key', 'secret-key']
+self-signed-certificates            active       1  self-signed-certificates  latest/edge  161  no       
+sysbench                            active       1  sysbench                  latest/edge   43  no       
+ubuntu-advantage                    blocked      7  ubuntu-advantage          latest/edge   85  no       No token configured
+
+Unit                            Workload  Agent  Machine  Public address  Ports     Message
+data-integrator/0*              blocked   idle   3        10.226.162.88             Please specify either topic, index, or database name
+  grafana-agent/1               blocked   idle            10.226.162.88             Missing ['grafana-cloud-config']|['grafana-dashboards-provider']|['logging-consumer']|['send-remote-write'] for cos-a...
+  landscape-client/3            blocked   idle            10.226.162.88             Registration failed!
+  pgbouncer-data-integrator/0*  active    idle            10.226.162.88   6432/tcp  
+  ubuntu-advantage/2            blocked   idle            10.226.162.88             No token configured
+postgresql-test-app/0*          active    idle   5        10.226.162.250            received database credentials of the first database
+  grafana-agent/0*              blocked   idle            10.226.162.250            Missing ['grafana-cloud-config']|['grafana-dashboards-provider']|['logging-consumer']|['send-remote-write'] for cos-a...
+  landscape-client/2            blocked   idle            10.226.162.250            Registration failed!
+  pgbouncer-test-app/0*         active    idle            10.226.162.250            
+  ubuntu-advantage/3            blocked   idle            10.226.162.250            No token configured
+postgresql/0*                   active    idle   0        10.226.162.87   5432/tcp  Primary
+  grafana-agent/2               blocked   idle            10.226.162.87             Missing ['grafana-cloud-config']|['grafana-dashboards-provider']|['logging-consumer']|['send-remote-write'] for cos-a...
+  landscape-client/5            blocked   idle            10.226.162.87             Registration failed!
+  ubuntu-advantage/5            blocked   idle            10.226.162.87             No token configured
+postgresql/1                    active    idle   1        10.226.162.75   5432/tcp  
+  grafana-agent/3               blocked   idle            10.226.162.75             Missing ['grafana-cloud-config']|['grafana-dashboards-provider']|['logging-consumer']|['send-remote-write'] for cos-a...
+  landscape-client/6            blocked   idle            10.226.162.75             Registration failed!
+  ubuntu-advantage/6            blocked   idle            10.226.162.75             No token configured
+s3-integrator/0*                blocked   idle   4        10.226.162.93             Missing parameters: ['access-key', 'secret-key']
+  landscape-client/1            blocked   idle            10.226.162.93             Registration failed!
+  ubuntu-advantage/1            blocked   idle            10.226.162.93             No token configured
+self-signed-certificates/0*     active    idle   2        10.226.162.102            
+  landscape-client/0*           blocked   idle            10.226.162.102            Registration failed!
+  ubuntu-advantage/0*           blocked   idle            10.226.162.102            No token configured
+sysbench/0*                     active    idle   6        10.226.162.76             
+  landscape-client/4            blocked   idle            10.226.162.76             Registration failed!
+  ubuntu-advantage/4            blocked   idle            10.226.162.76             No token configured
+
+Machine  State    Address         Inst id        Base          AZ  Message
+0        started  10.226.162.87   juju-fe2a18-0  ubuntu@22.04      Running
+1        started  10.226.162.75   juju-fe2a18-1  ubuntu@22.04      Running
+2        started  10.226.162.102  juju-fe2a18-2  ubuntu@22.04      Running
+3        started  10.226.162.88   juju-fe2a18-3  ubuntu@22.04      Running
+4        started  10.226.162.93   juju-fe2a18-4  ubuntu@22.04      Running
+5        started  10.226.162.250  juju-fe2a18-5  ubuntu@22.04      Running
+6        started  10.226.162.76   juju-fe2a18-6  ubuntu@22.04      Running
+
+[32mINFO    [0m pytest_operator.plugin:plugin.py:868 Juju error logs:
+
+machine-0: 01:28:03 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-0: 01:28:03 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+unit-postgresql-0: 01:28:04 ERROR juju.worker.meterstatus error running "meter-status-changed": charm missing from disk
+machine-2: 01:28:07 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-2: 01:28:07 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+unit-self-signed-certificates-0: 01:28:08 ERROR juju.worker.meterstatus error running "meter-status-changed": charm missing from disk
+machine-1: 01:28:09 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-1: 01:28:09 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+unit-postgresql-1: 01:28:10 ERROR juju.worker.meterstatus error running "meter-status-changed": charm missing from disk
+machine-6: 01:28:11 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-6: 01:28:11 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+unit-sysbench-0: 01:28:12 ERROR juju.worker.meterstatus error running "meter-status-changed": charm missing from disk
+machine-4: 01:28:20 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-4: 01:28:20 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+unit-s3-integrator-0: 01:28:20 ERROR juju.worker.meterstatus error running "meter-status-changed": charm missing from disk
+machine-5: 01:28:23 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-5: 01:28:24 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+unit-postgresql-test-app-0: 01:28:24 ERROR juju.worker.meterstatus error running "meter-status-changed": charm missing from disk
+machine-3: 01:28:25 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-3: 01:28:25 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+unit-data-integrator-0: 01:28:27 ERROR juju.worker.meterstatus error running "meter-status-changed": charm missing from disk
+unit-landscape-client-0: 01:28:27 ERROR juju.worker.meterstatus error running "meter-status-changed": charm missing from disk
+unit-ubuntu-advantage-0: 01:28:29 ERROR juju.worker.meterstatus error running "meter-status-changed": charm missing from disk
+unit-landscape-client-1: 01:28:32 ERROR juju.worker.meterstatus error running "meter-status-changed": charm missing from disk
+unit-ubuntu-advantage-1: 01:28:33 ERROR juju.worker.meterstatus error running "meter-status-changed": charm missing from disk
+unit-pgbouncer-test-app-0: 01:28:36 ERROR juju.worker.meterstatus error running "meter-status-changed": charm missing from disk
+unit-grafana-agent-0: 01:28:37 ERROR juju.worker.meterstatus error running "meter-status-changed": charm missing from disk
+unit-ubuntu-advantage-2: 01:28:38 ERROR juju.worker.meterstatus error running "meter-status-changed": charm missing from disk
+unit-pgbouncer-data-integrator-0: 01:28:39 ERROR juju.worker.meterstatus error running "meter-status-changed": charm missing from disk
+unit-landscape-client-2: 01:28:40 ERROR juju.worker.meterstatus error running "meter-status-changed": charm missing from disk
+unit-ubuntu-advantage-3: 01:28:40 ERROR juju.worker.meterstatus error running "meter-status-changed": charm missing from disk
+unit-grafana-agent-1: 01:28:40 ERROR juju.worker.meterstatus error running "meter-status-changed": charm missing from disk
+unit-landscape-client-3: 01:28:42 ERROR juju.worker.meterstatus error running "meter-status-changed": charm missing from disk
+unit-landscape-client-4: 01:28:55 ERROR juju.worker.meterstatus error running "meter-status-changed": charm missing from disk
+unit-ubuntu-advantage-4: 01:28:56 ERROR juju.worker.meterstatus error running "meter-status-changed": charm missing from disk
+unit-landscape-client-1: 01:29:09 CRITICAL unit.landscape-client/1.juju-log   File "/var/lib/juju/agents/unit-landscape-client-1/charm/./src/charm.py", line 261, in <module>
+    main(LandscapeClientCharm)
+  File "/var/lib/juju/agents/unit-landscape-client-1/charm/venv/ops/main.py", line 436, in main
+    _emit_charm_event(charm, dispatcher.event_name)
+  File "/var/lib/juju/agents/unit-landscape-client-1/charm/venv/ops/main.py", line 144, in _emit_charm_event
+    event_to_emit.emit(*args, **kwargs)
+  File "/var/lib/juju/agents/unit-landscape-client-1/charm/venv/ops/framework.py", line 351, in emit
+    framework._emit(event)
+  File "/var/lib/juju/agents/unit-landscape-client-1/charm/venv/ops/framework.py", line 853, in _emit
+    self._reemit(event_path)
+  File "/var/lib/juju/agents/unit-landscape-client-1/charm/venv/ops/framework.py", line 942, in _reemit
+    custom_handler(event)
+  File "/var/lib/juju/agents/unit-landscape-client-1/charm/./src/charm.py", line 215, in _on_config_changed
+    self.run_landscape_client()
+  File "/var/lib/juju/agents/unit-landscape-client-1/charm/./src/charm.py", line 190, in run_landscape_client
+    self.send_registration()
+  File "/var/lib/juju/agents/unit-landscape-client-1/charm/./src/charm.py", line 178, in send_registration
+    if process_helper([CLIENT_CONFIG_CMD, "--silent"]):
+  File "/var/lib/juju/agents/unit-landscape-client-1/charm/./src/charm.py", line 104, in process_helper
+    log_error("".join(traceback.format_stack()))
+
+unit-landscape-client-1: 01:29:09 CRITICAL unit.landscape-client/1.juju-log An account name and computer title are required.
+Aborting Landscape configuration
+
+unit-landscape-client-0: 01:29:11 CRITICAL unit.landscape-client/0.juju-log   File "/var/lib/juju/agents/unit-landscape-client-0/charm/./src/charm.py", line 261, in <module>
+    main(LandscapeClientCharm)
+  File "/var/lib/juju/agents/unit-landscape-client-0/charm/venv/ops/main.py", line 436, in main
+    _emit_charm_event(charm, dispatcher.event_name)
+  File "/var/lib/juju/agents/unit-landscape-client-0/charm/venv/ops/main.py", line 144, in _emit_charm_event
+    event_to_emit.emit(*args, **kwargs)
+  File "/var/lib/juju/agents/unit-landscape-client-0/charm/venv/ops/framework.py", line 351, in emit
+    framework._emit(event)
+  File "/var/lib/juju/agents/unit-landscape-client-0/charm/venv/ops/framework.py", line 853, in _emit
+    self._reemit(event_path)
+  File "/var/lib/juju/agents/unit-landscape-client-0/charm/venv/ops/framework.py", line 942, in _reemit
+    custom_handler(event)
+  File "/var/lib/juju/agents/unit-landscape-client-0/charm/./src/charm.py", line 215, in _on_config_changed
+    self.run_landscape_client()
+  File "/var/lib/juju/agents/unit-landscape-client-0/charm/./src/charm.py", line 190, in run_landscape_client
+    self.send_registration()
+  File "/var/lib/juju/agents/unit-landscape-client-0/charm/./src/charm.py", line 178, in send_registration
+    if process_helper([CLIENT_CONFIG_CMD, "--silent"]):
+  File "/var/lib/juju/agents/unit-landscape-client-0/charm/./src/charm.py", line 104, in process_helper
+    log_error("".join(traceback.format_stack()))
+
+unit-landscape-client-0: 01:29:11 CRITICAL unit.landscape-client/0.juju-log An account name and computer title are required.
+Aborting Landscape configuration
+
+unit-landscape-client-4: 01:29:33 CRITICAL unit.landscape-client/4.juju-log   File "/var/lib/juju/agents/unit-landscape-client-4/charm/./src/charm.py", line 261, in <module>
+    main(LandscapeClientCharm)
+  File "/var/lib/juju/agents/unit-landscape-client-4/charm/venv/ops/main.py", line 436, in main
+    _emit_charm_event(charm, dispatcher.event_name)
+  File "/var/lib/juju/agents/unit-landscape-client-4/charm/venv/ops/main.py", line 144, in _emit_charm_event
+    event_to_emit.emit(*args, **kwargs)
+  File "/var/lib/juju/agents/unit-landscape-client-4/charm/venv/ops/framework.py", line 351, in emit
+    framework._emit(event)
+  File "/var/lib/juju/agents/unit-landscape-client-4/charm/venv/ops/framework.py", line 853, in _emit
+    self._reemit(event_path)
+  File "/var/lib/juju/agents/unit-landscape-client-4/charm/venv/ops/framework.py", line 942, in _reemit
+    custom_handler(event)
+  File "/var/lib/juju/agents/unit-landscape-client-4/charm/./src/charm.py", line 215, in _on_config_changed
+    self.run_landscape_client()
+  File "/var/lib/juju/agents/unit-landscape-client-4/charm/./src/charm.py", line 190, in run_landscape_client
+    self.send_registration()
+  File "/var/lib/juju/agents/unit-landscape-client-4/charm/./src/charm.py", line 178, in send_registration
+    if process_helper([CLIENT_CONFIG_CMD, "--silent"]):
+  File "/var/lib/juju/agents/unit-landscape-client-4/charm/./src/charm.py", line 104, in process_helper
+    log_error("".join(traceback.format_stack()))
+
+unit-landscape-client-4: 01:29:33 CRITICAL unit.landscape-client/4.juju-log An account name and computer title are required.
+Aborting Landscape configuration
+
+unit-ubuntu-advantage-5: 01:29:55 ERROR juju.worker.meterstatus error running "meter-status-changed": charm missing from disk
+unit-landscape-client-5: 01:29:56 ERROR juju.worker.meterstatus error running "meter-status-changed": charm missing from disk
+unit-ubuntu-advantage-6: 01:29:59 ERROR juju.worker.meterstatus error running "meter-status-changed": charm missing from disk
+unit-grafana-agent-3: 01:30:00 ERROR juju.worker.meterstatus error running "meter-status-changed": charm missing from disk
+unit-landscape-client-6: 01:30:04 ERROR juju.worker.meterstatus error running "meter-status-changed": exit status 127
+unit-landscape-client-2: 01:30:30 CRITICAL unit.landscape-client/2.juju-log   File "/var/lib/juju/agents/unit-landscape-client-2/charm/./src/charm.py", line 261, in <module>
+    main(LandscapeClientCharm)
+  File "/var/lib/juju/agents/unit-landscape-client-2/charm/venv/ops/main.py", line 436, in main
+    _emit_charm_event(charm, dispatcher.event_name)
+  File "/var/lib/juju/agents/unit-landscape-client-2/charm/venv/ops/main.py", line 144, in _emit_charm_event
+    event_to_emit.emit(*args, **kwargs)
+  File "/var/lib/juju/agents/unit-landscape-client-2/charm/venv/ops/framework.py", line 351, in emit
+    framework._emit(event)
+  File "/var/lib/juju/agents/unit-landscape-client-2/charm/venv/ops/framework.py", line 853, in _emit
+    self._reemit(event_path)
+  File "/var/lib/juju/agents/unit-landscape-client-2/charm/venv/ops/framework.py", line 942, in _reemit
+    custom_handler(event)
+  File "/var/lib/juju/agents/unit-landscape-client-2/charm/./src/charm.py", line 215, in _on_config_changed
+    self.run_landscape_client()
+  File "/var/lib/juju/agents/unit-landscape-client-2/charm/./src/charm.py", line 190, in run_landscape_client
+    self.send_registration()
+  File "/var/lib/juju/agents/unit-landscape-client-2/charm/./src/charm.py", line 178, in send_registration
+    if process_helper([CLIENT_CONFIG_CMD, "--silent"]):
+  File "/var/lib/juju/agents/unit-landscape-client-2/charm/./src/charm.py", line 104, in process_helper
+    log_error("".join(traceback.format_stack()))
+
+unit-landscape-client-2: 01:30:30 CRITICAL unit.landscape-client/2.juju-log An account name and computer title are required.
+Aborting Landscape configuration
+
+unit-landscape-client-3: 01:30:31 CRITICAL unit.landscape-client/3.juju-log   File "/var/lib/juju/agents/unit-landscape-client-3/charm/./src/charm.py", line 261, in <module>
+    main(LandscapeClientCharm)
+  File "/var/lib/juju/agents/unit-landscape-client-3/charm/venv/ops/main.py", line 436, in main
+    _emit_charm_event(charm, dispatcher.event_name)
+  File "/var/lib/juju/agents/unit-landscape-client-3/charm/venv/ops/main.py", line 144, in _emit_charm_event
+    event_to_emit.emit(*args, **kwargs)
+  File "/var/lib/juju/agents/unit-landscape-client-3/charm/venv/ops/framework.py", line 351, in emit
+    framework._emit(event)
+  File "/var/lib/juju/agents/unit-landscape-client-3/charm/venv/ops/framework.py", line 853, in _emit
+    self._reemit(event_path)
+  File "/var/lib/juju/agents/unit-landscape-client-3/charm/venv/ops/framework.py", line 942, in _reemit
+    custom_handler(event)
+  File "/var/lib/juju/agents/unit-landscape-client-3/charm/./src/charm.py", line 215, in _on_config_changed
+    self.run_landscape_client()
+  File "/var/lib/juju/agents/unit-landscape-client-3/charm/./src/charm.py", line 190, in run_landscape_client
+    self.send_registration()
+  File "/var/lib/juju/agents/unit-landscape-client-3/charm/./src/charm.py", line 178, in send_registration
+    if process_helper([CLIENT_CONFIG_CMD, "--silent"]):
+  File "/var/lib/juju/agents/unit-landscape-client-3/charm/./src/charm.py", line 104, in process_helper
+    log_error("".join(traceback.format_stack()))
+
+unit-landscape-client-3: 01:30:31 CRITICAL unit.landscape-client/3.juju-log An account name and computer title are required.
+Aborting Landscape configuration
+
+unit-landscape-client-6: 01:31:02 CRITICAL unit.landscape-client/6.juju-log   File "/var/lib/juju/agents/unit-landscape-client-6/charm/./src/charm.py", line 261, in <module>
+    main(LandscapeClientCharm)
+  File "/var/lib/juju/agents/unit-landscape-client-6/charm/venv/ops/main.py", line 436, in main
+    _emit_charm_event(charm, dispatcher.event_name)
+  File "/var/lib/juju/agents/unit-landscape-client-6/charm/venv/ops/main.py", line 144, in _emit_charm_event
+    event_to_emit.emit(*args, **kwargs)
+  File "/var/lib/juju/agents/unit-landscape-client-6/charm/venv/ops/framework.py", line 351, in emit
+    framework._emit(event)
+  File "/var/lib/juju/agents/unit-landscape-client-6/charm/venv/ops/framework.py", line 853, in _emit
+    self._reemit(event_path)
+  File "/var/lib/juju/agents/unit-landscape-client-6/charm/venv/ops/framework.py", line 942, in _reemit
+    custom_handler(event)
+  File "/var/lib/juju/agents/unit-landscape-client-6/charm/./src/charm.py", line 215, in _on_config_changed
+    self.run_landscape_client()
+  File "/var/lib/juju/agents/unit-landscape-client-6/charm/./src/charm.py", line 190, in run_landscape_client
+    self.send_registration()
+  File "/var/lib/juju/agents/unit-landscape-client-6/charm/./src/charm.py", line 178, in send_registration
+    if process_helper([CLIENT_CONFIG_CMD, "--silent"]):
+  File "/var/lib/juju/agents/unit-landscape-client-6/charm/./src/charm.py", line 104, in process_helper
+    log_error("".join(traceback.format_stack()))
+
+unit-landscape-client-6: 01:31:02 CRITICAL unit.landscape-client/6.juju-log An account name and computer title are required.
+Aborting Landscape configuration
+
+unit-landscape-client-5: 01:31:12 CRITICAL unit.landscape-client/5.juju-log   File "/var/lib/juju/agents/unit-landscape-client-5/charm/./src/charm.py", line 261, in <module>
+    main(LandscapeClientCharm)
+  File "/var/lib/juju/agents/unit-landscape-client-5/charm/venv/ops/main.py", line 436, in main
+    _emit_charm_event(charm, dispatcher.event_name)
+  File "/var/lib/juju/agents/unit-landscape-client-5/charm/venv/ops/main.py", line 144, in _emit_charm_event
+    event_to_emit.emit(*args, **kwargs)
+  File "/var/lib/juju/agents/unit-landscape-client-5/charm/venv/ops/framework.py", line 351, in emit
+    framework._emit(event)
+  File "/var/lib/juju/agents/unit-landscape-client-5/charm/venv/ops/framework.py", line 853, in _emit
+    self._reemit(event_path)
+  File "/var/lib/juju/agents/unit-landscape-client-5/charm/venv/ops/framework.py", line 942, in _reemit
+    custom_handler(event)
+  File "/var/lib/juju/agents/unit-landscape-client-5/charm/./src/charm.py", line 215, in _on_config_changed
+    self.run_landscape_client()
+  File "/var/lib/juju/agents/unit-landscape-client-5/charm/./src/charm.py", line 190, in run_landscape_client
+    self.send_registration()
+  File "/var/lib/juju/agents/unit-landscape-client-5/charm/./src/charm.py", line 178, in send_registration
+    if process_helper([CLIENT_CONFIG_CMD, "--silent"]):
+  File "/var/lib/juju/agents/unit-landscape-client-5/charm/./src/charm.py", line 104, in process_helper
+    log_error("".join(traceback.format_stack()))
+
+unit-landscape-client-5: 01:31:12 CRITICAL unit.landscape-client/5.juju-log An account name and computer title are required.
+Aborting Landscape configuration
+
+
+[32mINFO    [0m pytest_operator.plugin:plugin.py:947 Forgetting model main...
