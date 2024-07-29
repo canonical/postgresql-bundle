@@ -114,7 +114,7 @@ relations:
 - - pgbouncer-data-integrator:database
   - data-integrator:postgresql
 - - pgbouncer-test-app:database
-  - postgresql-test-app:first-database
+  - postgresql-test-app:database
 - - postgresql:certificates
   - self-signed-certificates:certificates
 - - pgbouncer-data-integrator:certificates
