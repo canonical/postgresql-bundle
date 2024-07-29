@@ -45,7 +45,7 @@ applications:
     charm: postgresql-test-app
     constraints: arch=amd64
     num_units: 1
-    revision: 190
+    revision: 192
     series: jammy
     to:
     - '5'
@@ -114,7 +114,7 @@ relations:
 - - pgbouncer-data-integrator:database
   - data-integrator:postgresql
 - - pgbouncer-test-app:database
-  - postgresql-test-app:first-database
+  - postgresql-test-app:database
 - - postgresql:certificates
   - self-signed-certificates:certificates
 - - pgbouncer-data-integrator:certificates
