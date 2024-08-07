@@ -4,7 +4,7 @@ applications:
     charm: data-integrator
     constraints: arch=amd64
     num_units: 1
-    revision: 38
+    revision: 41
     series: jammy
     to:
     - '3'
@@ -54,7 +54,7 @@ applications:
     charm: s3-integrator
     constraints: arch=amd64
     num_units: 1
-    revision: 29
+    revision: 31
     series: jammy
     to:
     - '4'
@@ -81,7 +81,7 @@ applications:
   ubuntu-advantage:
     channel: latest/edge
     charm: ubuntu-advantage
-    revision: 85
+    revision: 89
     series: jammy
 machines:
   '0':
