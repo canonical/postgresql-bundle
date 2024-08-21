@@ -25,11 +25,15 @@ applications:
     charm: pgbouncer
     revision: 372
     series: jammy
+    config:
+      max_db_connections: 33
   pgbouncer-test-app:
     channel: 1/edge
     charm: pgbouncer
     revision: 372
     series: jammy
+    config:
+      max_db_connections: 33
   postgresql:
     channel: 14/edge
     charm: postgresql
