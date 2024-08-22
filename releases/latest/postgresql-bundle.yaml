@@ -65,7 +65,7 @@ applications:
     num_units: 1
     options:
       ca-common-name: postgresql_bundle_ca
-    revision: 177
+    revision: 182
     series: jammy
     to:
     - '2'
