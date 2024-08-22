@@ -65,7 +65,7 @@ applications:
     num_units: 1
     options:
       ca-common-name: postgresql_bundle_ca
-    revision: 182
+    revision: 185
     series: jammy
     to:
     - '2'
@@ -74,7 +74,7 @@ applications:
     charm: sysbench
     constraints: arch=amd64
     num_units: 1
-    revision: 46
+    revision: 48
     series: jammy
     to:
     - '6'
