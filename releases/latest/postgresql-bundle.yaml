@@ -25,15 +25,11 @@ applications:
     charm: pgbouncer
     revision: 372
     series: jammy
-    config:
-      max_db_connections: 33
   pgbouncer-test-app:
     channel: 1/edge
     charm: pgbouncer
     revision: 372
     series: jammy
-    config:
-      max_db_connections: 33
   postgresql:
     channel: 14/edge
     charm: postgresql
@@ -78,7 +74,7 @@ applications:
     charm: sysbench
     constraints: arch=amd64
     num_units: 1
-    revision: 48
+    revision: 46
     series: jammy
     to:
     - '6'
