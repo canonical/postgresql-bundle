@@ -36,7 +36,7 @@ async def test_setup(ops_test: OpsTest):
         await ops_test.model.wait_for_idle(
             apps=ACTIVE_APPS,
             status="active",
-            timeout=3000,
+            timeout=1800,
         )
         await ops_test.model.wait_for_idle(
             apps=BLOCKED_APPS,
