@@ -4,7 +4,7 @@ applications:
     charm: data-integrator
     constraints: arch=amd64
     num_units: 1
-    revision: 59
+    revision: 61
     series: jammy
     to:
     - '3'
@@ -45,7 +45,7 @@ applications:
     charm: postgresql-test-app
     constraints: arch=amd64
     num_units: 1
-    revision: 246
+    revision: 248
     series: jammy
     to:
     - '5'
@@ -54,7 +54,7 @@ applications:
     charm: s3-integrator
     constraints: arch=amd64
     num_units: 1
-    revision: 51
+    revision: 55
     series: jammy
     to:
     - '4'
@@ -74,14 +74,14 @@ applications:
     charm: sysbench
     constraints: arch=amd64
     num_units: 1
-    revision: 66
+    revision: 68
     series: jammy
     to:
     - '6'
   ubuntu-advantage:
     channel: latest/edge
     charm: ubuntu-advantage
-    revision: 101
+    revision: 107
     series: jammy
 machines:
   '0':
