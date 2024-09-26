@@ -51,7 +51,6 @@ jobs:
           juju set-model-constraints arch='amd64'
           sg 'lxd' -c "lxc image list"
           juju deploy ./releases/latest/postgresql-bundle.yaml
-          sleep 180
+          sleep 1000
           juju status
-          juju exec --all -- hostname -f
           juju exec --all -- snap list
