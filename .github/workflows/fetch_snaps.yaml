@@ -40,7 +40,7 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v3
       - name: Deploy bundle
-        timeout-minutes: 15
+        timeout-minutes: 60
         run: |
           mkdir -p ~/.local/share/juju  # Workaround for juju 3 strict snap
           sg 'lxd' -c "juju bootstrap 'lxd' --config model-logs-size=10G '--agent-version=3.4.5'"
