@@ -4,7 +4,6 @@
 
 on:
   workflow_dispatch:
-  push:
 
 jobs:
   test-deploy-bundle:
@@ -38,6 +37,8 @@ jobs:
           # shellcheck disable=SC2193
           # (shellcheck sees it as constant, but GitHub Actions expression is not constant between workflow runs)
           sg 'lxd' -c "lxc image copy ubuntu:82b997ec581b local: --alias 'juju/ubuntu@22.04/amd64'"
+      - name: Checkout repository
+        uses: actions/checkout@v3
       - name: Deploy bundle
         timeout-minutes: 15
         run: |
