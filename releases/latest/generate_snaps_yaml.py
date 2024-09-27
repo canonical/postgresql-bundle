@@ -2,6 +2,8 @@ import yaml
 import argparse
 
 def convert_to_yaml(output_table, canonical_livepatch):
+    print(f"output_table = {output_table}")
+    print(f"livepatch = {canonical_livepatch}")
     table_lines = output_table.splitlines()
     livepatch_line = canonical_livepatch.strip()
 
@@ -15,11 +17,15 @@ def convert_to_yaml(output_table, canonical_livepatch):
     # Process table file lines
     for line in table_lines:
         parts = line.split()
-        package = {
-            "name": parts[0],
-            "revision": parts[1],
-            "push_channel": parts[2]
-        }
+        print(parts)
+        if len(parts) >= 3:
+            package = {
+                "name": parts[0],
+                "revision": parts[1],
+                "push_channel": parts[2]
+            }
+        else:
+            print("len not >= 3")
         packages.append(package)
 
     # Add canonical-livepatch info
