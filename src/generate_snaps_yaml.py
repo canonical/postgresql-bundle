@@ -3,8 +3,6 @@ import argparse
 import pathlib
 import json
 
-from . import github_actions
-
 def generate_snaps_yaml(snap_table, canonical_livepatch, snaps_file_path) -> bool:
     """Update snaps.yaml file for new revisions. Returns True if a change was made."""
     snap_table_entries = snap_table.splitlines()[1:]
@@ -56,4 +54,7 @@ def main():
     args = parser.parse_args()
 
     is_yaml_updated = generate_snaps_yaml(args.snap_table, args.canonical_livepatch, args.snaps_file_path)
-    github_actions.output["updates_available"] = json.dumps(is_yaml_updated)
+    output = f"updates_available={json.dumps(is_yaml_updated)}"
+    print(output)
+    with open(os.environ["GITHUB_OUTPUT"], "a") as file:
+        file.write(output)
