@@ -55,6 +55,45 @@ jobs:
           juju status
           juju exec --all --output snaps.txt -- snap list
           cat ./snaps.txt
-          cat ./snaps.txt | awk '! /^[0-9]/ && $1 != "Name" { print $1, $3, $4 }' | sort | uniq > output.txt
-          snap info canonical-livepatch | awk '/^channels:/ {found=1; next} found && $1 != "" {print $1, $4; exit}' >> output.txt
-          cat ./output.txt
+          cat ./snaps.txt | awk '! /^[0-9]/ && $1 != "Name" { print $1, $3, $4 }' | sort | uniq > output_table.txt
+          snap info canonical-livepatch | awk '/^channels:/ {found=1; next} found && $1 != "" {print $1, $4; exit}' > canonical_livepatch.txt
+          cat ./output_table.txt
+          cat ./canonical_livepatch.txt
+      - name: Parse yaml file
+        timeout-minutes: 5
+        shell: python
+        run: |
+          import yaml
+
+          with open("output_table.txt", "r") as table_file:
+              table_lines = table_file.readlines()
+
+          with open("canonical_livepatch.txt", "r") as livepatch_file:
+              livepatch_line = livepatch_file.read().strip()
+
+          livepatch_channel, livepatch_revision = livepatch_line.split(":")
+          livepatch_revision = livepatch_revision.strip(" ()")
+
+          packages = []
+
+          for line in table_lines:
+              parts = line.split()
+              package = {
+                  "name": parts[0],
+                  "revision": parts[1],
+                  "push_channel": parts[2],
+              }
+              packages.append(package)
+
+          packages.append({
+              "name": "canonical-livepatch",
+              "revision": livepatch_revision,
+              "push_channel": livepatch_channel,
+          })
+
+          with open("snaps.yaml", "w") as yaml_file:
+              yaml.dump({"packages": packages}, yaml_file, default_flow_style=False)
+      - name: print resulting yaml file
+        timeout-minutes: 3
+        run: |
+          cat ./snaps.yaml
