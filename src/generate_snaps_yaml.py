@@ -2,6 +2,7 @@ import yaml
 import argparse
 import pathlib
 import json
+import os
 
 def generate_snaps_yaml(snap_table, canonical_livepatch, snaps_file_path) -> bool:
     """Update snaps.yaml file for new revisions. Returns True if a change was made."""
