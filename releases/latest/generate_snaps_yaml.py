@@ -24,9 +24,7 @@ def convert_to_yaml(output_table, canonical_livepatch):
                 "revision": parts[1],
                 "push_channel": parts[2]
             }
-        else:
-            print("len not >= 3")
-        packages.append(package)
+            packages.append(package)
 
     # Add canonical-livepatch info
     packages.append({
