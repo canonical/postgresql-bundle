@@ -1,0 +1,25 @@
+packages:
+- name: charmed-pgbouncer
+  push_channel: 1/stable
+  revision: '16'
+- name: charmed-postgresql
+  push_channel: 14/stable
+  revision: '124'
+- name: core20
+  push_channel: latest/stable
+  revision: '2379'
+- name: core22
+  push_channel: latest/stable
+  revision: '1621'
+- name: grafana-agent
+  push_channel: latest/stable
+  revision: '82'
+- name: lxd
+  push_channel: "5.0/stable/\u2026"
+  revision: '29351'
+- name: snapd
+  push_channel: latest/stable
+  revision: '21759'
+- name: canonical-livepatch
+  push_channel: latest/stable
+  revision: '282'
