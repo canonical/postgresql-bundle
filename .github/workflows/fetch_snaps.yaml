@@ -56,5 +56,5 @@ jobs:
           juju exec --all --output snaps.txt -- snap list
           cat ./snaps.txt
           cat ./snaps.txt | awk '! /^[0-9]/ && $1 != "Name" { print $1, $3, $4 }' | sort | uniq > output.txt
-          snap info canonical-livepatch | awk '/^channels:/ {found=1; next} found && $1 != "" {print $1, $2; exit}' >> output.txt
+          snap info canonical-livepatch | awk '/^channels:/ {found=1; next} found && $1 != "" {print $1, $4; exit}' >> output.txt
           cat ./output.txt
