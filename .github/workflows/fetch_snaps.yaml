@@ -52,7 +52,7 @@ jobs:
         timeout-minutes: 60
         run: |
           juju deploy ./releases/latest/postgresql-bundle.yaml
-          sleep 400 # time to allow the bundle to settle
+          sleep 600 # time to allow the bundle to settle
           juju status
           juju exec --all --output snaps.txt -- snap list
           cat ./snaps.txt
