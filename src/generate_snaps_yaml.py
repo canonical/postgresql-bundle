@@ -43,10 +43,10 @@ def generate_snaps_yaml(snap_table, canonical_livepatch, snaps_file_path) -> boo
         return False
 
     with open(snaps_file_path, "w") as yaml_file:
-        yaml.dump(new_data, yaml_file, default_flow_style=False)
+        yaml.dump(new_data, yaml_file)
     return True
 
-def main():
+if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument('snap_table')
     parser.add_argument('canonical_livepatch')
