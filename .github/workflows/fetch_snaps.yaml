@@ -55,9 +55,9 @@ jobs:
           juju status
           juju exec --all --output snaps.txt -- snap list
           cat ./snaps.txt
-          cat ./snaps.txt | awk '! /^[0-9]/ && $1 != "Name" { print $1, $3, $4 }' | sort | uniq > output_table.txt
-          snap info canonical-livepatch | awk '/^channels:/ {found=1; next} found && $1 != "" {print $1, $4; exit}' > canonical_livepatch.txt
-          cat ./output_table.txt
-          cat ./canonical_livepatch.txt
-          python ./releases/latest/generate_snaps_yaml.py ./output_table.txt ./canonical_livepatch.txt
+          output_table=$(cat ./snaps.txt | awk '! /^[0-9]/ && $1 != "Name" { print $1, $3, $4 }' | sort | uniq)
+          canonical_livepatch=$(snap info canonical-livepatch | awk '/^channels:/ {found=1; next} found && $1 != "" {print $1, $4; exit}')
+          echo $output_table
+          echo $canonical_livepatch
+          python ./releases/latest/generate_snaps_yaml.py "$output_table" "$canonical_livepatch"
           cat ./snaps.yaml
