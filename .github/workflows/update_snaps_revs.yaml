@@ -1,0 +1,17 @@
+# Copyright 2023 Canonical Ltd.
+# See LICENSE file for licensing details.
+name: Update bundle snaps
+
+on:
+  workflow_dispatch:
+  push:
+
+jobs:
+  update-bundle-snaps:
+    name: Update bundle snaps
+    uses: canonical/data-platform-workflows/.github/workflows/update_bundle_snaps.yaml@lucas/fetch-snap-rev
+    with:
+      path-to-snaps-file: releases/latest/snaps.yaml
+      path-to-bundle-file: releases/latest/postgresql-bundle.yaml
+    secrets:
+      token: ${{ secrets.PAT }}
