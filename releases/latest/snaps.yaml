@@ -1,0 +1,16 @@
+packages:
+- name: grafana-agent
+  push_channel: latest/stable
+  revision: 51
+- name: grafana-agent
+  push_channel: latest/stable
+  revision: 82
+- name: charmed-pgbouncer
+  push_channel: 1/stable
+  revision: 16
+- name: charmed-pgbouncer
+  push_channel: 1/stable
+  revision: 16
+- name: charmed-postgresql
+  push_channel: 14/stable
+  revision: 124
