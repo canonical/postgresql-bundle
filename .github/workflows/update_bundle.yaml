@@ -12,6 +12,5 @@ jobs:
     with:
       path-to-bundle-file: releases/latest/postgresql-bundle.yaml
       path-to-snaps-file: releases/latest/snaps.yaml
-      reviewers: canonical/data-platform-postgresql
     secrets:
       token: ${{ secrets.PAT }}
