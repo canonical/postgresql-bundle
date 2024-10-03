@@ -11,6 +11,5 @@ jobs:
     uses: canonical/data-platform-workflows/.github/workflows/_update_bundle.yaml@lucas/new-bundle-workflow
     with:
       path-to-bundle-file: releases/latest/postgresql-bundle.yaml
-      path-to-snaps-file: releases/latest/snaps.yaml
     secrets:
       token: ${{ secrets.PAT }}
