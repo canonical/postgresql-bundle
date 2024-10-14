@@ -35,7 +35,7 @@ applications:
     charm: postgresql
     constraints: arch=amd64
     num_units: 2
-    revision: 492
+    revision: 494
     series: jammy
     to:
     - '0'
@@ -45,7 +45,7 @@ applications:
     charm: postgresql-test-app
     constraints: arch=amd64
     num_units: 1
-    revision: 261
+    revision: 263
     series: jammy
     to:
     - '5'
