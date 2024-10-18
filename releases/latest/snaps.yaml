@@ -1,16 +1,16 @@
 packages:
+- name: canonical-livepatch
+  push_channel: latest/stable
+  revision: 286
+- name: charmed-pgbouncer
+  push_channel: 1/edge
+  revision: 16
 - name: charmed-postgresql
   push_channel: 14/edge
   revision: 133
 - name: grafana-agent
   push_channel: latest/stable
   revision: 51
-- name: canonical-livepatch
-  push_channel: latest/stable
-  revision: 286
 - name: grafana-agent
   push_channel: latest/stable
   revision: 82
-- name: charmed-pgbouncer
-  push_channel: 1/edge
-  revision: 16
