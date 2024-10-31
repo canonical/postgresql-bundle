@@ -18,7 +18,7 @@ applications:
     charm: landscape-client
     config:
       ppa: ppa:landscape/self-hosted-beta
-    revision: 69
+    revision: 70
     series: jammy
   pgbouncer-data-integrator:
     channel: 1/edge
@@ -74,7 +74,7 @@ applications:
     charm: sysbench
     constraints: arch=amd64
     num_units: 1
-    revision: 95
+    revision: 97
     series: jammy
     to:
     - '6'
