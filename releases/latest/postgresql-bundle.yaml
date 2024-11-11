@@ -35,7 +35,7 @@ applications:
     charm: postgresql
     constraints: arch=amd64
     num_units: 2
-    revision: 511
+    revision: 513
     series: jammy
     to:
     - '0'
@@ -54,7 +54,7 @@ applications:
     charm: s3-integrator
     constraints: arch=amd64
     num_units: 1
-    revision: 73
+    revision: 75
     series: jammy
     to:
     - '4'
@@ -74,7 +74,7 @@ applications:
     charm: sysbench
     constraints: arch=amd64
     num_units: 1
-    revision: 103
+    revision: 105
     series: jammy
     to:
     - '6'
