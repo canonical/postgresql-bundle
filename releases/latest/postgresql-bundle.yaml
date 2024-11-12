@@ -4,7 +4,7 @@ applications:
     charm: data-integrator
     constraints: arch=amd64
     num_units: 1
-    revision: 72
+    revision: 74
     series: jammy
     to:
     - '3'
@@ -54,7 +54,7 @@ applications:
     charm: s3-integrator
     constraints: arch=amd64
     num_units: 1
-    revision: 75
+    revision: 77
     series: jammy
     to:
     - '4'
@@ -74,7 +74,7 @@ applications:
     charm: sysbench
     constraints: arch=amd64
     num_units: 1
-    revision: 105
+    revision: 107
     series: jammy
     to:
     - '6'
