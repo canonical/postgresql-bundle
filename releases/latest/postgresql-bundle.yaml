@@ -11,7 +11,7 @@ applications:
   grafana-agent:
     channel: latest/edge
     charm: grafana-agent
-    revision: 299
+    revision: 306
     series: jammy
   landscape-client:
     channel: latest/edge
@@ -65,7 +65,7 @@ applications:
     num_units: 1
     options:
       ca-common-name: postgresql_bundle_ca
-    revision: 203
+    revision: 206
     series: jammy
     to:
     - '2'
