@@ -23,12 +23,12 @@ applications:
   pgbouncer-data-integrator:
     channel: 1/edge
     charm: pgbouncer
-    revision: 514
+    revision: 522
     series: jammy
   pgbouncer-test-app:
     channel: 1/edge
     charm: pgbouncer
-    revision: 514
+    revision: 522
     series: jammy
   postgresql:
     channel: 14/edge
