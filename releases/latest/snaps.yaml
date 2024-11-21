@@ -10,7 +10,7 @@ packages:
   revision: 133
 - name: grafana-agent
   push_channel: latest/stable
-  revision: 51
+  revision: 94
 - name: grafana-agent
   push_channel: latest/stable
-  revision: 82
+  revision: 95
