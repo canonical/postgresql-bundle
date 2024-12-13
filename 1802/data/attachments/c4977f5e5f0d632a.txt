@@ -1,0 +1,10 @@
+[32mINFO    [0m pytest_operator.plugin:plugin.py:787 Connecting to existing model localhost-localhost:test on unspecified cloud
+[32mINFO    [0m pytest_operator.plugin:plugin.py:929 Model status:
+
+Model  Controller           Cloud/Region         Version  SLA          Timestamp
+test   localhost-localhost  localhost/localhost  3.5.5    unsupported  01:24:54Z
+
+[32mINFO    [0m pytest_operator.plugin:plugin.py:935 Juju error logs:
+
+
+[32mINFO    [0m pytest_operator.plugin:plugin.py:1017 Forgetting model main...
