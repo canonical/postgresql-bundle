@@ -54,7 +54,7 @@ applications:
     charm: s3-integrator
     constraints: arch=amd64
     num_units: 1
-    revision: 97
+    revision: 99
     series: jammy
     to:
     - '4'
