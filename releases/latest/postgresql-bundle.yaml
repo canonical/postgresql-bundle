@@ -4,14 +4,14 @@ applications:
     charm: data-integrator
     constraints: arch=amd64
     num_units: 1
-    revision: 88
+    revision: 90
     series: jammy
     to:
     - '3'
   grafana-agent:
     channel: latest/edge
     charm: grafana-agent
-    revision: 400
+    revision: 404
     series: jammy
   landscape-client:
     channel: latest/edge
@@ -23,12 +23,12 @@ applications:
   pgbouncer-data-integrator:
     channel: 1/edge
     charm: pgbouncer
-    revision: 631
+    revision: 639
     series: jammy
   pgbouncer-test-app:
     channel: 1/edge
     charm: pgbouncer
-    revision: 631
+    revision: 639
     series: jammy
   postgresql:
     channel: 14/edge
@@ -45,7 +45,7 @@ applications:
     charm: postgresql-test-app
     constraints: arch=amd64
     num_units: 1
-    revision: 342
+    revision: 344
     series: jammy
     to:
     - '5'
@@ -54,7 +54,7 @@ applications:
     charm: s3-integrator
     constraints: arch=amd64
     num_units: 1
-    revision: 108
+    revision: 112
     series: jammy
     to:
     - '4'
