@@ -74,7 +74,7 @@ applications:
     charm: sysbench
     constraints: arch=amd64
     num_units: 1
-    revision: 125
+    revision: 129
     series: jammy
     to:
     - '6'
