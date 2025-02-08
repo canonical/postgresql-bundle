@@ -11,7 +11,7 @@ applications:
   grafana-agent:
     channel: latest/edge
     charm: grafana-agent
-    revision: 409
+    revision: 417
     series: jammy
   landscape-client:
     channel: latest/edge
@@ -45,7 +45,7 @@ applications:
     charm: postgresql-test-app
     constraints: arch=amd64
     num_units: 1
-    revision: 356
+    revision: 358
     series: jammy
     to:
     - '5'
@@ -54,7 +54,7 @@ applications:
     charm: s3-integrator
     constraints: arch=amd64
     num_units: 1
-    revision: 122
+    revision: 124
     series: jammy
     to:
     - '4'
