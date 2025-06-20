@@ -23,19 +23,19 @@ applications:
   pgbouncer-data-integrator:
     channel: 1/edge
     charm: pgbouncer
-    revision: 762
+    revision: 774
     series: jammy
   pgbouncer-test-app:
     channel: 1/edge
     charm: pgbouncer
-    revision: 762
+    revision: 774
     series: jammy
   postgresql:
     channel: 14/edge
     charm: postgresql
     constraints: arch=amd64
     num_units: 2
-    revision: 780
+    revision: 801
     series: jammy
     to:
     - '0'
@@ -81,7 +81,7 @@ applications:
   ubuntu-advantage:
     channel: latest/edge
     charm: ubuntu-advantage
-    revision: 137
+    revision: 145
     series: jammy
 machines:
   '0':
