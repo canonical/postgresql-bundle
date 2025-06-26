@@ -9,21 +9,28 @@ from pytest_operator.plugin import OpsTest
 
 logger = logging.getLogger(__name__)
 
-TEST_APP_NAME = "postgresql-test-app"
+POSTGRES_NAME = "db"
+TEST_APP_NAME = "app-int"
 ACTIVE_APPS = [
-    "pgbouncer-data-integrator",
-    "pgbouncer-test-app",
-    "postgresql",
+    "app-ext",
+    "app-ext-admin",
+    "lb-ext",
     TEST_APP_NAME,
-    "self-signed-certificates",
-    "sysbench",
+    "app-int-perf",
+    "lb-int",
+    POSTGRES_NAME,
+    "tls",
 ]
 BLOCKED_APPS = [
-    "data-integrator",
-    "grafana-agent",
-    "landscape-client",
-    "s3-integrator",
-    "ubuntu-advantage",
+    "cos-agent-app-ext",
+    "cos-agent-app-int",
+    "cos-agent-app-int-perf",
+    "cos-agent-db",
+    "cos-agent-lb-ext",
+    "cos-agent-lb-int",
+    "lp-client",
+    "s3",
+    "ubuntu-pro",
 ]
 
 
@@ -32,7 +39,7 @@ BLOCKED_APPS = [
 async def test_setup(ops_test: OpsTest):
     async with ops_test.fast_forward():
         await ops_test.model.deploy("./releases/latest/postgresql-bundle.yaml")
-        await ops_test.model.applications["postgresql"].set_config({"profile": "testing"})
+        await ops_test.model.applications[POSTGRES_NAME].set_config({"profile": "testing"})
         await ops_test.model.wait_for_idle(
             apps=ACTIVE_APPS,
             status="active",
