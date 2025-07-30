@@ -9,7 +9,7 @@ applications:
     to:
     - '3'
   grafana-agent:
-    channel: latest/edge
+    channel: 1/edge
     charm: grafana-agent
     revision: 469
     series: jammy
