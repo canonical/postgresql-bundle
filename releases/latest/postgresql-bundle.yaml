@@ -11,14 +11,14 @@ applications:
   grafana-agent:
     channel: 1/edge
     charm: grafana-agent
-    revision: 490
+    revision: 576
     series: jammy
   landscape-client:
     channel: latest/edge
     charm: landscape-client
     config:
       ppa: ppa:landscape/self-hosted-beta
-    revision: 72
+    revision: 73
     series: jammy
   pgbouncer-data-integrator:
     channel: 1/edge
