@@ -11,7 +11,7 @@ applications:
   grafana-agent:
     channel: 1/edge
     charm: grafana-agent
-    revision: 594
+    revision: 603
     series: jammy
   landscape-client:
     channel: latest/edge
