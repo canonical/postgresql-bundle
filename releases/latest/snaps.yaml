@@ -1,7 +1,7 @@
 packages:
 - name: canonical-livepatch
   push_channel: latest/stable
-  revision: 341
+  revision: 355
 - name: charmed-pgbouncer
   push_channel: 1/edge
   revision: 18
