@@ -4,7 +4,7 @@ applications:
     charm: data-integrator
     constraints: arch=amd64
     num_units: 1
-    revision: 250
+    revision: 262
     series: jammy
     to:
     - '3'
@@ -23,19 +23,19 @@ applications:
   pgbouncer-data-integrator:
     channel: 1/edge
     charm: pgbouncer
-    revision: 834
+    revision: 859
     series: jammy
   pgbouncer-test-app:
     channel: 1/edge
     charm: pgbouncer
-    revision: 834
+    revision: 859
     series: jammy
   postgresql:
     channel: 14/edge
     charm: postgresql
     constraints: arch=amd64
     num_units: 2
-    revision: 901
+    revision: 938
     series: jammy
     to:
     - '0'
@@ -45,7 +45,7 @@ applications:
     charm: postgresql-test-app
     constraints: arch=amd64
     num_units: 1
-    revision: 406
+    revision: 414
     series: jammy
     to:
     - '5'
@@ -65,7 +65,7 @@ applications:
     num_units: 1
     options:
       ca-common-name: postgresql_bundle_ca
-    revision: 346
+    revision: 388
     series: jammy
     to:
     - '2'
