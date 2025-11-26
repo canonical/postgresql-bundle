@@ -59,7 +59,7 @@ applications:
     to:
     - '4'
   self-signed-certificates:
-    channel: latest/edge
+    channel: 1/edge
     charm: self-signed-certificates
     constraints: arch=amd64
     num_units: 1
