@@ -22,21 +22,21 @@ on:
 jobs:
   lint:
     name: Lint
-    uses: canonical/data-platform-workflows/.github/workflows/lint.yaml@v40.0.2
+    uses: canonical/data-platform-workflows/.github/workflows/lint.yaml@v41.0.0
 
   integration-test:
     strategy:
       fail-fast: false
       matrix:
         juju:
-          - agent: 3.6.12  # renovate: juju-agent-pin-minor
+          - agent: 3.6.13  # renovate: juju-agent-pin-minor
             allure_on_amd64: true
         architecture:
           - amd64
     name: Integration test charm | ${{ matrix.juju.agent }}
     needs:
       - lint
-    uses: canonical/data-platform-workflows/.github/workflows/integration_test_charm.yaml@v40.0.2
+    uses: canonical/data-platform-workflows/.github/workflows/integration_test_charm.yaml@v41.0.0
     with:
       artifact-prefix: packed-charm-
       architecture: ${{ matrix.architecture }}
