@@ -4,7 +4,7 @@ applications:
     charm: data-integrator
     constraints: arch=amd64
     num_units: 1
-    revision: 335
+    revision: 341
     series: jammy
     to:
     - '3'
@@ -65,7 +65,7 @@ applications:
     num_units: 1
     options:
       ca-common-name: postgresql_bundle_ca
-    revision: 520
+    revision: 532
     series: jammy
     to:
     - '2'
