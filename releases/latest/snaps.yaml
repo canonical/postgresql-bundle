@@ -4,10 +4,10 @@ packages:
   revision: 384
 - name: charmed-pgbouncer
   push_channel: 1/edge
-  revision: 21
+  revision: 23
 - name: charmed-postgresql
   push_channel: 14/edge
-  revision: 251
+  revision: 281
 - name: grafana-agent
   push_channel: latest/stable
   revision: 94
