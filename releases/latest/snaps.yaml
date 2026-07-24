@@ -7,7 +7,7 @@ packages:
   revision: 27
 - name: charmed-postgresql
   push_channel: 14/edge
-  revision: 370
+  revision: 393
 - name: grafana-agent
   push_channel: latest/stable
   revision: 94

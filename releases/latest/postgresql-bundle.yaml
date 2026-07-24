@@ -35,7 +35,7 @@ applications:
     charm: postgresql
     constraints: arch=amd64
     num_units: 2
-    revision: 1185
+    revision: 1190
     series: jammy
     to:
     - '0'
@@ -65,7 +65,7 @@ applications:
     num_units: 1
     options:
       ca-common-name: postgresql_bundle_ca
-    revision: 652
+    revision: 654
     series: jammy
     to:
     - '2'
